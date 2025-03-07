@@ -66,7 +66,7 @@ class Attendance(models.Model):
     def __str__(self):
         return f"{self.student.name} - {self.date} - {self.status}"
 
-# Add to your models.py file
+# Notice Model
 class Notice(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
@@ -76,3 +76,14 @@ class Notice(models.Model):
     
     def __str__(self):
         return self.title
+
+# Review Model
+class Review(models.Model):
+    name = models.CharField(max_length=255)  # Name of the reviewer
+    role = models.CharField(max_length=100, blank=True, null=True)  # Optional role (Ex-student, Parent, etc.)
+    review = models.TextField()  # Review content
+    image = models.ImageField(upload_to='reviews/', blank=True, null=True)  # Optional image for profile
+    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp
+
+    def __str__(self):
+        return f"Review by {self.name} - {self.created_at.strftime('%Y-%m-%d')}"

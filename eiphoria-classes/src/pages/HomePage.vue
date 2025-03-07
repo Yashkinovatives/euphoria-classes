@@ -15,31 +15,31 @@
           <div class="badge" v-motion 
                :initial="{ scale: 0, opacity: 0 }" 
                :enter="{ scale: 1, opacity: 1, transition: { delay: 300 } }">
-            <span class="badge-icon">🚀</span>
-            <span>Elevate Your Learning</span>
+            <span class="badge-icon">📚</span>
+            <span>Transform Your Learning Journey</span>
           </div>
         </div>
 
         <h1 class="title">
-          Step into the Future with
+          Ignite Your Knowledge with
           <div class="gradient-text-wrapper">
-            <span class="gradient-text">Limitless Possibilities</span>
+            <span class="gradient-text">Smart Educational Tools</span>
           </div>
         </h1>
 
         <p class="description">
-          Unlock the full potential of your skills with interactive courses, 
-          AI-driven insights, and personalized guidance tailored to your unique learning journey.
+          Master new skills through structured curriculum, interactive lessons, 
+          and academic resources designed by education experts for your academic success.
         </p>
 
         <div class="cta-group">
           <button class="primary-btn" @click="$router.push('/Login')">
-            <span class="btn-icon">✨</span>
-            <span>Get Started</span>
+            <span class="btn-icon">🎓</span>
+            <span>Start Learning</span>
           </button>
           
           <button class="secondary-btn" @click="$router.push('/courses')">
-            <span>Explore Courses</span>
+            <span>Browse Curriculum</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
@@ -58,7 +58,7 @@
 
       <!-- Feature Cards -->
       <div class="features-section">
-        <h2 class="features-title">Why Choose Our Platform</h2>
+        <h2 class="features-title">Educational Excellence</h2>
         
         <div class="features-grid">
           <div v-for="(feature, index) in features" 
@@ -90,42 +90,42 @@ import AboutUsComponent from '@/components/HomePageComponents/AboutUsComponent.v
 import ScrollingSection from '@/components/HomePageComponents/ScrollingSection.vue';
 
 const stats = [
-  { value: '50K+', label: 'Active Learners' },
-  { value: '200+', label: 'Expert Courses' },
-  { value: '95%', label: 'Success Rate' }
+  { value: '50K+', label: 'Enrolled Students' },
+  { value: '200+', label: 'Accredited Courses' },
+  { value: '95%', label: 'Graduation Rate' }
 ];
 
 const features = [
   {
-    icon: '🎯',
-    title: 'AI-Powered Learning',
-    description: 'Our smart technology analyzes your progress and learning style to deliver personalized content that adapts to your needs.',
-    bgColor: 'linear-gradient(135deg, #8B5CF6, #C084FC)'
+    icon: '📊',
+    title: 'Adaptive Learning',
+    description: 'Our intelligent system creates personalized learning paths based on your strengths and areas for improvement, ensuring optimal educational outcomes.',
+    bgColor: 'linear-gradient(135deg, #F59E0B, #FBBF24)'
   },
   {
-    icon: '⚡',
-    title: 'Ultra Fast Performance',
-    description: 'Enjoy seamless access to all courses, tools, and insights with our high-performance platform optimized for any device.',
-    bgColor: 'linear-gradient(135deg, #6366F1, #A5B4FC)'
+    icon: '📝',
+    title: 'Interactive Exercises',
+    description: 'Reinforce concepts through hands-on practice with immediate feedback, helping you master complex subjects through practical application.',
+    bgColor: 'linear-gradient(135deg, #D97706, #F59E0B)'
   },
   {
-    icon: '🌎',
-    title: 'Global Community',
-    description: 'Connect with passionate learners and industry experts worldwide, collaborate on projects, and expand your professional network.',
-    bgColor: 'linear-gradient(135deg, #8B5CF6, #A78BFA)'
+    icon: '👨‍👩‍👧‍👦',
+    title: 'Collaborative Learning',
+    description: 'Connect with fellow students and educators in virtual classrooms, discussion forums, and group projects to enhance your understanding through diverse perspectives.',
+    bgColor: 'linear-gradient(135deg, #F59E0B, #FCD34D)'
   },
   {
-    icon: '🔍',
-    title: 'Comprehensive Resources',
-    description: 'Access a vast library of cutting-edge learning materials, case studies, and practical exercises to master any skill.',
-    bgColor: 'linear-gradient(135deg, #7C3AED, #C084FC)'
+    icon: '📚',
+    title: 'Comprehensive Library',
+    description: 'Access our extensive collection of textbooks, research papers, and educational resources to deepen your knowledge and excel in your academic pursuits.',
+    bgColor: 'linear-gradient(135deg, #B45309, #F59E0B)'
   }
 ]
 </script>
 
 <style scoped>
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+/* Import Sans-Serif Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap');
 
 /* Base Styles */
 * {
@@ -136,12 +136,12 @@ const features = [
 
 .hero {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+  background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
   position: relative;
   overflow: hidden;
   padding: 4rem 2rem;
   color: #1e293b;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Inter', sans-serif;
   letter-spacing: -0.02em;
 }
 
@@ -158,7 +158,7 @@ const features = [
 
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(139, 92, 246, 0.1), rgba(192, 132, 252, 0.1));
+  background: linear-gradient(45deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1));
   border-radius: 50%;
   filter: blur(1px);
   animation: float 25s infinite ease-in-out alternate;
@@ -207,17 +207,17 @@ const features = [
   display: flex;
   align-items: center;
   padding: 0.75rem 1.25rem;
-  background: rgba(139, 92, 246, 0.15);
+  background: rgba(245, 158, 11, 0.15);
   border-radius: 100px;
   backdrop-filter: blur(10px);
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.2);
   gap: 0.5rem;
-  color: #4c1d95;
+  color: #92400E;
 }
 
 .badge-icon {
@@ -240,7 +240,7 @@ const features = [
 }
 
 .gradient-text {
-  background: linear-gradient(45deg, #7C3AED, #C084FC);
+  background: linear-gradient(45deg, #D97706, #FBBF24);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 800;
@@ -254,7 +254,7 @@ const features = [
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(45deg, #7C3AED, #C084FC);
+  background: linear-gradient(45deg, #D97706, #FBBF24);
   border-radius: 4px;
 }
 
@@ -286,9 +286,9 @@ const features = [
   align-items: center;
   gap: 0.75rem;
   transition: all 0.3s ease;
-  background: linear-gradient(45deg, #7C3AED, #A855F7);
+  background: linear-gradient(45deg, #D97706, #F59E0B);
   color: white;
-  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
   letter-spacing: 0;
   border: none;
   cursor: pointer;
@@ -296,7 +296,7 @@ const features = [
 
 .primary-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
 }
 
 .btn-icon {
@@ -313,16 +313,16 @@ const features = [
   gap: 0.75rem;
   transition: all 0.3s ease;
   background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  color: #6d28d9;
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #B45309;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
   cursor: pointer;
 }
 
 .secondary-btn:hover {
   background: rgba(255, 255, 255, 0.95);
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.2);
 }
 
 /* Stats Section */
@@ -342,7 +342,7 @@ const features = [
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(45deg, #7C3AED, #C084FC);
+  background: linear-gradient(45deg, #D97706, #FBBF24);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -380,7 +380,7 @@ const features = [
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background: linear-gradient(45deg, #7C3AED, #C084FC);
+  background: linear-gradient(45deg, #D97706, #FBBF24);
   border-radius: 4px;
 }
 
@@ -399,14 +399,14 @@ const features = [
   display: flex;
   flex-direction: column;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.1);
   height: 100%;
 }
 
 .feature-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 14px 40px rgba(139, 92, 246, 0.12);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow: 0 14px 40px rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .feature-icon-container {
@@ -418,7 +418,7 @@ const features = [
   justify-content: center;
   margin-bottom: 1.5rem;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.15);
 }
 
 .feature-card:hover .feature-icon-container {

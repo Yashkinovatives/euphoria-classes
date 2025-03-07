@@ -199,38 +199,6 @@ const fetchParentDashboard = async () => {
   }
 };
 
-
-// ✅ Handle Enrollment
-const handleEnrollment = async (enrollmentData) => {
-  try {
-    loading.value = true;
-
-    const payload = {
-      name: enrollmentData.name || enrollmentData.student?.name,
-      class_section: enrollmentData.class_section || enrollmentData.student?.class_section
-    };
-    
-    await axios.post("http://127.0.0.1:8000/api/parent/enroll-student/", payload, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
-    });
-
-    successMessage.value = "Student enrolled successfully!";
-    
-    setTimeout(() => {
-      successMessage.value = "";
-    }, 3000);
-
-    // Remove manual event trigger
-    await refreshDashboard();
-
-  } catch (error) {
-    console.error("Error handling enrollment:", error);
-    alert("Failed to enroll: " + (error.response?.data?.error || "Server error"));
-  } finally {
-    loading.value = false;
-  }
-};
-
 // ✅ Refresh Dashboard
 const refreshDashboard = async () => {
   try {

@@ -1,9 +1,9 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model, authenticate
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Student, TestResult, ClassSection , FeePayment , FeeRecord,Attendance
+from .models import Student, TestResult, ClassSection , FeePayment , FeeRecord,Attendance,Review
 from rest_framework import status
 from datetime import datetime
 from .models import Notice
@@ -367,3 +367,61 @@ def update_notice(request, notice_id):
     notice.save()
     
     return Response({"message": "Notice updated successfully"}, status=200)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])  # Anyone can view reviews
+def get_reviews(request):
+    reviews = Review.objects.all().order_by('-created_at')
+    data = []
+    for review in reviews:
+        review_data = {
+            'id': review.id,
+            'name': review.name,
+            'role': review.role or "",
+            'review': review.review,
+            'image': review.image.url if review.image else None,
+            'created_at': review.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        data.append(review_data)
+    return Response(data)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])  # Anyone (public) can submit a review
+def add_review(request):
+    try:
+        name = request.data.get('name')
+        review_text = request.data.get('review')
+        
+        if not name or not review_text:
+            return Response({"error": "Name and review are required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        review = Review(
+            name=name,
+            role=request.data.get('role', ''),
+            review=review_text
+        )
+        
+        # Handle image if provided
+        if 'image' in request.FILES:
+            review.image = request.FILES['image']
+            
+        review.save()
+        return Response({"message": "Review submitted successfully"}, status=status.HTTP_201_CREATED)
+    
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])  # Only authenticated users (teachers) can delete reviews
+def delete_review(request, review_id):
+    if request.user.user_type != "teacher":
+        return Response({"error": "Unauthorized, only teachers can delete reviews"}, status=status.HTTP_403_FORBIDDEN)
+    
+    review = Review.objects.filter(id=review_id).first()
+    if not review:
+        return Response({"error": "Review not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    review.delete()
+    return Response({"message": "Review deleted successfully"}, status=status.HTTP_200_OK)
+

@@ -3,7 +3,7 @@ from core.views import (
     signup, login, teacher_dashboard, parent_dashboard,
     enroll_student, add_test_result, get_student_results, get_students, 
     get_class_sections, add_monthly_fee, get_monthly_fee_status,set_total_fees,mark_attendance,update_attendance,
-    get_student_attendance,add_notice, get_notices, delete_notice, update_notice
+    get_student_attendance,add_notice, get_notices, delete_notice, update_notice,get_reviews,add_review,delete_review
 )
 
 urlpatterns = [
@@ -26,5 +26,8 @@ urlpatterns = [
     path('notices/', get_notices, name='get_notices'),
     path('teacher/delete-notice/<int:notice_id>/', delete_notice, name='delete_notice'),
     path('teacher/update-notice/<int:notice_id>/', update_notice, name='update_notice'),
+    path('reviews/', get_reviews, name='get_reviews'),
+    path('reviews/add/', add_review, name='add_review'),
+    path('teacher/delete-review/<int:review_id>/', delete_review, name='delete_review'),
 ]
 
