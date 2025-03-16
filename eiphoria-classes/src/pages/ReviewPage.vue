@@ -1,6 +1,5 @@
 <template>
   <div class="testimonials-section">
-    <!-- Animated Background Elements -->
     <div class="animated-bg">
       <div v-for="n in 8" :key="n" class="floating-element"></div>
     </div>
@@ -61,13 +60,11 @@
         </div>
       </div>
 
-      <!-- Add Review Button -->
       <button @click="showModal = true" class="add-review-btn">
         <span class="btn-icon">✏️</span>
         <span>Share Your Story</span>
       </button>
 
-      <!-- Review Modal -->
       <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
         <div class="modal-content">
           <button @click="showModal = false" class="close-modal-btn">×</button>
@@ -140,16 +137,13 @@ export default {
       try {
         await axios.post("http://127.0.0.1:8000/api/reviews/add/", this.newReview);
         
-        // Refresh the reviews list
         await this.fetchReviews();
 
-        // Clear input fields and close modal
         this.newReview.name = "";
         this.newReview.role = "";
         this.newReview.review = "";
         this.showModal = false;
         
-        // Show success message
         alert("Thank you! Your review has been submitted successfully.");
       } catch (error) {
         console.error("Error submitting review:", error);
@@ -166,10 +160,8 @@ export default {
 </script>
 
 <style scoped>
-/* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
-/* Base Styles */
 * {
   box-sizing: border-box;
   margin: 0;

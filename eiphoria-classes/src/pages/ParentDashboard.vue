@@ -1,249 +1,243 @@
-<template>
-  <div class="dashboard">
-    <div class="animated-bg">
-      <div v-for="n in 8" :key="n" class="floating-element"></div>
-    </div>
+  <template>
+    <div class="dashboard">
+      <div class="animated-bg">
+        <div v-for="n in 8" :key="n" class="floating-element"></div>
+      </div>
 
-    <div class="dashboard-container">
-      <header class="header">
-        <div class="header-content">
-          <div class="header-left">
-            <h1>Parent Dashboard</h1>
-            <div class="badge">
-              <span class="badge-icon">👋</span>
-              <span>Welcome Back!</span>
+      <div class="dashboard-container">
+        <header class="header">
+          <div class="header-content">
+            <div class="header-left">
+              <h1>Parent Dashboard</h1>
+              <div class="badge">
+                <span class="badge-icon">👋</span>
+                <span>Welcome Back!</span>
+              </div>
+            </div>
+            <div class="header-actions">
+              <button @click="openNoticeBoardModal" class="notice-btn">
+                <span class="btn-icon">📌</span>
+                <span>School Notices</span>
+              </button>
+              <button @click="openUploadResultModal" class="upload-btn">
+                <span class="btn-icon">📄</span>
+                <span>Upload Results</span>
+              </button>
+              <button @click="logout" class="logout-btn">
+                <span class="btn-icon">🚪</span>
+                <span>Logout</span>
+              </button>
             </div>
           </div>
-          <div class="header-actions">
-            <button @click="openNoticeBoardModal" class="notice-btn">
-              <span class="btn-icon">📌</span>
-              <span>School Notices</span>
-            </button>
-            <button @click="logout" class="logout-btn">
-              <span class="btn-icon">🚪</span>
-              <span>Logout</span>
-            </button>
+        </header>
+
+        <div v-if="loading" class="loader">
+          <div class="loader-spinner"></div>
+          <p>Loading your dashboard...</p>
+        </div>
+
+        <div v-else>
+          <div v-if="successMessage" class="success-message">
+            {{ successMessage }}
+          </div>
+
+          <div v-if="enrollmentRequired" class="enrollment-section">
+            <EnrollmentForm 
+              :classSections="classSections"
+              @enroll="handleEnrollment"
+              @enrollmentSuccess="refreshDashboard"
+            />
+          </div>
+
+          <div v-else class="dashboard-content">
+            <QuickStats 
+              :students="students" 
+              :testResults="testResults" 
+              :attendanceRecords="attendanceRecords"
+            />
+            
+            <StudentOverview :students="students" />
+            
+            <StudentAttendance 
+              :attendanceRecords="attendanceRecords" 
+              :isLoading="isLoadingAttendance"
+            />
+            
+            <AcademicPerformance :testResults="testResults" />
+            
+            <FeeStatus :feeStatus="feeStatus" />
           </div>
         </div>
-      </header>
 
-      <div v-if="loading" class="loader">
-        <div class="loader-spinner"></div>
-        <p>Loading your dashboard...</p>
+        <!-- Notice Board Modal -->
+        <ParentNoticeBoardModal v-if="showNoticeBoardModal" @close="closeNoticeBoardModal" />
+
+        <!-- Upload Result Modal -->
+        <UploadResultModal 
+          v-if="showUploadResultModal" 
+          @close="closeUploadResultModal"
+          :students="students"
+          @uploadSuccess="refreshDashboard"
+        />
       </div>
-
-      <div v-else>
-        <div v-if="successMessage" class="success-message">
-          {{ successMessage }}
-        </div>
-
-        <div v-if="enrollmentRequired" class="enrollment-section">
-          <EnrollmentForm 
-            :classSections="classSections"
-            @enroll="handleEnrollment"
-            @enrollmentSuccess="refreshDashboard"
-          />
-        </div>
-
-        <div v-else class="dashboard-content">
-          <!-- ✅ Pass attendance data to components -->
-          <QuickStats 
-            :students="students" 
-            :testResults="testResults" 
-            :attendanceRecords="attendanceRecords"
-          />
-          
-          <StudentOverview :students="students" />
-          
-          <StudentAttendance 
-            :attendanceRecords="attendanceRecords" 
-            :isLoading="isLoadingAttendance"
-          />
-          
-          <AcademicPerformance :testResults="testResults" />
-          
-          <FeeStatus :feeStatus="feeStatus" />
-        </div>
-      </div>
-
-      <!-- Notice Board Modal -->
-      <ParentNoticeBoardModal
-        v-if="showNoticeBoardModal"
-        @close="closeNoticeBoardModal"
-      />
     </div>
-  </div>
-</template>
+  </template>
 
-<script setup>
-import { ref, onMounted } from "vue";
-import { useRouter } from 'vue-router';
-import axios from "axios";
+  <script setup>
+  import { ref, onMounted } from "vue";
+  import { useRouter } from 'vue-router';
+  import axios from "axios";
 
-import EnrollmentForm from '@/components/ParentDashboradComponents/EnrollmentForm.vue';
-import QuickStats from '@/components/ParentDashboradComponents/QuickStats.vue';
-import StudentOverview from '@/components/ParentDashboradComponents/StudentOverview.vue';
-import AcademicPerformance from '@/components/ParentDashboradComponents/AcademicPerformance.vue';
-import FeeStatus from '@/components/ParentDashboradComponents/FeeStatus.vue';
-import StudentAttendance from '@/components/ParentDashboradComponents/StudentAttendance.vue';
-import ParentNoticeBoardModal from '@/components/ParentDashboradComponents/ParentNoticeBoardModal.vue';
+  import EnrollmentForm from '@/components/ParentDashboradComponents/EnrollmentForm.vue';
+  import QuickStats from '@/components/ParentDashboradComponents/QuickStats.vue';
+  import StudentOverview from '@/components/ParentDashboradComponents/StudentOverview.vue';
+  import AcademicPerformance from '@/components/ParentDashboradComponents/AcademicPerformance.vue';
+  import FeeStatus from '@/components/ParentDashboradComponents/FeeStatus.vue';
+  import StudentAttendance from '@/components/ParentDashboradComponents/StudentAttendance.vue';
+  import ParentNoticeBoardModal from '@/components/ParentDashboradComponents/ParentNoticeBoardModal.vue';
+  import UploadResultModal from '@/components/ParentDashboradComponents/UploadResultModal.vue';
 
-const router = useRouter();
-const students = ref([]);
-const enrollmentRequired = ref(false);
-const loading = ref(true);
-const classSections = ref([]);
-const testResults = ref([]);
-const feeStatus = ref([]);
-const successMessage = ref('');
-const attendanceRecords = ref([]);  // ✅ Store attendance data
-const isLoadingAttendance = ref(true);
-const error = ref(null);
-const showNoticeBoardModal = ref(false);
+  const router = useRouter();
+  const students = ref([]);
+  const enrollmentRequired = ref(false);
+  const loading = ref(true);
+  const classSections = ref([]);
+  const testResults = ref([]);
+  const feeStatus = ref([]);
+  const successMessage = ref('');
+  const attendanceRecords = ref([]);  
+  const isLoadingAttendance = ref(true);
+  const error = ref(null);
+  const showNoticeBoardModal = ref(false);
+  const showUploadResultModal = ref(false);
 
-// ✅ Notice Board Modal Functions
-const openNoticeBoardModal = () => {
-  showNoticeBoardModal.value = true;
-};
+  // Open/Close Notice Modal
+  const openNoticeBoardModal = () => { showNoticeBoardModal.value = true; };
+  const closeNoticeBoardModal = () => { showNoticeBoardModal.value = false; };
 
-const closeNoticeBoardModal = () => {
-  showNoticeBoardModal.value = false;
-};
+  // Open/Close Upload Result Modal
+  const openUploadResultModal = () => { showUploadResultModal.value = true; };
+  const closeUploadResultModal = () => { showUploadResultModal.value = false; };
 
-// ✅ Fetch Attendance Data
-const fetchAttendance = async () => {
-  isLoadingAttendance.value = true;
-  error.value = null;
+  // Fetch Attendance Records
+  const fetchAttendance = async () => {
+    isLoadingAttendance.value = true;
+    error.value = null;
 
-  try {
-    const token = localStorage.getItem("access_token");
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    };
+    try {
+      const token = localStorage.getItem("access_token");
+      const config = {
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      };
 
-    const response = await axios.get("http://127.0.0.1:8000/api/parent/student-attendance/", config);
-    console.log("Fetched Attendance:", response.data);
-
-    attendanceRecords.value = response.data.attendance_records || [];
-  } catch (err) {
-    console.error("Attendance Fetch Error:", err);
-    error.value = err;
-    attendanceRecords.value = [];
-  } finally {
-    isLoadingAttendance.value = false;
-  }
-};
-
-// ✅ Fetch Student Results
-const fetchStudentResults = async () => {
-  try {
-    const response = await axios.get("http://127.0.0.1:8000/api/parent/test-results/", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
-    });
-    testResults.value = response.data.results || [];
-  } catch (error) {
-    console.error("Error fetching test results:", error);
-    testResults.value = [];
-  }
-};
-
-// ✅ Fetch Fee Status
-const fetchFeeStatus = async () => {
-  try {
-    const response = await axios.get("http://127.0.0.1:8000/api/parent/monthly-fee-status/", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
-    });
-    feeStatus.value = response.data.fee_status || [];
-  } catch (error) {
-    console.error("Error fetching fee status:", error);
-    feeStatus.value = [];
-  }
-};
-
-// ✅ Fetch Class Sections
-const fetchClassSections = async () => {
-  try {
-    const response = await axios.get("http://127.0.0.1:8000/api/class-sections/");
-    classSections.value = response.data;
-  } catch (error) {
-    console.error("Error fetching class sections:", error);
-  }
-};
-
-// ✅ Fetch Parent Dashboard
-const fetchParentDashboard = async () => {
-  try {
-    const response = await axios.get("http://127.0.0.1:8000/api/parent-dashboard/", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
-    });
-
-    console.log("Fetched Student Data:", response.data.students);
-
-    if (response.data.enrollment_required) {
-      enrollmentRequired.value = true;
-    } else {
-      enrollmentRequired.value = false;
-      
-      // Avoid pushing duplicates
-      students.value = [...new Set(response.data.students.map(s => JSON.stringify(s)))].map(s => JSON.parse(s));
+      const response = await axios.get("http://127.0.0.1:8000/api/parent/student-attendance/", config);
+      attendanceRecords.value = response.data.attendance_records || [];
+    } catch (err) {
+      error.value = err;
+      attendanceRecords.value = [];
+    } finally {
+      isLoadingAttendance.value = false;
     }
-  } catch (error) {
-    console.error("Error fetching dashboard:", error);
-    if (error.response?.status === 401) {
-      localStorage.clear();
-      router.push('/');
+  };
+
+  // Fetch Student Test Results
+  const fetchStudentResults = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/parent/test-results/", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
+      });
+      testResults.value = response.data.results || [];
+    } catch (error) {
+      testResults.value = [];
     }
-  }
-};
+  };
 
-// ✅ Refresh Dashboard
-const refreshDashboard = async () => {
-  try {
-    loading.value = true;
-    
-    // Clear existing students to prevent duplicates
-    students.value = [];
+  // Fetch Fee Status
+  const fetchFeeStatus = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/parent/monthly-fee-status/", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
+      });
+      feeStatus.value = response.data.fee_status || [];
+    } catch (error) {
+      feeStatus.value = [];
+    }
+  };
 
-    await Promise.all([
-      fetchParentDashboard(),
-      fetchStudentResults(),
-      fetchFeeStatus(),
-      fetchAttendance()
-    ]);
-  } catch (error) {
-    console.error("Error refreshing dashboard:", error);
-  } finally {
-    loading.value = false;
-  }
-};
+  // Fetch Class Sections
+  const fetchClassSections = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/class-sections/");
+      classSections.value = response.data;
+    } catch (error) {
+      console.error("Error fetching class sections:", error);
+    }
+  };
 
+  // Fetch Parent Dashboard Data
+  const fetchParentDashboard = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/parent-dashboard/", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
+      });
 
-// ✅ Logout
-const logout = () => {
-  localStorage.clear();
-  router.push('/');
-};
+      if (response.data.enrollment_required) {
+        enrollmentRequired.value = true;
+      } else {
+        enrollmentRequired.value = false;
+        students.value = [...new Set(response.data.students.map(s => JSON.stringify(s)))].map(s => JSON.parse(s));
+      }
+    } catch (error) {
+      if (error.response?.status === 401) {
+        localStorage.clear();
+        router.push('/');
+      }
+    }
+  };
 
-// ✅ Fetch data when component is mounted
-onMounted(async () => {
-  try {
-    await Promise.all([
-      fetchParentDashboard(),
-      fetchClassSections(),
-      fetchStudentResults(),
-      fetchFeeStatus(),
-      fetchAttendance()  // ✅ Fetch attendance on mount
-    ]);
-  } catch (err) {
-    console.error("Error loading dashboard:", err);
-  } finally {
-    loading.value = false;
-  }
-});
-</script>
+  // Refresh Dashboard Data
+  const refreshDashboard = async () => {
+    try {
+      loading.value = true;
+      students.value = [];
+
+      await Promise.all([
+        fetchParentDashboard(),
+        fetchStudentResults(),
+        fetchFeeStatus(),
+        fetchAttendance()
+      ]);
+    } catch (error) {
+      console.error("Error refreshing dashboard:", error);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  // Logout User
+  const logout = () => {
+    localStorage.clear();
+    router.push('/');
+  };
+
+  // Load Data on Page Mount
+  onMounted(async () => {
+    try {
+      await Promise.all([
+        fetchParentDashboard(),
+        fetchClassSections(),
+        fetchStudentResults(),
+        fetchFeeStatus(),
+        fetchAttendance()
+      ]);
+    } catch (err) {
+      console.error("Error loading dashboard:", err);
+    } finally {
+      loading.value = false;
+    }
+  });
+
+  </script>
 
 
 <style scoped>

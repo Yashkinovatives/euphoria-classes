@@ -77,7 +77,6 @@
 </template>
 
 <script setup>
-
 const currentYear = new Date().getFullYear()
 
 const menuItems = [
@@ -112,7 +111,7 @@ const socialLinks = [
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
 .footer-container {
-  background: linear-gradient(to bottom, #f5f3ff, #ede9fe);
+  background: linear-gradient(to bottom, #fff9e6, #fff3cc);
   color: #1e293b;
   padding: 6rem 1.5rem 2rem;
   position: relative;
@@ -127,7 +126,7 @@ const socialLinks = [
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(to right, transparent, #7C3AED, transparent);
+  background: linear-gradient(to right, transparent, #FFD700, transparent);
 }
 
 /* Animated Background */
@@ -143,7 +142,7 @@ const socialLinks = [
 
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(139, 92, 246, 0.1), rgba(192, 132, 252, 0.1));
+  background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 199, 44, 0.1));
   border-radius: 50%;
   filter: blur(1px);
   animation: float 25s infinite ease-in-out alternate;
@@ -171,84 +170,6 @@ const socialLinks = [
   z-index: 1;
 }
 
-/* Newsletter Section */
-.newsletter-section {
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 24px;
-  padding: 3rem;
-  margin-bottom: 4rem;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.05);
-}
-
-.newsletter-content {
-  max-width: 600px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.newsletter-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  background: linear-gradient(45deg, #7C3AED, #C084FC);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.newsletter-description {
-  color: #475569;
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
-}
-
-.newsletter-form {
-  display: flex;
-  gap: 1rem;
-}
-
-.newsletter-input {
-  flex: 1;
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  background: rgba(255, 255, 255, 0.8);
-  transition: all 0.3s ease;
-}
-
-.newsletter-input:focus {
-  outline: none;
-  border-color: #7C3AED;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
-}
-
-.newsletter-button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  background: linear-gradient(45deg, #7C3AED, #A855F7);
-  color: white;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  border: none;
-  cursor: pointer;
-}
-
-.newsletter-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-}
-
-.arrow-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  stroke-width: 2;
-}
-
 /* Footer Grid */
 .footer-grid {
   display: grid;
@@ -267,17 +188,17 @@ const socialLinks = [
 }
 
 .gradient-text {
-  background: linear-gradient(45deg, #7C3AED, #C084FC);
+  background: linear-gradient(45deg, #FFD700, #FFC72C);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .logo-dot {
-  color: #7C3AED;
+  color: #FFD700;
 }
 
 .brand-description {
-  color: #475569;
+  color: #555;
   font-size: 1.1rem;
   line-height: 1.7;
   margin-bottom: 2rem;
@@ -300,7 +221,7 @@ const socialLinks = [
   left: 0;
   width: 40px;
   height: 3px;
-  background: linear-gradient(45deg, #7C3AED, #C084FC);
+  background: linear-gradient(45deg, #FFD700, #FFC72C);
   border-radius: 2px;
 }
 
@@ -312,7 +233,7 @@ const socialLinks = [
 }
 
 .footer-link {
-  color: #475569;
+  color: #555;
   text-decoration: none;
   font-size: 1.1rem;
   display: block;
@@ -321,7 +242,7 @@ const socialLinks = [
 }
 
 .footer-link:hover {
-  color: #7C3AED;
+  color: #FFD700;
   transform: translateX(4px);
 }
 
@@ -335,18 +256,18 @@ const socialLinks = [
 .contact-icon {
   width: 1.25rem;
   height: 1.25rem;
-  stroke: #7C3AED;
+  stroke: #FFD700;
   stroke-width: 2;
 }
 
 .contact-link {
-  color: #475569;
+  color: #555;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .contact-link:hover {
-  color: #7C3AED;
+  color: #FFD700;
 }
 
 .social-links {
@@ -362,17 +283,17 @@ const socialLinks = [
   height: 2.5rem;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.8);
-  color: #7C3AED;
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: #FFD700;
+  border: 1px solid rgba(255, 215, 0, 0.3);
   transition: all 0.3s ease;
 }
 
 .social-link:hover {
   transform: translateY(-2px);
-  background: linear-gradient(45deg, #7C3AED, #A855F7);
+  background: linear-gradient(45deg, #FFD700, #FFC72C);
   color: white;
   border-color: transparent;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
 }
 
 /* Bottom Bar */
@@ -381,11 +302,11 @@ const socialLinks = [
   justify-content: space-between;
   align-items: center;
   padding-top: 2rem;
-  border-top: 1px solid rgba(139, 92, 246, 0.2);
+  border-top: 1px solid rgba(255, 215, 0, 0.2);
 }
 
 .copyright-text {
-  color: #6b7280;
+  color: #777;
 }
 
 .legal-links {
@@ -394,13 +315,13 @@ const socialLinks = [
 }
 
 .legal-link {
-  color: #6b7280;
+  color: #777;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .legal-link:hover {
-  color: #7C3AED;
+  color: #FFD700;
 }
 
 /* Responsive Design */
@@ -416,17 +337,6 @@ const socialLinks = [
 }
 
 @media (max-width: 768px) {
-  .newsletter-form {
-    flex-direction: column;
-  }
-
-  .newsletter-button {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 640px) {
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 2rem;

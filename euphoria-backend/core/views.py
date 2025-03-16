@@ -3,10 +3,11 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Student, TestResult, ClassSection , FeePayment , FeeRecord,Attendance,Review
+from .models import Student, ClassSection, FeePayment, FeeRecord, Attendance, Review, Notice,ParentUploadedSemester, ParentUploadedSubjectResult, ParentUploadedResult, TestResult
 from rest_framework import status
 from datetime import datetime
 from .models import Notice
+import json
 
 
 
@@ -425,3 +426,134 @@ def delete_review(request, review_id):
     review.delete()
     return Response({"message": "Review deleted successfully"}, status=status.HTTP_200_OK)
 
+    # ✅ Parent Uploads Student Results
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def upload_student_result(request):
+    try:
+        print("Raw Request Data:", request.data)  # ✅ Debugging
+
+        student_id = request.data.get("student_id")
+        semester_name = request.data.get("semester")  # This is a string (e.g., "Semester 1")
+        year = request.data.get("year")
+        subjects_json = request.data.get("subjects")  # JSON string
+
+        print("Subjects JSON (Before Parsing):", subjects_json)  # ✅ Debugging
+
+        # ✅ Convert JSON string to Python list
+        try:
+            subjects = json.loads(subjects_json)
+        except json.JSONDecodeError:
+            return Response({"error": "Invalid subjects format"}, status=400)
+
+        # ✅ Validate subjects is a list
+        if not isinstance(subjects, list):
+            return Response({"error": "Subjects must be a list"}, status=400)
+
+        # ✅ Validate the student exists
+        student = Student.objects.filter(id=student_id).first()
+        if not student:
+            return Response({"error": "Invalid student ID"}, status=400)
+
+        # ✅ Fix: Ensure we retrieve/create a `ParentUploadedSemester` instance
+        semester_instance, created = ParentUploadedSemester.objects.get_or_create(
+            student=student,
+            semester=semester_name,
+            year=year,
+            uploaded_by=request.user
+        )
+
+        print("Semester Instance:", semester_instance)  # ✅ Debugging
+
+        # ✅ Save result document if uploaded
+        document = request.FILES.get("document")
+        if document:
+            file_path = default_storage.save(f"results/{document.name}", document)
+        else:
+            file_path = None
+
+        # ✅ Save results in the database (link to semester instance)
+        result = ParentUploadedResult.objects.create(
+            semester=semester_instance,  # 🔥 Now linking to the correct instance
+            document=file_path
+        )
+
+        # ✅ Save each subject and marks
+        for sub in subjects:
+            if not all(k in sub for k in ["subject", "marks_obtained", "total_marks"]):
+                return Response({"error": "Invalid subject data"}, status=400)
+
+            ParentUploadedSubjectResult.objects.create(
+                semester=semester_instance,  # 🔥 Link to the semester instance
+                subject=sub["subject"],
+                marks_obtained=int(sub["marks_obtained"]),
+                total_marks=int(sub["total_marks"])
+            )
+
+        return Response({"message": "Results uploaded successfully!"}, status=201)
+
+    except Exception as e:
+        print("Error:", str(e))  # ✅ Debugging
+        return Response({"error": "Something went wrong"}, status=500)
+
+
+
+
+# ✅ Teacher Views Uploaded Results
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_uploaded_results(request):
+    if request.user.user_type != "teacher":
+        return Response({"error": "Unauthorized"}, status=403)
+
+    results = ParentUploadedSemester.objects.all().values(
+    "id", "student_id", "student__name", "semester", "year", "uploaded_by__first_name", "uploaded_at"
+)
+
+    return Response({"results": list(results)}, status=200)
+
+
+# ✅ Teacher Views Specific Student's Uploaded Result Details
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_uploaded_result_details(request, semester_id):
+    if request.user.user_type != "teacher":
+        return Response({"error": "Unauthorized"}, status=403)
+
+    semester = ParentUploadedSemester.objects.filter(id=semester_id).first()
+    if not semester:
+        return Response({"error": "Result not found"}, status=404)
+
+    subjects = ParentUploadedSubjectResult.objects.filter(semester=semester).values(
+        "subject", "marks_obtained", "total_marks"
+    )
+
+    document = ParentUploadedResult.objects.filter(semester=semester).first()
+    document_url = document.document.url if document and document.document else None
+
+    result_data = {
+        "student_name": semester.student.name,
+        "semester": semester.semester,
+        "year": semester.year,
+        "uploaded_by": semester.uploaded_by.first_name,
+        "subjects": list(subjects),
+        "document": document_url
+    }
+
+    return Response(result_data, status=200)
+
+
+# ✅ Parent Deletes Uploaded Result
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_uploaded_result(request, semester_id):
+    if request.user.user_type != "parent":
+        return Response({"error": "Unauthorized"}, status=403)
+
+    semester = ParentUploadedSemester.objects.filter(id=semester_id, uploaded_by=request.user).first()
+    if not semester:
+        return Response({"error": "Result not found or unauthorized"}, status=404)
+
+    semester.delete()
+    return Response({"message": "Result deleted successfully"}, status=200)

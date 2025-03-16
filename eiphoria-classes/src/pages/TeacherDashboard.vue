@@ -39,19 +39,20 @@
       <div v-else class="dashboard-content">
         <!-- Quick Stats -->
         <TeacherStats :students="students" />
-        
+
         <!-- Students Management -->
-              <StudentsTable 
-        :students="students"
-        @view-details="viewStudentDetails"
-        @add-test="openTestModal"
-        @manage-fees="manageStudentFees"
-        @manage-attendance="manageStudentAttendance"
-      />
+        <StudentsTable
+          :students="students"
+          @view-details="viewStudentDetails"
+          @add-test="openTestModal"
+          @view-results="openViewResultsModal"
+          @manage-fees="manageStudentFees"
+          @manage-attendance="manageStudentAttendance"
+        />
       </div>
 
       <!-- Modals -->
-      <AddTestModal 
+      <AddTestModal
         v-if="showTestModal"
         :student="selectedStudent"
         @close="closeTestModal"
@@ -77,7 +78,11 @@
         @close="closeAttendanceModal"
         @update="refreshData"
       />
-      
+      <ViewStudentResultsModal
+        v-if="showViewResultsModal"
+        :student="selectedStudent"
+        @close="showViewResultsModal = false"
+      />
       <NoticeBoardModal
         v-if="showNoticeBoardModal"
         @close="closeNoticeBoardModal"
@@ -88,47 +93,57 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
 
-import TeacherStats from '@/components/TeacherDashboradComponents/TeacherStats.vue';
-import StudentsTable from '@/components/TeacherDashboradComponents/StudentsTable.vue';
-import AddTestModal from '@/components/TeacherDashboradComponents/AddTestModal.vue';
-import StudentDetailsModal from '@/components/TeacherDashboradComponents/StudentDetailsModal.vue';
-import FeesModal from '@/components/TeacherDashboradComponents/FeesModal.vue';
-import AttendanceModal from '@/components/TeacherDashboradComponents/AttendanceModal.vue';
-import NoticeBoardModal from '@/components/TeacherDashboradComponents/NoticeBoardModal.vue';
+import TeacherStats from "@/components/TeacherDashboradComponents/TeacherStats.vue";
+import StudentsTable from "@/components/TeacherDashboradComponents/StudentsTable.vue";
+import AddTestModal from "@/components/TeacherDashboradComponents/AddTestModal.vue";
+import StudentDetailsModal from "@/components/TeacherDashboradComponents/StudentDetailsModal.vue";
+import FeesModal from "@/components/TeacherDashboradComponents/FeesModal.vue";
+import AttendanceModal from "@/components/TeacherDashboradComponents/AttendanceModal.vue";
+import NoticeBoardModal from "@/components/TeacherDashboradComponents/NoticeBoardModal.vue";
+import ViewStudentResultsModal from "@/components/TeacherDashboradComponents/ViewStudentResultsModal.vue";
 
 const router = useRouter();
 const loading = ref(true);
 const students = ref([]);
-const teacherName = ref('');
+const teacherName = ref("");
 const showTestModal = ref(false);
 const showFeesModal = ref(false);
 const showAttendanceModal = ref(false);
 const showNoticeBoardModal = ref(false);
 const selectedStudent = ref(null);
 const selectedStudentDetails = ref(null);
+const showViewResultsModal = ref(false);
 
 onMounted(async () => {
   await refreshData();
 });
 
+const openViewResultsModal = (student) => {
+  selectedStudent.value = student;
+  showViewResultsModal.value = true;
+};
+
 const refreshData = async () => {
   try {
-    const token = localStorage.getItem('access_token');
-    const response = await axios.get('http://127.0.0.1:8000/api/teacher-dashboard/', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    
+    const token = localStorage.getItem("access_token");
+    const response = await axios.get(
+      "http://127.0.0.1:8000/api/teacher-dashboard/",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
     students.value = response.data.students;
-    teacherName.value = response.data.teacher_name || 'Teacher';
+    teacherName.value = response.data.teacher_name || "Teacher";
   } catch (error) {
     console.error("Error fetching data:", error);
     if (error.response?.status === 401) {
       localStorage.clear();
-      router.push('/');
+      router.push("/");
     }
   } finally {
     loading.value = false;
@@ -137,13 +152,16 @@ const refreshData = async () => {
 
 const viewStudentDetails = async (student) => {
   try {
-    const token = localStorage.getItem('access_token');
-    const response = await axios.get(`http://127.0.0.1:8000/api/student/${student.id}/details/`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    const token = localStorage.getItem("access_token");
+    const response = await axios.get(
+      `http://127.0.0.1:8000/api/student/${student.id}/details/`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     selectedStudentDetails.value = response.data;
   } catch (error) {
-    console.error('Error fetching student details:', error);
+    console.error("Error fetching student details:", error);
   }
 };
 
@@ -159,18 +177,22 @@ const closeTestModal = () => {
 
 const submitTestResult = async (testData) => {
   try {
-    const token = localStorage.getItem('access_token');
-    await axios.post('http://127.0.0.1:8000/api/test-results/add/', {
-      student_id: selectedStudent.value.id,
-      ...testData
-    }, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    
+    const token = localStorage.getItem("access_token");
+    await axios.post(
+      "http://127.0.0.1:8000/api/test-results/add/",
+      {
+        student_id: selectedStudent.value.id,
+        ...testData,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
     showTestModal.value = false;
     await refreshData();
   } catch (error) {
-    console.error('Error adding test result:', error);
+    console.error("Error adding test result:", error);
     throw error;
   }
 };
@@ -205,19 +227,19 @@ const closeNoticeBoardModal = () => {
 
 const logout = () => {
   localStorage.clear();
-  router.push('/');
+  router.push("/");
 };
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
 
 .dashboard {
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f3ff, #ede9fe);
   position: relative;
   overflow: hidden;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
 }
 
 .animated-bg {
@@ -232,25 +254,75 @@ const logout = () => {
 
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(139, 92, 246, 0.1), rgba(192, 132, 252, 0.1));
+  background: linear-gradient(
+    45deg,
+    rgba(139, 92, 246, 0.1),
+    rgba(192, 132, 252, 0.1)
+  );
   border-radius: 50%;
   filter: blur(1px);
   animation: float 25s infinite ease-in-out alternate;
 }
 
-.floating-element:nth-child(1) { width: 300px; height: 300px; top: 10%; left: 10%; }
-.floating-element:nth-child(2) { width: 200px; height: 200px; top: 60%; left: 20%; }
-.floating-element:nth-child(3) { width: 150px; height: 150px; top: 30%; left: 60%; }
-.floating-element:nth-child(4) { width: 250px; height: 250px; top: 70%; left: 70%; }
-.floating-element:nth-child(5) { width: 180px; height: 180px; top: 40%; left: 40%; }
-.floating-element:nth-child(6) { width: 220px; height: 220px; top: 20%; left: 80%; }
-.floating-element:nth-child(7) { width: 160px; height: 160px; top: 80%; left: 30%; }
-.floating-element:nth-child(8) { width: 280px; height: 280px; top: 50%; left: 85%; }
+.floating-element:nth-child(1) {
+  width: 300px;
+  height: 300px;
+  top: 10%;
+  left: 10%;
+}
+.floating-element:nth-child(2) {
+  width: 200px;
+  height: 200px;
+  top: 60%;
+  left: 20%;
+}
+.floating-element:nth-child(3) {
+  width: 150px;
+  height: 150px;
+  top: 30%;
+  left: 60%;
+}
+.floating-element:nth-child(4) {
+  width: 250px;
+  height: 250px;
+  top: 70%;
+  left: 70%;
+}
+.floating-element:nth-child(5) {
+  width: 180px;
+  height: 180px;
+  top: 40%;
+  left: 40%;
+}
+.floating-element:nth-child(6) {
+  width: 220px;
+  height: 220px;
+  top: 20%;
+  left: 80%;
+}
+.floating-element:nth-child(7) {
+  width: 160px;
+  height: 160px;
+  top: 80%;
+  left: 30%;
+}
+.floating-element:nth-child(8) {
+  width: 280px;
+  height: 280px;
+  top: 50%;
+  left: 85%;
+}
 
 @keyframes float {
-  0% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(3deg); }
-  100% { transform: translateY(-40px) rotate(-3deg); }
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(3deg);
+  }
+  100% {
+    transform: translateY(-40px) rotate(-3deg);
+  }
 }
 
 .dashboard-container {
@@ -290,7 +362,7 @@ const logout = () => {
 }
 
 h1 {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 2rem;
   font-weight: 700;
   color: #1e293b;
@@ -368,7 +440,9 @@ h1 {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .dashboard-content {

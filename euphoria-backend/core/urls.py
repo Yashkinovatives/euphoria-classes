@@ -1,9 +1,10 @@
 from django.urls import path
 from core.views import (
     signup, login, teacher_dashboard, parent_dashboard,
-    enroll_student, add_test_result, get_student_results, get_students, 
-    get_class_sections, add_monthly_fee, get_monthly_fee_status,set_total_fees,mark_attendance,update_attendance,
-    get_student_attendance,add_notice, get_notices, delete_notice, update_notice,get_reviews,add_review,delete_review
+    enroll_student, add_test_result, get_student_results, get_students,
+    get_class_sections, add_monthly_fee, get_monthly_fee_status, set_total_fees, mark_attendance, update_attendance,
+    get_student_attendance, add_notice, get_notices, delete_notice, update_notice, get_reviews, add_review, delete_review,
+    upload_student_result, get_uploaded_results, get_uploaded_result_details, delete_uploaded_result
 )
 
 urlpatterns = [
@@ -29,5 +30,12 @@ urlpatterns = [
     path('reviews/', get_reviews, name='get_reviews'),
     path('reviews/add/', add_review, name='add_review'),
     path('teacher/delete-review/<int:review_id>/', delete_review, name='delete_review'),
-]
+    path('parent/upload-result/', upload_student_result, name='upload_student_result'),
 
+    # Teacher View Results
+    path('teacher/view-results/', get_uploaded_results, name='get_uploaded_results'),
+    path('teacher/view-result/<int:semester_id>/', get_uploaded_result_details, name='get_uploaded_result_details'),
+
+    # Parent Delete Results
+    path('parent/delete-result/<int:semester_id>/', delete_uploaded_result, name='delete_uploaded_result'),
+]

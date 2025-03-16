@@ -88,12 +88,8 @@
                 >
                   <span>📝</span> Add Test
                 </button>
-                <button 
-                  @click="$emit('view-details', student)"
-                  class="btn btn-secondary"
-                >
-                  <span>👁️</span> View
-                </button>
+                <button @click="$emit('view-results', student)">View</button>
+
                 <button 
                   @click="$emit('manage-fees', student)"
                   class="btn btn-tertiary"

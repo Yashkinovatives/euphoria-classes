@@ -1,72 +1,69 @@
 <template>
   <section class="hero">
-    <!-- Animated Background Elements -->
     <div class="animated-bg">
       <div v-for="n in 8" :key="n" class="floating-element"></div>
     </div>
 
-    <!-- Main Content -->
     <div class="content-container">
-      <div class="hero-content" v-motion 
-           :initial="{ opacity: 0, y: 100 }" 
-           :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 50, damping: 15 } }">
-        
+      <div class="hero-content" v-motion
+        :initial="{ opacity: 0, y: 100 }"
+        :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 50, damping: 15 } }">
+
         <div class="badge-container">
-          <div class="badge" v-motion 
-               :initial="{ scale: 0, opacity: 0 }" 
-               :enter="{ scale: 1, opacity: 1, transition: { delay: 300 } }">
-            <span class="badge-icon">📚</span>
-            <span>Transform Your Learning Journey</span>
+          <div class="badge" v-motion
+            :initial="{ scale: 0, opacity: 0 }"
+            :enter="{ scale: 1, opacity: 1, transition: { delay: 300 } }">
+            <span class="badge-icon">🚀</span>
+            <span>Elevate Your Learning</span>
           </div>
         </div>
 
         <h1 class="title">
-          Ignite Your Knowledge with
+          Step into the Future with
           <div class="gradient-text-wrapper">
-            <span class="gradient-text">Smart Educational Tools</span>
+            <span class="gradient-text">Limitless Possibilities</span>
           </div>
         </h1>
 
         <p class="description">
-          Master new skills through structured curriculum, interactive lessons, 
-          and academic resources designed by education experts for your academic success.
+          Unlock the full potential of your skills with interactive courses,
+          AI-driven insights, and personalized guidance tailored to your unique learning journey.
         </p>
 
         <div class="cta-group">
           <button class="primary-btn" @click="$router.push('/Login')">
-            <span class="btn-icon">🎓</span>
-            <span>Start Learning</span>
+            <span class="btn-icon">✨</span>
+            <span>Get Started</span>
           </button>
-          
+
           <button class="secondary-btn" @click="$router.push('/courses')">
-            <span>Browse Curriculum</span>
+            <span>Explore Courses</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
+              <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </button>
         </div>
-        
+
         <div class="stats-container">
-          <div class="stat-item" v-for="(stat, index) in stats" :key="index" 
-               v-motion :initial="{ opacity: 0, y: 20 }" 
-               :enter="{ opacity: 1, y: 0, transition: { delay: 300 + (index * 100) } }">
+          <div class="stat-item" v-for="(stat, index) in stats" :key="index"
+            v-motion :initial="{ opacity: 0, y: 20 }"
+            :enter="{ opacity: 1, y: 0, transition: { delay: 300 + (index * 100) } }">
             <h3 class="stat-value">{{ stat.value }}</h3>
             <p class="stat-label">{{ stat.label }}</p>
           </div>
         </div>
       </div>
 
-      <!-- Feature Cards -->
       <div class="features-section">
-        <h2 class="features-title">Educational Excellence</h2>
-        
+        <h2 class="features-title">Why Choose Our Platform</h2>
+
         <div class="features-grid">
-          <div v-for="(feature, index) in features" 
-               :key="feature.title"
-               class="feature-card"
-               v-motion
-               :initial="{ opacity: 0, y: 50 }"
-               :enter="{ opacity: 1, y: 0, transition: { delay: index * 150 } }">
+          <div v-for="(feature, index) in features"
+            :key="feature.title"
+            class="feature-card"
+            v-motion
+            :initial="{ opacity: 0, y: 50 }"
+            :enter="{ opacity: 1, y: 0, transition: { delay: index * 150 } }">
             <div class="feature-icon-container" :style="{ background: feature.bgColor }">
               <div class="feature-icon">{{ feature.icon }}</div>
             </div>
@@ -79,9 +76,8 @@
       </div>
     </div>
   </section>
-  <AboutUsComponent/>
-  <!-- <FeaturedClasses/> -->
-  <ScrollingSection/>
+  <AboutUsComponent />
+  <ScrollingSection />
 </template>
 
 <script setup>
@@ -89,43 +85,44 @@
 import AboutUsComponent from '@/components/HomePageComponents/AboutUsComponent.vue';
 import ScrollingSection from '@/components/HomePageComponents/ScrollingSection.vue';
 
+// Uncomment this section to properly define stats
 const stats = [
-  { value: '50K+', label: 'Enrolled Students' },
-  { value: '200+', label: 'Accredited Courses' },
-  { value: '95%', label: 'Graduation Rate' }
+  { value: '50K+', label: 'Active Learners' },
+  { value: '200+', label: 'Expert Courses' },
+  { value: '95%', label: 'Success Rate' }
 ];
 
 const features = [
   {
-    icon: '📊',
-    title: 'Adaptive Learning',
-    description: 'Our intelligent system creates personalized learning paths based on your strengths and areas for improvement, ensuring optimal educational outcomes.',
-    bgColor: 'linear-gradient(135deg, #F59E0B, #FBBF24)'
+    icon: '🎯',
+    title: 'Practical Oriented Lectures',
+    description: 'Practical Oriented Lectures focus on applying knowledge, not just memorizing it, ensuring you gain skills ready for real-world use',
+    bgColor: 'linear-gradient(135deg, #FFD700, #FFC72C)' // Yellow gradient for AI
   },
   {
-    icon: '📝',
-    title: 'Interactive Exercises',
-    description: 'Reinforce concepts through hands-on practice with immediate feedback, helping you master complex subjects through practical application.',
-    bgColor: 'linear-gradient(135deg, #D97706, #F59E0B)'
+    icon: '⚡',
+    title: 'All Inclusive Study Material',
+    description: 'Everything you need, in one place: Our materials offer a complete learning experience, from core concepts to advanced applications.',
+    bgColor: 'linear-gradient(135deg, #FFECB3, #FFE082)' // Lighter yellow gradient for performance
   },
   {
-    icon: '👨‍👩‍👧‍👦',
-    title: 'Collaborative Learning',
-    description: 'Connect with fellow students and educators in virtual classrooms, discussion forums, and group projects to enhance your understanding through diverse perspectives.',
-    bgColor: 'linear-gradient(135deg, #F59E0B, #FCD34D)'
+    icon: '🌎',
+    title: 'Interactive Quizzes & Assessments',
+    description: 'Test your knowledge and track your progress with engaging quizzes and assessments, designed to reinforce learning.',
+    bgColor: 'linear-gradient(135deg, #FFEB3B, #FFD600)' // Brighter yellow gradient for community
   },
   {
-    icon: '📚',
-    title: 'Comprehensive Library',
-    description: 'Access our extensive collection of textbooks, research papers, and educational resources to deepen your knowledge and excel in your academic pursuits.',
-    bgColor: 'linear-gradient(135deg, #B45309, #F59E0B)'
+    icon: '🔍',
+    title: 'Flexible Learning Schedule',
+    description: 'Learn on your own terms: Our flexible schedules allow you to study when it suits you, fitting education into your life.',
+    bgColor: 'linear-gradient(135deg, #FFF9C4, #FFF59D)' // Very light yellow gradient for resources
   }
 ]
 </script>
 
 <style scoped>
-/* Import Sans-Serif Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap');
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
 /* Base Styles */
 * {
@@ -136,12 +133,12 @@ const features = [
 
 .hero {
   min-height: 100vh;
-  background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
+  background: linear-gradient(135deg, hsl(55, 100%, 95%), #f1f0dc); /* Light yellow background */
   position: relative;
   overflow: hidden;
-  padding: 4rem 2rem;
-  color: #1e293b;
-  font-family: 'Inter', sans-serif;
+  padding: 4rem 1rem; /* Reduced side padding for mobile */
+  color: #333; /* Darker text for better contrast */
+  font-family: 'Outfit', sans-serif;
   letter-spacing: -0.02em;
 }
 
@@ -158,20 +155,20 @@ const features = [
 
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1));
+  background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 199, 44, 0.1)); /* Yellow floating elements */
   border-radius: 50%;
   filter: blur(1px);
   animation: float 25s infinite ease-in-out alternate;
 }
 
-.floating-element:nth-child(1) { width: 300px; height: 300px; top: 5%; left: 10%; animation-delay: 0s; }
-.floating-element:nth-child(2) { width: 200px; height: 200px; top: 65%; left: 85%; animation-delay: -4s; }
-.floating-element:nth-child(3) { width: 350px; height: 350px; top: 35%; left: 55%; animation-delay: -8s; }
-.floating-element:nth-child(4) { width: 150px; height: 150px; top: 75%; left: 15%; animation-delay: -12s; }
-.floating-element:nth-child(5) { width: 250px; height: 250px; top: 20%; left: 75%; animation-delay: -16s; }
-.floating-element:nth-child(6) { width: 180px; height: 180px; top: 80%; left: 45%; animation-delay: -5s; }
-.floating-element:nth-child(7) { width: 220px; height: 220px; top: 15%; left: 35%; animation-delay: -9s; }
-.floating-element:nth-child(8) { width: 270px; height: 270px; top: 60%; left: 70%; animation-delay: -13s; }
+.floating-element:nth-child(1) { width: 20%; height: 20vw; top: 5%; left: 10%; animation-delay: 0s; }
+.floating-element:nth-child(2) { width: 15%; height: 15vw; top: 65%; left: 85%; animation-delay: -4s; }
+.floating-element:nth-child(3) { width: 25%; height: 25vw; top: 35%; left: 55%; animation-delay: -8s; }
+.floating-element:nth-child(4) { width: 10%; height: 10vw; top: 75%; left: 15%; animation-delay: -12s; }
+.floating-element:nth-child(5) { width: 18%; height: 18vw; top: 20%; left: 75%; animation-delay: -16s; }
+.floating-element:nth-child(6) { width: 12%; height: 12vw; top: 80%; left: 45%; animation-delay: -5s; }
+.floating-element:nth-child(7) { width: 14%; height: 14vw; top: 15%; left: 35%; animation-delay: -9s; }
+.floating-element:nth-child(8) { width: 20%; height: 20vw; top: 60%; left: 70%; animation-delay: -13s; }
 
 @keyframes float {
   0% { transform: translateY(0) rotate(0deg); }
@@ -181,57 +178,61 @@ const features = [
 
 /* Main Content */
 .content-container {
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 6rem;
+  gap: 4rem; /* Reduced gap for mobile */
+  padding: 0 1rem; /* Added padding for all screen sizes */
 }
 
 .hero-content {
+  width: 100%;
   max-width: 750px;
   margin: 0 auto;
   text-align: center;
-  padding-top: 2rem;
+  padding-top: 1rem; /* Reduced top padding for mobile */
 }
 
 .badge-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem; /* Slightly reduced margin for mobile */
 }
 
 .badge {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1.25rem;
-  background: rgba(245, 158, 11, 0.15);
+  padding: 0.6rem 1rem; /* Slightly smaller padding for mobile */
+  background: rgba(255, 215, 0, 0.15);
   border-radius: 100px;
   backdrop-filter: blur(10px);
-  font-family: 'Roboto', sans-serif;
-  font-size: 1rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(0.8rem, 2.5vw, 1rem); /* Responsive font size */
   font-weight: 600;
   letter-spacing: 0.02em;
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);
   gap: 0.5rem;
-  color: #92400E;
+  color: #B8860B; 
+  width: fit-content; /* Ensure the badge only takes the space it needs */
 }
 
 .badge-icon {
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 3vw, 1.25rem); /* Responsive icon size */
 }
 
 .title {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 4.5rem;
+  font-size: clamp(2rem, 6vw, 4.5rem); /* Responsive font size */
   font-weight: 700;
   line-height: 1.1;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem; /* Reduced margin for mobile */
   letter-spacing: -0.03em;
-  color: #1e293b;
+  color: #333;
 }
 
 .gradient-text-wrapper {
@@ -240,7 +241,7 @@ const features = [
 }
 
 .gradient-text {
-  background: linear-gradient(45deg, #D97706, #FBBF24);
+  background: linear-gradient(45deg, #FFD700, #FFC72C); /* Yellow gradient text */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 800;
@@ -254,15 +255,15 @@ const features = [
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(45deg, #D97706, #FBBF24);
+  background: linear-gradient(45deg, #FFD700, #FFC72C); /* Yellow gradient underline */
   border-radius: 4px;
 }
 
 .description {
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 3vw, 1.25rem); /* Responsive font size */
   font-weight: 400;
-  color: #475569;
-  margin-bottom: 2.5rem;
+  color: #555; /* Darker grey description */
+  margin-bottom: 2rem; /* Reduced margin for mobile */
   line-height: 1.7;
   letter-spacing: -0.01em;
   max-width: 700px;
@@ -274,102 +275,105 @@ const features = [
   display: flex;
   gap: 1rem;
   justify-content: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem; /* Reduced margin for mobile */
+  flex-wrap: wrap; /* Allow buttons to wrap on very small screens */
 }
 
-.primary-btn {
-  padding: 1.25rem 2.5rem;
+.primary-btn, .secondary-btn {
+  padding: clamp(0.8rem, 2.5vw, 1.25rem) clamp(1.5rem, 5vw, 2.5rem); /* Responsive padding */
   border-radius: 100px;
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: clamp(0.9rem, 2.5vw, 1.125rem); /* Responsive font size */
   display: flex;
   align-items: center;
   gap: 0.75rem;
   transition: all 0.3s ease;
-  background: linear-gradient(45deg, #D97706, #F59E0B);
-  color: white;
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
   letter-spacing: 0;
   border: none;
   cursor: pointer;
+  min-width: 140px; /* Minimum width for buttons */
+  justify-content: center; /* Center content on mobile */
+}
+
+.primary-btn {
+  background: linear-gradient(45deg, #FFD700, #FFC72C); /* Yellow primary button */
+  color: #333; /* Darker text */
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
 }
 
 .primary-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
 }
 
 .btn-icon {
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 3vw, 1.25rem); /* Responsive icon size */
 }
 
 .secondary-btn {
-  padding: 1.25rem 2.5rem;
-  border-radius: 100px;
-  font-weight: 600;
-  font-size: 1.125rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  transition: all 0.3s ease;
   background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  color: #B45309;
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
-  cursor: pointer;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: #B8860B; /* Dark goldenrod for secondary */
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.1);
 }
 
 .secondary-btn:hover {
   background: rgba(255, 255, 255, 0.95);
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.2);
 }
 
 /* Stats Section */
 .stats-container {
   display: flex;
   justify-content: center;
-  gap: 3.5rem;
+  gap: clamp(1.5rem, 5vw, 3.5rem); /* Responsive gap */
   margin-top: 2rem;
+  flex-wrap: wrap; /* Allow stats to wrap on mobile */
 }
 
 .stat-item {
   text-align: center;
+  min-width: 120px; /* Minimum width for stat items */
+  margin-bottom: 1rem; /* Add bottom margin for when they wrap */
 }
 
 .stat-value {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive font size */
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(45deg, #D97706, #FBBF24);
+  background: linear-gradient(45deg, #FFD700, #FFC72C); 
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .stat-label {
-  font-size: 1rem;
-  color: #475569;
+  font-size: clamp(0.8rem, 2.5vw, 1rem); /* Responsive font size */
+  color: #555;
   font-weight: 500;
 }
 
 /* Features Section */
 .features-section {
   width: 100%;
+  padding: 0 0.5rem; /* Add slight padding */
 }
 
 .features-title {
   text-align: center;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive font size */
   font-weight: 700;
   margin-bottom: 3rem;
   letter-spacing: -0.02em;
-  color: #1e293b;
+  color: #333;
   position: relative;
   display: inline-block;
   left: 50%;
   transform: translateX(-50%);
+  width: 100%; /* Ensure full width for text centering */
+  max-width: 90vw; /* Limit width on larger screens */
 }
 
 .features-title::after {
@@ -378,47 +382,48 @@ const features = [
   bottom: -15px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80px;
+  width: clamp(50px, 15vw, 80px); /* Responsive width */
   height: 4px;
-  background: linear-gradient(45deg, #D97706, #FBBF24);
+  background: linear-gradient(45deg, #FFD700, #FFC72C); /* Yellow gradient feature title underline */
   border-radius: 4px;
 }
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Smaller minimum width */
+  gap: 1.5rem; /* Reduced gap for mobile */
+  width: 100%;
 }
 
 .feature-card {
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
   border-radius: 24px;
-  padding: 2.5rem;
+  padding: clamp(1.5rem, 5vw, 2.5rem); /* Responsive padding */
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.1); /* Yellow border */
   height: 100%;
 }
 
 .feature-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 14px 40px rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.2);
+  box-shadow: 0 14px 40px rgba(255, 215, 0, 0.12);
+  border: 1px solid rgba(255, 215, 0, 0.2); /* Slightly darker yellow border */
 }
 
 .feature-icon-container {
-  width: 70px;
-  height: 70px;
-  border-radius: 20px;
+  width: clamp(50px, 12vw, 70px); /* Responsive size */
+  height: clamp(50px, 12vw, 70px); /* Responsive size */
+  border-radius: 16px; /* Slightly smaller radius for mobile */
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem; /* Reduced margin for mobile */
   transition: all 0.3s ease;
-  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.15);
+  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.15); /* Yellow icon container shadow */
 }
 
 .feature-card:hover .feature-icon-container {
@@ -426,7 +431,7 @@ const features = [
 }
 
 .feature-icon {
-  font-size: 1.75rem;
+  font-size: clamp(1.3rem, 4vw, 1.75rem); /* Responsive font size */
 }
 
 .feature-content {
@@ -437,49 +442,70 @@ const features = [
 
 .feature-title {
   font-family: 'Space Grotesk', sans-serif;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
+  margin-bottom: 0.75rem; /* Reduced margin for mobile */
+  font-size: clamp(1.2rem, 3.5vw, 1.5rem); /* Responsive font size */
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #1e293b;
+  color: #333;
 }
 
 .feature-description {
-  font-size: 1.125rem;
-  color: #475569;
+  font-size: clamp(0.9rem, 3vw, 1.125rem); /* Responsive font size */
+  color: #555;
   line-height: 1.6;
   font-weight: 400;
   flex: 1;
 }
 
-/* Responsive Design */
+/* Media Queries - I've adjusted the existing ones and added some new breakpoints */
+@media (max-width: 1200px) {
+  .content-container {
+    gap: 4rem;
+  }
+}
+
+/* Tablet and smaller desktop screens */
 @media (max-width: 1024px) {
+  .hero {
+    padding: 3rem 1rem;
+  }
+  
+  .content-container {
+    gap: 3.5rem;
+  }
+  
   .features-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/* Tablet portrait and large mobile */
 @media (max-width: 768px) {
   .hero {
-    padding: 3rem 1.5rem;
+    padding: 2.5rem 1rem;
+  }
+
+  .content-container {
+    gap: 3rem;
   }
 
   .title {
-    font-size: 3.25rem;
+    margin-bottom: 1.25rem;
   }
 
   .description {
-    font-size: 1.125rem;
+    margin-bottom: 1.75rem;
   }
 
   .cta-group {
     flex-direction: column;
     width: 100%;
-    max-width: 320px;
+    max-width: 280px;
     margin-left: auto;
     margin-right: auto;
+    gap: 0.75rem;
   }
-  
+
   .primary-btn, .secondary-btn {
     width: 100%;
     justify-content: center;
@@ -487,7 +513,11 @@ const features = [
 
   .stats-container {
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.25rem;
+  }
+
+  .stat-item {
+    margin-bottom: 0;
   }
 
   .features-grid {
@@ -495,29 +525,68 @@ const features = [
   }
 }
 
+/* Small mobile devices */
 @media (max-width: 480px) {
   .hero {
-    padding: 2rem 1rem;
+    padding: 2rem 0.75rem;
   }
 
-  .title {
-    font-size: 2.75rem;
+  .content-container {
+    gap: 2.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .hero-content {
+    padding-top: 0.5rem;
   }
 
   .badge {
-    font-size: 0.875rem;
+    padding: 0.5rem 0.875rem;
   }
 
   .feature-card {
-    padding: 1.75rem;
-  }
-  
-  .feature-title {
-    font-size: 1.25rem;
+    padding: 1.5rem;
+    border-radius: 20px;
   }
 
-  .feature-description {
-    font-size: 1rem;
+  .feature-icon-container {
+    margin-bottom: 1rem;
+    border-radius: 12px;
+  }
+
+  .feature-title {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Very small mobile devices */
+@media (max-width: 360px) {
+  .hero {
+    padding: 1.5rem 0.5rem;
+  }
+  
+  .content-container {
+    gap: 2rem;
+  }
+  
+  .badge-container {
+    margin-bottom: 1rem;
+  }
+  
+  .title {
+    margin-bottom: 1rem;
+  }
+  
+  .description {
+    margin-bottom: 1.5rem;
+  }
+  
+  .cta-group {
+    margin-bottom: 2rem;
+  }
+  
+  .features-title {
+    margin-bottom: 2rem;
   }
 }
 </style>

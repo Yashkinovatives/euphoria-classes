@@ -1,7 +1,6 @@
 <template>
   <div class="auth-wrapper">
     <div class="auth-container">
-      <!-- Left Panel - Image Section -->
       <div class="image-panel">
         <div class="logo">
           <img src="/logo.svg" alt="Logo" />
@@ -18,7 +17,7 @@
         </div>
       </div>
       
-      <!-- Right Panel - Form Section -->
+      
       <div class="form-panel">
         <div class="back-link">
           <a href="#" @click.prevent="goBack">
@@ -38,19 +37,19 @@
           </p>
           
           <form @submit.prevent="handleSubmit" class="auth-form">
-            <!-- Name Field (Only for Signup) -->
+            
             <div class="form-group" v-if="!isLogin">
               <label>Full Name</label>
               <input type="text" v-model="form.name" placeholder="Enter your full name" required />
             </div>
 
-            <!-- Email Field -->
+            
             <div class="form-group">
               <label>Email Address</label>
               <input type="email" v-model="form.email" placeholder="Enter your email" required />
             </div>
 
-            <!-- Password Field -->
+            
             <div class="form-group">
               <label>Password</label>
               <div class="password-input">
@@ -66,7 +65,6 @@
               </div>
             </div>
 
-            <!-- Role Selection (Available for Both Signup & Login) -->
             <div class="form-group">
               <label>Select Role</label>
               <div class="role-buttons">
@@ -108,7 +106,7 @@ const form = reactive({
   name: "",
   email: "",
   password: "",
-  user_type: "teacher", // Default role
+  user_type: "teacher",
 });
 
 const roles = [
