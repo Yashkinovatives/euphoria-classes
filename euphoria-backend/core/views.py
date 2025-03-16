@@ -3,11 +3,18 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Student, ClassSection, FeePayment, FeeRecord, Attendance, Review, Notice,ParentUploadedSemester, ParentUploadedSubjectResult, ParentUploadedResult, TestResult
+from .models import Student, CustomUser  ,ClassSection, FeePayment, FeeRecord, Attendance, Review, Notice,ParentUploadedSemester, ParentUploadedSubjectResult, ParentUploadedResult, TestResult
 from rest_framework import status
+from django.core.mail import send_mail
 from datetime import datetime
 from .models import Notice
 import json
+from django.conf import settings
+import random
+import string
+from django.utils.crypto import get_random_string
+from django.core.cache import cache
+
 
 
 
@@ -24,23 +31,91 @@ def get_tokens_for_user(user):
     }
 
 
+# ✅ Teacher Signup Requires Approval Code
+from django.core.cache import cache
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils.crypto import get_random_string
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import CustomUser
+
 @api_view(['POST'])
 def signup(request):
     data = request.data
+    email = data['email'].lower()  # Convert email to lowercase for consistency
 
-    if User.objects.filter(email=data['email']).exists():
+    if CustomUser.objects.filter(email=email).exists():
         return Response({"error": "User already exists"}, status=400)
 
-    user = User.objects.create_user(
-        username=data['email'], 
-        email=data['email'], 
-        password=data['password'],
-        first_name=data['name'],  
-        user_type=data['user_type']
-    )
-    user.save()
+    # ✅ If user is a teacher, generate an approval code
+    if data['user_type'] == "teacher":
+        approval_code = get_random_string(6, allowed_chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
-    return Response({"message": f"{data['user_type']} registered successfully"}, status=201)
+        # ✅ Store approval code in Django cache for 30 minutes
+        cache_key = f"approval_code_{email}"
+        cache.set(cache_key, approval_code, timeout=1800)
+
+        # ✅ Print to verify cache storage
+        print(f"Stored Approval Code for {email}: {cache.get(cache_key)}")  
+
+        # ✅ Create teacher but keep inactive until approved
+        user = CustomUser.objects.create_user(
+            username=email,
+            email=email,
+            password=data['password'],
+            first_name=data['name'],
+            user_type="teacher",
+            pending_approval=True,  # Mark as awaiting approval
+            is_active=False  # Keep inactive until approved
+        )
+
+        # ✅ Send approval code email to admin
+        send_mail(
+            "Teacher Signup Approval Code",
+            f"Approval Code: {approval_code}\nUse this code to approve the teacher.",
+            settings.DEFAULT_FROM_EMAIL,
+            [settings.ADMIN_EMAIL],  # 🔹 Replace with actual admin email
+            fail_silently=False,
+        )
+
+        return Response({"message": "Signup request received. Awaiting admin approval."}, status=201)
+
+    else:  
+        # ✅ Parent Signup (No approval required)
+        user = CustomUser.objects.create_user(
+            username=email,
+            email=email,
+            password=data['password'],
+            first_name=data['name'],
+            user_type="parent",
+            pending_approval=False,
+            is_active=True  # Parents are active immediately
+        )
+        return Response({"message": "Parent registered successfully"}, status=201)
+
+
+
+@api_view(['POST'])
+def verify_teacher_code(request):
+    email = request.data.get("email").lower()  # Lowercase email for consistency
+    approval_code = request.data.get("approval_code")
+
+    stored_code = cache.get(f"approval_code_{email}")  # Fetch with lowercase email
+    print(f"Incoming Data: {request.data}")  # Debugging
+    print(f"Stored Code: {stored_code}, Received Code: {approval_code}")  # Debugging
+
+    if stored_code and stored_code == approval_code:
+        user = CustomUser.objects.filter(email=email).first()
+        if user:
+            user.pending_approval = False
+            user.is_active = True
+            user.save()
+            cache.delete(f"approval_code_{email}")  # Remove code after use
+            return Response({"message": "Teacher account approved"}, status=200)
+
+    return Response({"error": "Invalid approval code"}, status=400)
+
 
 
 @api_view(['POST'])
@@ -49,6 +124,9 @@ def login(request):
     user = authenticate(username=data['email'], password=data['password'])
 
     if user:
+        if not user.is_active:
+            return Response({"error": "Account not activated. Please contact admin."}, status=403)
+        
         if user.user_type != data.get("user_type"):
             return Response({"error": f"You must log in as a {user.user_type}, not {data.get('user_type')}"}, status=400)
 

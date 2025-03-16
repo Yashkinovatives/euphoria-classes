@@ -4,12 +4,13 @@ from core.views import (
     enroll_student, add_test_result, get_student_results, get_students,
     get_class_sections, add_monthly_fee, get_monthly_fee_status, set_total_fees, mark_attendance, update_attendance,
     get_student_attendance, add_notice, get_notices, delete_notice, update_notice, get_reviews, add_review, delete_review,
-    upload_student_result, get_uploaded_results, get_uploaded_result_details, delete_uploaded_result
+    upload_student_result, get_uploaded_results, get_uploaded_result_details, delete_uploaded_result,verify_teacher_code
 )
 
 urlpatterns = [
     path('signup/', signup, name='signup'),
     path('login/', login, name='login'),
+    path("verify-teacher/", verify_teacher_code, name="verify_teacher_code"),
     path('teacher-dashboard/', teacher_dashboard, name='teacher_dashboard'),
     path('parent-dashboard/', parent_dashboard, name='parent_dashboard'),
     path('parent/enroll-student/', enroll_student, name='enroll_student'),

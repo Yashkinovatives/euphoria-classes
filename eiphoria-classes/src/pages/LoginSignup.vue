@@ -1,14 +1,15 @@
 <template>
   <div class="auth-wrapper">
     <div class="auth-container">
+      <!-- Left Panel -->
       <div class="image-panel">
         <div class="logo">
           <img src="/logo.svg" alt="Logo" />
         </div>
-        
+
         <div class="image-content">
           <h2 class="image-title">Capturing Moments,<br />Creating Memories</h2>
-          
+
           <div class="slide-indicators">
             <span></span>
             <span></span>
@@ -16,8 +17,8 @@
           </div>
         </div>
       </div>
-      
-      
+
+      <!-- Right Panel -->
       <div class="form-panel">
         <div class="back-link">
           <a href="#" @click.prevent="goBack">
@@ -25,32 +26,34 @@
             <i class="fas fa-arrow-right"></i>
           </a>
         </div>
-        
+
         <div class="auth-form-container">
-          <h1 class="form-title">{{ isLogin ? 'Sign in to your account' : 'Create an account' }}</h1>
-          
+          <h1 class="form-title">
+            {{ isLogin ? "Sign in to your account" : awaitingApproval ? "Verify Approval Code" : "Create an account" }}
+          </h1>
+
           <p class="account-switch">
             {{ isLogin ? "Don't have an account?" : "Already have an account?" }}
             <a href="#" @click.prevent="toggleAuthMode">
-              {{ isLogin ? 'Sign up' : 'Log in' }}
+              {{ isLogin ? "Sign up" : "Log in" }}
             </a>
           </p>
-          
+
           <form @submit.prevent="handleSubmit" class="auth-form">
-            
-            <div class="form-group" v-if="!isLogin">
+            <!-- Full Name Field -->
+            <div class="form-group" v-if="!isLogin && !awaitingApproval">
               <label>Full Name</label>
               <input type="text" v-model="form.name" placeholder="Enter your full name" required />
             </div>
 
-            
+            <!-- Email Address -->
             <div class="form-group">
               <label>Email Address</label>
               <input type="email" v-model="form.email" placeholder="Enter your email" required />
             </div>
 
-            
-            <div class="form-group">
+            <!-- Password Field -->
+            <div class="form-group" v-if="!awaitingApproval">
               <label>Password</label>
               <div class="password-input">
                 <input
@@ -65,7 +68,8 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <!-- Role Selection -->
+            <div class="form-group" v-if="!isLogin && !awaitingApproval">
               <label>Select Role</label>
               <div class="role-buttons">
                 <button
@@ -81,8 +85,17 @@
               </div>
             </div>
 
+            <!-- Approval Code Input (Only for Teachers after Signup) -->
+            <div class="form-group" v-if="awaitingApproval">
+              <label>Enter Approval Code</label>
+              <input type="text" v-model="approvalCode" placeholder="Enter the code sent to admin" required />
+            </div>
+
+            <!-- Submit Button -->
             <button type="submit" class="submit-btn" :disabled="loading">
-              <span v-if="!loading">{{ isLogin ? 'Sign In' : 'Create Account' }}</span>
+              <span v-if="!loading">
+                {{ isLogin ? "Sign In" : awaitingApproval ? "Verify Code" : "Create Account" }}
+              </span>
               <span v-else class="loader"></span>
             </button>
           </form>
@@ -93,7 +106,7 @@
 </template>
 
 <script setup>
-import { ref,  reactive } from "vue";
+import { ref, reactive } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 
@@ -101,6 +114,8 @@ const router = useRouter();
 const loading = ref(false);
 const showPassword = ref(false);
 const isLogin = ref(true);
+const awaitingApproval = ref(false);
+const approvalCode = ref("");
 
 const form = reactive({
   name: "",
@@ -117,6 +132,8 @@ const roles = [
 const toggleAuthMode = () => {
   isLogin.value = !isLogin.value;
   form.name = "";
+  awaitingApproval.value = false;
+  approvalCode.value = "";
 };
 
 const togglePasswordVisibility = () => {
@@ -126,20 +143,38 @@ const togglePasswordVisibility = () => {
 const handleSubmit = async () => {
   loading.value = true;
   try {
-    const endpoint = isLogin.value
-      ? "http://127.0.0.1:8000/api/login/"
-      : "http://127.0.0.1:8000/api/signup/";
+    let endpoint;
+    let payload = { ...form };
 
-    const response = await axios.post(endpoint, form);
+    // Convert email to lowercase for consistency
+    payload.email = payload.email.toLowerCase(); 
+
+    if (isLogin.value) {
+      endpoint = "http://127.0.0.1:8000/api/login/";
+    } else {
+      if (awaitingApproval.value) {
+        // Teacher Verification
+        endpoint = "http://127.0.0.1:8000/api/verify-teacher/";
+        payload = { email: payload.email, approval_code: approvalCode.value };
+      } else {
+        // Initial Signup
+        endpoint = "http://127.0.0.1:8000/api/signup/";
+      }
+    }
+
+    const response = await axios.post(endpoint, payload);
 
     if (isLogin.value) {
       localStorage.setItem("access_token", response.data.access);
       localStorage.setItem("refresh_token", response.data.refresh);
       localStorage.setItem("user_type", response.data.user_type);
-
       router.push(response.data.user_type === "teacher" ? "/teacher-dashboard" : "/parent-dashboard");
     } else {
-      isLogin.value = true;
+      if (form.user_type === "teacher" && !awaitingApproval.value) {
+        awaitingApproval.value = true;
+      } else {
+        isLogin.value = true;
+      }
     }
   } catch (error) {
     alert(error.response?.data?.error || "Something went wrong.");
@@ -148,6 +183,7 @@ const handleSubmit = async () => {
   }
 };
 </script>
+
 
 
 <style scoped>

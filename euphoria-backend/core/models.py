@@ -1,13 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import random
+import string
 
-# Custom User Model
 class CustomUser(AbstractUser):
     USER_TYPES = (
         ('teacher', 'Teacher'),
         ('parent', 'Parent'),
     )
     user_type = models.CharField(max_length=10, choices=USER_TYPES)
+    
+    pending_approval = models.BooleanField(default=False)  # ✅ Track if approval is pending
+
+    def __str__(self):
+        return self.email
 
 
 # Class Section Model

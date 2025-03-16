@@ -77,7 +77,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'euphoria.wsgi.application'
-
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+ADMIN_EMAIL = "yashkarale06@gmail.com" 
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
