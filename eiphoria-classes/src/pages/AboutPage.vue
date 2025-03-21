@@ -12,7 +12,7 @@
         <span class="arrow-icon">→</span>
       </h1>
       <p class="hero-subtitle">
-        Elevating education through innovation and personalized learning experiences
+        Dedicated to nurturing young minds and helping every student reach their full academic potential
       </p>
 
       <!-- Stats Grid -->
@@ -46,26 +46,26 @@ import { ref } from "vue";
 const stats = ref([
   {
     id: 1,
-    value: "3+",
-    label: "Years of Industry Experience",
+    value: "15+",
+    label: "Years of Excellence",
     featured: false,
   },
   {
     id: 2,
-    value: "42+",
-    label: "Happy Clients",
+    value: "500+",
+    label: "Happy Students",
     featured: false,
   },
   {
     id: 3,
-    value: "113+",
-    label: "Projects Done",
+    value: "98%",
+    label: "Parent Satisfaction",
     featured: false,
   },
   {
     id: 4,
-    value: "12",
-    label: "Recent Clients",
+    value: "92%",
+    label: "Success Rate",
     featured: true,
   },
 ]);
@@ -73,18 +73,18 @@ const stats = ref([
 
 <style scoped>
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 .about-hero {
   position: relative;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+  background: linear-gradient(135deg, #F0F7FF, #E6F2FF);
   padding: 0.5rem 2rem 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 
 /* Animated Background */
@@ -99,7 +99,7 @@ const stats = ref([
 
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(139, 92, 246, 0.1), rgba(192, 132, 252, 0.1));
+  background: linear-gradient(45deg, rgba(75, 150, 243, 0.1), rgba(49, 120, 230, 0.1));
   border-radius: 50%;
   filter: blur(1px);
   animation: float 25s infinite ease-in-out alternate;
@@ -128,10 +128,10 @@ const stats = ref([
 }
 
 .hero-title {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: 4rem;
   font-weight: 800;
-  color: #1e293b;
+  color: #2D3748;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -140,14 +140,14 @@ const stats = ref([
 }
 
 .gradient-text {
-  background: linear-gradient(45deg, #7C3AED, #C084FC);
+  background: linear-gradient(45deg, #4B96F3, #3178E6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .arrow-icon {
   font-size: 3rem;
-  color: #7C3AED;
+  color: #4B96F3;
   animation: bounce 2s infinite alternate;
 }
 
@@ -158,7 +158,7 @@ const stats = ref([
 
 .hero-subtitle {
   font-size: 1.5rem;
-  color: #475569;
+  color: #4A5568;
   max-width: 700px;
   margin: 0 auto 4rem;
 }
@@ -166,19 +166,24 @@ const stats = ref([
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
+  gap: 1.5rem;
   margin-top: 2rem;
+  max-width: 1200px;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .stat-card {
   background-color: white;
-  padding: 2.5rem 1.5rem;
+  padding: 2.5rem 2rem;
   border-radius: 1rem;
   text-align: center;
-  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.1);
+  box-shadow: 0 10px 25px rgba(75, 150, 243, 0.1);
   transition: all 0.3s ease-in-out;
   position: relative;
   overflow: hidden;
+  min-width: 220px;
 }
 
 .hover-bg {
@@ -187,7 +192,7 @@ const stats = ref([
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #7C3AED, #A855F7);
+  background: linear-gradient(135deg, #4B96F3, #3178E6);
   opacity: 0;
   transition: opacity 0.4s ease;
   z-index: 0;
@@ -198,12 +203,12 @@ const stats = ref([
 }
 
 .stat-card.featured {
-  background: linear-gradient(135deg, #7C3AED, #A855F7);
+  background: linear-gradient(135deg, #4B96F3, #3178E6);
 }
 
 .stat-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 15px 35px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 15px 35px rgba(75, 150, 243, 0.2);
 }
 
 .stat-content {
@@ -212,10 +217,10 @@ const stats = ref([
 }
 
 .stat-value {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: 3rem;
   font-weight: 800;
-  color: #1e293b;
+  color: #2D3748;
   margin-bottom: 0.75rem;
   transition: color 0.4s ease;
 }
@@ -230,7 +235,7 @@ const stats = ref([
 
 .stat-label {
   font-size: 1.125rem;
-  color: #475569;
+  color: #4A5568;
   line-height: 1.4;
   transition: color 0.4s ease;
 }
@@ -247,6 +252,11 @@ const stats = ref([
 @media (max-width: 1024px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
+    max-width: 800px;
+  }
+  
+  .stat-card {
+    min-width: 230px;
   }
 }
 

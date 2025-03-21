@@ -13,10 +13,6 @@
         <div class="header-content">
           <div class="header-left">
             <h1>Teacher Dashboard</h1>
-            <div class="badge">
-              <span class="badge-icon">👋</span>
-              <span>Welcome, {{ teacherName }}</span>
-            </div>
           </div>
           <div class="header-actions">
             <button @click="openNoticeBoardModal" class="notice-btn">
@@ -37,8 +33,19 @@
       </div>
 
       <div v-else class="dashboard-content">
-        <!-- Quick Stats -->
-        <TeacherStats :students="students" />
+        <!-- Welcome Card -->
+        <div class="welcome-card">
+          <div class="welcome-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+          </div>
+          <div class="welcome-text">
+            <h2>Welcome <span class="teacher-name">{{ teacherName }}</span> to Your Dashboard</h2>
+            <p>Manage your students, classes, and teaching resources all in one place.</p>
+          </div>
+        </div>
 
         <!-- Students Management -->
         <StudentsTable
@@ -58,13 +65,7 @@
         @close="closeTestModal"
         @submit="submitTestResult"
       />
-
-      <StudentDetailsModal
-        v-if="selectedStudentDetails"
-        :student="selectedStudentDetails"
-        @close="selectedStudentDetails = null"
-      />
-
+      
       <FeesModal
         v-if="showFeesModal"
         :student="selectedStudent"
@@ -97,10 +98,9 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 
-import TeacherStats from "@/components/TeacherDashboradComponents/TeacherStats.vue";
 import StudentsTable from "@/components/TeacherDashboradComponents/StudentsTable.vue";
 import AddTestModal from "@/components/TeacherDashboradComponents/AddTestModal.vue";
-import StudentDetailsModal from "@/components/TeacherDashboradComponents/StudentDetailsModal.vue";
+// import StudentDetailsModal from "@/components/TeacherDashboradComponents/StudentDetailsModal.vue";
 import FeesModal from "@/components/TeacherDashboradComponents/FeesModal.vue";
 import AttendanceModal from "@/components/TeacherDashboradComponents/AttendanceModal.vue";
 import NoticeBoardModal from "@/components/TeacherDashboradComponents/NoticeBoardModal.vue";
@@ -232,14 +232,16 @@ const logout = () => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap");
 
 .dashboard {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+  background: linear-gradient(135deg, #F0F7FF, #E6F2FF);
   position: relative;
   overflow: hidden;
-  font-family: "Outfit", sans-serif;
+  font-family: "Nunito", sans-serif;
+  color: #2D3748;
+  font-size: 16px;
 }
 
 .animated-bg {
@@ -256,8 +258,8 @@ const logout = () => {
   position: absolute;
   background: linear-gradient(
     45deg,
-    rgba(139, 92, 246, 0.1),
-    rgba(192, 132, 252, 0.1)
+    rgba(75, 150, 243, 0.1),
+    rgba(49, 120, 230, 0.1)
   );
   border-radius: 50%;
   filter: blur(1px);
@@ -339,8 +341,8 @@ const logout = () => {
   border-radius: 16px;
   padding: 1.5rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
-  border: 1px solid rgba(139, 92, 246, 0.1);
+  box-shadow: 0 4px 20px rgba(75, 150, 243, 0.1);
+  border: 1px solid rgba(75, 150, 243, 0.1);
 }
 
 .header-content {
@@ -362,10 +364,10 @@ const logout = () => {
 }
 
 h1 {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-size: 2rem;
   font-weight: 700;
-  color: #1e293b;
+  color: #2D3748;
   margin: 0;
 }
 
@@ -373,11 +375,12 @@ h1 {
   display: flex;
   align-items: center;
   padding: 0.75rem 1.25rem;
-  background: rgba(139, 92, 246, 0.15);
+  background: rgba(75, 150, 243, 0.15);
   border-radius: 100px;
   gap: 0.5rem;
   font-weight: 600;
-  color: #6d28d9;
+  color: #3178E6;
+  border: 1px solid rgba(75, 150, 243, 0.2);
 }
 
 .badge-icon {
@@ -389,9 +392,9 @@ h1 {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: rgba(139, 92, 246, 0.1);
-  color: #7c3aed;
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: rgba(75, 150, 243, 0.1);
+  color: #3178E6;
+  border: 1px solid rgba(75, 150, 243, 0.2);
   border-radius: 100px;
   font-weight: 600;
   cursor: pointer;
@@ -399,7 +402,7 @@ h1 {
 }
 
 .notice-btn:hover {
-  background: rgba(139, 92, 246, 0.2);
+  background: rgba(75, 150, 243, 0.2);
   transform: translateY(-2px);
 }
 
@@ -433,8 +436,8 @@ h1 {
 .loader-spinner {
   width: 50px;
   height: 50px;
-  border: 3px solid #e9d5ff;
-  border-top-color: #7c3aed;
+  border: 3px solid rgba(75, 150, 243, 0.2);
+  border-top-color: #3178E6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -450,40 +453,254 @@ h1 {
   gap: 2rem;
 }
 
+/* Welcome Card */
+.welcome-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(75, 150, 243, 0.08);
+  border: 1px solid rgba(75, 150, 243, 0.1);
+}
+
+.welcome-icon {
+  width: 60px;
+  height: 60px;
+  background: rgba(75, 150, 243, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3178E6;
+  flex-shrink: 0;
+}
+
+.welcome-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.welcome-text {
+  flex: 1;
+}
+
+.welcome-text h2 {
+  font-family: "Quicksand", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: #2D3748;
+}
+
+.teacher-name {
+  color: #3178E6;
+  font-weight: 800;
+}
+
+.welcome-text p {
+  font-size: 1.125rem;
+  color: #4A5568;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .dashboard-container {
+    padding: 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
+  html, body {
+    font-size: 14px;
+  }
+
   .dashboard-container {
     padding: 1rem;
   }
 
   .header {
-    padding: 1rem;
+    padding: 1.25rem;
   }
 
   .header-content {
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
     text-align: center;
   }
 
   .header-left {
     flex-direction: column;
     gap: 1rem;
+    width: 100%;
+  }
+
+  .badge {
+    width: 100%;
+    justify-content: center;
+    padding: 0.65rem 1rem;
   }
 
   .header-actions {
-    flex-direction: column;
+    flex-direction: row;
     width: 100%;
     gap: 0.75rem;
   }
 
   .notice-btn,
   .logout-btn {
-    width: 100%;
+    width: 50%;
     justify-content: center;
+    padding: 0.65rem 1rem;
+    font-size: 0.9rem;
   }
 
   h1 {
+    font-size: 1.75rem;
+  }
+  
+  .welcome-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+  }
+  
+  .welcome-text h2 {
+    font-size: 1.25rem;
+  }
+  
+  .welcome-text p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  html, body {
+    font-size: 12px;
+  }
+
+  .dashboard-container {
+    padding: 0.75rem;
+  }
+  
+  .header {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+  }
+  
+  .notice-btn,
+  .logout-btn {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .badge {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  .badge-icon {
+    font-size: 1rem;
+  }
+  
+  h1 {
     font-size: 1.5rem;
+  }
+  
+  .welcome-card {
+    padding: 1.25rem;
+    border-radius: 12px;
+  }
+  
+  .welcome-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .welcome-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .welcome-text h2 {
+    font-size: 1.125rem;
+  }
+  
+  .welcome-text p {
+    font-size: 0.875rem;
+  }
+  
+  .loader-spinner {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .loader {
+    min-height: 300px;
+  }
+}
+
+/* Target very small mobile devices (Galaxy Fold, etc.) */
+@media (max-width: 360px) {
+  .dashboard-container {
+    padding: 0.5rem;
+  }
+  
+  .header, 
+  .welcome-card {
+    padding: 0.875rem;
+    margin-bottom: 1rem;
+  }
+  
+  h1 {
+    font-size: 1.25rem;
+  }
+  
+  .welcome-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .welcome-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .welcome-text h2 {
+    font-size: 1rem;
+  }
+  
+  .welcome-text p {
+    font-size: 0.8rem;
+  }
+  
+  .dashboard-content {
+    gap: 1rem;
+  }
+}
+
+/* Fix for mobile Safari overscroll issues */
+@supports (-webkit-touch-callout: none) {
+  .dashboard {
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Add safe areas for notched iPhones */
+@supports (padding: max(0px)) {
+  .dashboard-container {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
 }
 </style>

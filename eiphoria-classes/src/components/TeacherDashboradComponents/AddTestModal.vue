@@ -15,8 +15,9 @@
 
       <form @submit.prevent="handleSubmit" class="test-form">
         <div class="form-group">
-          <label>Subject</label>
+          <label for="subject">Subject</label>
           <input 
+            id="subject"
             type="text" 
             v-model="formData.subject" 
             required 
@@ -26,8 +27,9 @@
         
         <div class="form-row">
           <div class="form-group">
-            <label>Marks Obtained</label>
+            <label for="marks_obtained">Marks Obtained</label>
             <input 
+              id="marks_obtained"
               type="number" 
               v-model.number="formData.marks_obtained" 
               required 
@@ -37,8 +39,9 @@
           </div>
 
           <div class="form-group">
-            <label>Total Marks</label>
+            <label for="total_marks">Total Marks</label>
             <input 
+              id="total_marks"
               type="number" 
               v-model.number="formData.total_marks" 
               required 
@@ -49,7 +52,7 @@
         </div>
 
         <div class="score-preview" v-if="showScorePreview">
-          <div class="preview-label">Score Preview:</div>
+          <div class="preview-label">Score Preview</div>
           <div class="preview-score" :class="getScoreClass">
             {{ calculatePercentage }}%
           </div>
@@ -69,7 +72,7 @@
 </template>
 
 <script setup>
-import { ref, computed ,defineEmits,defineProps} from 'vue';
+import { ref, computed, defineEmits, defineProps } from 'vue';
 
 // Replace props declaration with defineProps
 defineProps({
@@ -119,6 +122,8 @@ const handleSubmit = () => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap');
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -131,15 +136,18 @@ const handleSubmit = () => {
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 1rem;
 }
 
 .modal-content {
   background: white;
-  border-radius: 24px;
+  border-radius: 16px;
   width: 90%;
   max-width: 500px;
   position: relative;
   animation: modalSlide 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 @keyframes modalSlide {
@@ -154,11 +162,12 @@ const handleSubmit = () => {
 }
 
 .modal-header {
-  padding: 1.5rem;
-  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(75, 150, 243, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #F8FAFC;
 }
 
 .student-info {
@@ -170,119 +179,159 @@ const handleSubmit = () => {
 .student-avatar {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
-  border-radius: 14px;
+  background: linear-gradient(135deg, #4B96F3, #3178E6);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-size: 1.25rem;
   font-weight: 600;
+  text-transform: uppercase;
 }
 
 h2 {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: 1.5rem;
-  color: #1e293b;
+  color: #2D3748;
   margin: 0;
+  font-weight: 700;
 }
 
 .student-name {
-  color: #64748b;
+  color: #4A5568;
   margin: 0.25rem 0 0 0;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .close-btn {
   background: none;
   border: none;
-  font-size: 1.5rem;
-  color: #64748b;
+  font-size: 1.75rem;
+  color: #4A5568;
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 50%;
   transition: all 0.3s ease;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
 }
 
 .close-btn:hover {
-  background: rgba(139, 92, 246, 0.1);
-  color: #7c3aed;
+  background: rgba(75, 150, 243, 0.1);
+  color: #3178E6;
 }
 
 .test-form {
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
 .form-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group label {
   display: block;
-  font-weight: 500;
-  color: #1e293b;
+  font-weight: 600;
+  color: #2D3748;
   margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  font-family: 'Nunito', sans-serif;
 }
 
 .form-group input {
   width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  border-radius: 12px;
-  font-size: 1rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  font-size: 0.95rem;
   transition: all 0.3s ease;
+  background-color: #F8FAFC;
+  color: #2D3748;
+  font-family: 'Nunito', sans-serif;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #7c3aed;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  border-color: #4B96F3;
+  box-shadow: 0 0 0 3px rgba(75, 150, 243, 0.1);
+  background-color: #FFFFFF;
+}
+
+.form-group input::placeholder {
+  color: #A0AEC0;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 1.5rem;
+  align-items: start;
 }
 
 .score-preview {
-  background: rgba(139, 92, 246, 0.05);
-  padding: 1rem;
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
+  background: rgba(75, 150, 243, 0.05);
+  padding: 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border: 1px solid rgba(75, 150, 243, 0.1);
 }
 
 .preview-label {
-  color: #64748b;
-  font-weight: 500;
+  color: #4A5568;
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .preview-score {
   font-size: 1.25rem;
-  font-weight: 600;
-  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-family: 'Quicksand', sans-serif;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  min-width: 80px;
+  text-align: center;
 }
 
-.preview-score.excellent { color: #10b981; }
-.preview-score.good { color: #3b82f6; }
-.preview-score.average { color: #f59e0b; }
-.preview-score.poor { color: #ef4444; }
+.preview-score.excellent { 
+  color: #10b981; 
+  background-color: rgba(16, 185, 129, 0.1);
+}
+.preview-score.good { 
+  color: #3178E6; 
+  background-color: rgba(75, 150, 243, 0.1);
+}
+.preview-score.average { 
+  color: #f59e0b; 
+  background-color: rgba(245, 158, 11, 0.1);
+}
+.preview-score.poor { 
+  color: #ef4444; 
+  background-color: rgba(239, 68, 68, 0.1);
+}
 
 .form-actions {
   display: flex;
   gap: 1rem;
-  margin-top: 2rem;
+  justify-content: flex-end;
 }
 
 .btn-cancel, .btn-submit {
-  flex: 1;
-  padding: 0.75rem;
-  border-radius: 12px;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 0.95rem;
+  font-family: 'Nunito', sans-serif;
 }
 
 .btn-cancel {
@@ -292,9 +341,10 @@ h2 {
 }
 
 .btn-submit {
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  background: #4B96F3;
   color: white;
   border: none;
+  min-width: 140px;
 }
 
 .btn-submit:disabled {
@@ -302,22 +352,53 @@ h2 {
   cursor: not-allowed;
 }
 
-.btn-cancel:hover, .btn-submit:not(:disabled):hover {
-  transform: translateY(-2px);
+.btn-cancel:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.btn-submit:not(:disabled):hover {
+  background: #3178E6;
 }
 
 @media (max-width: 768px) {
   .modal-content {
     width: 95%;
-    margin: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .modal-header {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .test-form {
+    padding: 1.5rem;
   }
 
   .form-row {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
-
+  
+  .student-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1.125rem;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+  }
+  
   .form-actions {
-    flex-direction: column;
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+  }
+  
+  .btn-cancel, .btn-submit {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem 1rem;
   }
 }
 </style>

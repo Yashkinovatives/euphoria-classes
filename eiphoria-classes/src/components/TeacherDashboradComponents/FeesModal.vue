@@ -1,4 +1,5 @@
 # FeesModal.vue
+<!-- Updated with blue theme to match dashboard styling -->
 <template>
   <div class="modal-backdrop">
     <div class="modal-content">
@@ -208,6 +209,8 @@ const addMonthlyPayment = async () => {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 0 15px;
+  box-sizing: border-box;
 }
 
 .modal-content {
@@ -217,20 +220,34 @@ const addMonthlyPayment = async () => {
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
+  position: relative;
+  margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(75, 150, 243, 0.1);
+  border: 1px solid rgba(75, 150, 243, 0.1);
 }
 
 .modal-header {
   padding: 1.5rem;
-  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+  border-bottom: 1px solid rgba(75, 150, 243, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 5;
+  border-radius: 16px 16px 0 0;
 }
 
 .modal-header h3 {
   margin: 0;
-  color: #1e293b;
-  font-family: 'Space Grotesk', sans-serif;
+  color: #2D3748;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 700;
 }
 
 .close-btn {
@@ -239,6 +256,13 @@ const addMonthlyPayment = async () => {
   font-size: 1.5rem;
   color: #64748b;
   cursor: pointer;
+  padding: 0;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
 }
 
 .modal-body {
@@ -246,14 +270,15 @@ const addMonthlyPayment = async () => {
 }
 
 .success-message {
-  background-color: rgba(34, 197, 94, 0.15);
-  color: rgb(22, 163, 74);
+  background-color: rgba(75, 150, 243, 0.15);
+  color: #3178E6;
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
   text-align: center;
   font-weight: 600;
   animation: fadeIn 0.3s;
+  border: 1px solid rgba(75, 150, 243, 0.2);
 }
 
 @keyframes fadeIn {
@@ -262,10 +287,11 @@ const addMonthlyPayment = async () => {
 }
 
 .fees-summary {
-  background: #f8f7ff;
+  background: rgba(75, 150, 243, 0.05);
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
+  border: 1px solid rgba(75, 150, 243, 0.1);
 }
 
 .summary-item {
@@ -280,8 +306,10 @@ const addMonthlyPayment = async () => {
 }
 
 .fees-section h4 {
-  color: #1e293b;
+  color: #2D3748;
   margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .help-text {
@@ -299,8 +327,10 @@ const addMonthlyPayment = async () => {
 .fees-input {
   flex: 1;
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(75, 150, 243, 0.2);
   border-radius: 8px;
+  font-size: 16px; /* Prevents iOS zoom on focus */
+  -webkit-appearance: none; /* Better appearance on iOS */
 }
 
 .fees-input:disabled {
@@ -313,24 +343,22 @@ const addMonthlyPayment = async () => {
   gap: 1rem;
 }
 
-.month-select {
-  padding: 0.75rem 1rem;
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  border-radius: 8px;
-  background: white;
-}
+
 
 .payment-history {
-  background: #f8f7ff;
+  background: rgba(75, 150, 243, 0.05);
   border-radius: 12px;
   padding: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid rgba(75, 150, 243, 0.1);
 }
 
 .payment-record {
   display: flex;
   justify-content: space-between;
   padding: 0.75rem;
-  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+  border-bottom: 1px solid rgba(75, 150, 243, 0.1);
 }
 
 .payment-record:last-child {
@@ -350,10 +378,14 @@ const addMonthlyPayment = async () => {
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  background: linear-gradient(135deg, #4B96F3, #3178E6);
   color: white;
 }
 
@@ -362,9 +394,146 @@ const addMonthlyPayment = async () => {
   cursor: not-allowed;
 }
 
+/* Touch-friendly adjustment for all interactive elements */
+.btn, .close-btn, select, input {
+  touch-action: manipulation;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    max-height: 85vh;
+  }
+  
+  .modal-header {
+    padding: 1.25rem;
+  }
+  
+  .modal-body {
+    padding: 1.25rem;
+  }
+  
+  .fees-summary {
+    padding: 1.25rem;
+  }
+  
+  .payment-history {
+    max-height: 180px;
+  }
+}
+
 @media (max-width: 640px) {
+  .modal-content {
+    width: 100%;
+    max-height: 90vh;
+    border-radius: 12px;
+  }
+  
+  .modal-header {
+    padding: 1rem;
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .modal-header h3 {
+    font-size: 1.15rem;
+    max-width: 75%;
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+  
+  .fees-summary {
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .fees-section {
+    margin-bottom: 1.5rem;
+  }
+  
   .input-group {
     flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .payment-history {
+    padding: 0.75rem;
+  }
+  
+  .payment-record {
+    padding: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-backdrop {
+    padding: 0 10px;
+    align-items: flex-end;
+  }
+  
+  .modal-content {
+    max-height: 85vh;
+    border-radius: 20px 20px 0 0;
+  }
+  
+  .modal-header {
+    padding: 0.9rem;
+    border-radius: 20px 20px 0 0;
+  }
+  
+  .modal-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .modal-body {
+    padding: 0.9rem;
+  }
+  
+  .fees-section h4 {
+    font-size: 1rem;
+  }
+  
+  .payment-history {
+    max-height: 160px;
+  }
+  
+  .fees-input, .month-select {
+    padding: 0.7rem 0.9rem;
+  }
+  
+  /* Better tap targets on small screens */
+  .payment-record {
+    padding: 0.8rem 0.5rem;
+  }
+}
+
+/* iOS safe areas */
+@supports (padding: max(0px)) {
+  .modal-backdrop {
+    padding-bottom: max(15px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Height adjustments for very small devices */
+@media (max-height: 600px) {
+  .modal-content {
+    max-height: 92vh;
+  }
+  
+  .payment-history {
+    max-height: 120px;
+  }
+  
+  .fees-section {
+    margin-bottom: 1.25rem;
   }
 }
 </style>

@@ -11,10 +11,10 @@
           <div class="section-badge">Our Mission</div>
           <h2 class="section-title">Transforming Education Through <span class="gradient-text">Innovation</span></h2>
           <p class="section-text">
-            At Euphoria Classes, we believe that education should be accessible, engaging, and effective for everyone. Our mission is to empower learners of all backgrounds to achieve their full potential through technology-enhanced education that adapts to individual learning styles.
+            At Euphoria Tutorials, we believe that education should be accessible, engaging, and effective for everyone. Our mission is to empower students to achieve their full potential through personalized education that adapts to individual learning styles.
           </p>
           <p class="section-text">
-            We're committed to creating a supportive community where students can connect with expert instructors and peers, fostering collaboration and growth in a dynamic learning environment.
+            We're committed to creating a supportive environment where students can connect with expert teachers and peers, fostering collaboration and growth in a dynamic learning atmosphere.
           </p>
           
           <div class="key-points">
@@ -25,7 +25,7 @@
                   <polyline points="22 4 12 14.01 9 11.01"></polyline>
                 </svg>
               </div>
-              <span>Personalized Learning Experiences</span>
+              <span>Personalized Learning Approach</span>
             </div>
             <div class="key-point">
               <div class="point-icon">
@@ -34,7 +34,7 @@
                   <polyline points="22 4 12 14.01 9 11.01"></polyline>
                 </svg>
               </div>
-              <span>Expert-Led Curriculum</span>
+              <span>Expert Teaching Faculty</span>
             </div>
             <div class="key-point">
               <div class="point-icon">
@@ -43,14 +43,14 @@
                   <polyline points="22 4 12 14.01 9 11.01"></polyline>
                 </svg>
               </div>
-              <span>Cutting-Edge Technology</span>
+              <span>Comprehensive Support System</span>
             </div>
           </div>
         </div>
         
         <div class="image-column">
           <div class="image-wrapper">
-            <img src="/api/placeholder/600/400" alt="Students learning" class="mission-image" />
+            <img :src="Slearning" alt="Students learning" class="mission-image" />
             <div class="image-accent"></div>
           </div>
         </div>
@@ -60,19 +60,19 @@
 </template>
 
 <script setup>
-// No script needed for this component
+import Slearning from "@/assets/images/Slearning.jpg";
 </script>
 
 <style scoped>
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 .mission-section {
   position: relative;
-  background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+  background: linear-gradient(135deg, #F0F7FF, #E6F2FF);
   padding: 5rem 2rem;
-  font-family: 'Outfit', sans-serif;
-  color: #1e293b;
+  font-family: 'Nunito', sans-serif;
+  color: #2D3748;
   overflow: hidden;
 }
 
@@ -88,7 +88,7 @@
 
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(139, 92, 246, 0.1), rgba(192, 132, 252, 0.1));
+  background: linear-gradient(45deg, rgba(75, 150, 243, 0.1), rgba(49, 120, 230, 0.1));
   border-radius: 50%;
   filter: blur(1px);
   animation: float 25s infinite ease-in-out alternate;
@@ -131,9 +131,9 @@
 .section-badge {
   display: inline-block;
   padding: 0.5rem 1rem;
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(75, 150, 243, 0.1);
   border-radius: 100px;
-  color: #7C3AED;
+  color: #3178E6;
   font-weight: 600;
   font-size: 0.875rem;
   margin-bottom: 1rem;
@@ -141,24 +141,24 @@
 }
 
 .section-title {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: 2.5rem;
   font-weight: 700;
-  color: #1e293b;
+  color: #2D3748;
   margin-bottom: 1.5rem;
   line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
 .gradient-text {
-  background: linear-gradient(45deg, #7C3AED, #C084FC);
+  background: linear-gradient(45deg, #4B96F3, #3178E6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .section-text {
   font-size: 1.125rem;
-  color: #475569;
+  color: #4A5568;
   line-height: 1.7;
   margin-bottom: 1.5rem;
 }
@@ -175,7 +175,7 @@
   align-items: center;
   gap: 1rem;
   font-weight: 500;
-  color: #1e293b;
+  color: #2D3748;
   transition: transform 0.3s ease;
 }
 
@@ -190,14 +190,14 @@
   width: 2rem;
   height: 2rem;
   min-width: 2rem;
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(75, 150, 243, 0.1);
   border-radius: 50%;
-  color: #7C3AED;
+  color: #4B96F3;
   transition: all 0.3s ease;
 }
 
 .key-point:hover .point-icon {
-  background: linear-gradient(135deg, #7C3AED, #C084FC);
+  background: linear-gradient(135deg, #4B96F3, #3178E6);
   color: white;
   transform: scale(1.1);
 }
@@ -215,17 +215,22 @@
   position: relative;
   border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 15px 30px rgba(139, 92, 246, 0.1);
+  box-shadow: 0 15px 30px rgba(75, 150, 243, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  max-width: 85%;
+  margin: 0 auto;
 }
 
 .image-wrapper:hover {
   transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 20px 40px rgba(75, 150, 243, 0.2);
 }
 
 .mission-image {
   width: 100%;
+  height: auto;
+  max-height: 350px;
+  object-fit: cover;
   display: block;
   border-radius: 1rem;
   transform: scale(1.02);
@@ -242,7 +247,7 @@
   right: -20px;
   width: 140px;
   height: 140px;
-  background: linear-gradient(135deg, #7C3AED, #C084FC);
+  background: linear-gradient(135deg, #4B96F3, #3178E6);
   border-radius: 1rem;
   z-index: -1;
   opacity: 0.8;
@@ -275,6 +280,14 @@
   
   .image-column {
     order: -1;
+  }
+  
+  .image-wrapper {
+    max-width: 75%;
+  }
+  
+  .mission-image {
+    max-height: 300px;
   }
   
   .section-title {

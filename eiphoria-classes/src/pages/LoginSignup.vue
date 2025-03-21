@@ -4,7 +4,7 @@
       <!-- Left Panel -->
       <div class="image-panel">
         <div class="logo">
-          <img src="/logo.svg" alt="Logo" />
+          <img :src="CLogo" alt="Logo" />
         </div>
 
         <div class="image-content">
@@ -68,8 +68,8 @@
               </div>
             </div>
 
-            <!-- Role Selection -->
-            <div class="form-group" v-if="!isLogin && !awaitingApproval">
+            <!-- Role Selection - Now shown for both login and signup -->
+            <div class="form-group" v-if="!awaitingApproval">
               <label>Select Role</label>
               <div class="role-buttons">
                 <button
@@ -80,6 +80,7 @@
                   class="role-btn"
                   @click="form.user_type = role.value"
                 >
+                  <i :class="role.icon"></i>
                   {{ role.label }}
                 </button>
               </div>
@@ -109,6 +110,7 @@
 import { ref, reactive } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import CLogo from "@/assets/images/CLogo.jpg";
 
 const router = useRouter();
 const loading = ref(false);
@@ -125,8 +127,8 @@ const form = reactive({
 });
 
 const roles = [
-  { label: "Teacher", value: "teacher" },
-  { label: "Parent", value: "parent" },
+  { label: "Teacher", value: "teacher", icon: "fas fa-chalkboard-teacher" },
+  { label: "Parent", value: "parent", icon: "fas fa-user-friends" },
 ];
 
 const toggleAuthMode = () => {
@@ -138,6 +140,11 @@ const toggleAuthMode = () => {
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
+};
+
+const goBack = () => {
+  // Navigate back to the website
+  router.push('/');
 };
 
 const handleSubmit = async () => {
@@ -183,8 +190,6 @@ const handleSubmit = async () => {
   }
 };
 </script>
-
-
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -269,7 +274,7 @@ const handleSubmit = async () => {
 .form-panel {
   flex: 6;
   background-color: #1a1625;
-  padding: 2rem;
+  padding: 2.5rem;
   position: relative;
   color: white;
 }
@@ -328,20 +333,14 @@ const handleSubmit = async () => {
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
-
-.name-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .form-group {
   position: relative;
 }
 
-.input-label {
+.form-group label {
   font-size: 0.9rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.7);
@@ -417,78 +416,6 @@ const handleSubmit = async () => {
   color: white;
 }
 
-.terms-checkbox {
-  margin: 0.5rem 0;
-  user-select: none;
-}
-
-.checkbox-container {
-  display: flex;
-  align-items: center;
-  position: relative;
-  padding-left: 1.75rem;
-  cursor: pointer;
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.checkbox-container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 18px;
-  width: 18px;
-  background-color: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-}
-
-.checkbox-container:hover input ~ .checkmark {
-  background-color: rgba(255, 255, 255, 0.12);
-}
-
-.checkbox-container input:checked ~ .checkmark {
-  background-color: #7048bc;
-  border-color: #7048bc;
-}
-
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-
-.checkbox-container input:checked ~ .checkmark:after {
-  display: block;
-}
-
-.checkbox-container .checkmark:after {
-  left: 6px;
-  top: 2px;
-  width: 4px;
-  height: 9px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-
-.terms-link {
-  color: #7048bc;
-  text-decoration: none;
-}
-
-.terms-link:hover {
-  text-decoration: underline;
-}
-
 .submit-btn {
   width: 100%;
   padding: 0.875rem;
@@ -550,18 +477,32 @@ const handleSubmit = async () => {
     padding: 1rem;
   }
   
-  .form-panel {
-    padding: 1.5rem 1rem;
+  .auth-container {
+    border-radius: 16px;
   }
   
-  .name-fields {
-    grid-template-columns: 1fr;
+  .image-panel {
+    padding: 1.5rem;
+    max-height: 200px;
+  }
+  
+  .image-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .form-panel {
+    padding: 1.5rem 1rem;
   }
   
   .back-link {
     position: static;
     margin-bottom: 1rem;
     text-align: right;
+  }
+  
+  .form-title {
+    font-size: 1.5rem;
   }
 }
 </style>

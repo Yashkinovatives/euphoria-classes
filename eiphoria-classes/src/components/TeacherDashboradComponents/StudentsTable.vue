@@ -35,8 +35,6 @@
           <tr>
             <th>Student</th>
             <th>Class</th>
-            <th>Performance</th>
-            <th>Last Test</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -53,34 +51,8 @@
                 <div class="student-id">ID: {{ student.id }}</div>
               </div>
             </td>
-            <td>{{ student.class_section__name }}</td>
-            <td>
-              <div class="performance-indicator">
-                <div class="score" :class="getPerformanceClass(student.average_score)">
-                  {{ student.average_score ? student.average_score.toFixed(1) + '%' : 'N/A' }}
-                </div>
-                <div 
-                  class="progress-bar"
-                  v-if="student.average_score"
-                >
-                  <div 
-                    class="progress" 
-                    :style="{ 
-                      width: `${student.average_score}%`,
-                      backgroundColor: getProgressColor(student.average_score)
-                    }"
-                  ></div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div class="last-test" v-if="student.latest_test">
-                {{ student.latest_test.subject }}<br>
-                <span class="test-date">{{ formatDate(student.latest_test.date) }}</span>
-              </div>
-              <span v-else class="no-test">No tests yet</span>
-            </td>
-            <td>
+            <td class="class-cell">{{ student.class_section__name }}</td>
+            <td class="actions-cell">
               <div class="action-buttons">
                 <button 
                   @click="$emit('add-test', student)"
@@ -88,8 +60,12 @@
                 >
                   <span>📝</span> Add Test
                 </button>
-                <button @click="$emit('view-results', student)">View</button>
-
+                <button 
+                  @click="$emit('view-results', student)"
+                  class="btn btn-secondary"
+                >
+                  <span>👁️</span> View
+                </button>
                 <button 
                   @click="$emit('manage-fees', student)"
                   class="btn btn-tertiary"
@@ -108,6 +84,57 @@
         </tbody>
       </table>
 
+      <!-- Mobile Card View for Students -->
+      <div class="mobile-student-cards">
+        <div 
+          v-for="student in filteredStudents" 
+          :key="student.id"
+          class="student-card"
+        >
+          <div class="card-header">
+            <div class="student-info">
+              <div class="student-avatar">{{ student.name[0] }}</div>
+              <div class="student-details">
+                <div class="student-name">{{ student.name }}</div>
+                <div class="student-class">{{ student.class_section__name }}</div>
+                <div class="student-id">ID: {{ student.id }}</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Card body removed as per request to remove Performance and Last Test -->
+          <!-- Spacer div to maintain some spacing between header and actions -->
+          <div class="spacer"></div>
+          
+          <div class="card-actions">
+            <button 
+              @click="$emit('add-test', student)"
+              class="btn btn-primary"
+            >
+              <span>📝</span> Add Test
+            </button>
+            <button 
+              @click="$emit('view-results', student)"
+              class="btn btn-secondary"
+            >
+              <span>👁️</span> View
+            </button>
+            <button 
+              @click="$emit('manage-fees', student)"
+              class="btn btn-tertiary"
+            >
+              <span>💰</span> Fees
+            </button>
+            <button 
+              @click="$emit('manage-attendance', student)"
+              class="btn btn-attendance"
+            >
+              <span>📊</span> Attendance
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div v-if="filteredStudents.length === 0" class="no-results">
         <div class="no-results-icon">🔍</div>
         <p>No students found</p>
@@ -117,7 +144,7 @@
 </template>
 
 <script setup>
-import { ref, computed ,defineProps,defineEmits} from 'vue';
+import { ref, computed, defineProps, defineEmits } from 'vue';
 
 // Define props without assigning to a variable
 const props = defineProps({
@@ -128,7 +155,7 @@ const props = defineProps({
 });
 
 // Define emits for all the events
-defineEmits(['add-test', 'view-details', 'manage-fees', 'manage-attendance']);
+defineEmits(['add-test', 'view-details', 'view-results', 'manage-fees', 'manage-attendance']);
 
 const searchQuery = ref('');
 const selectedClass = ref('');
@@ -145,37 +172,19 @@ const filteredStudents = computed(() => {
   });
 });
 
-const getPerformanceClass = (score) => {
-  if (!score && score !== 0) return 'na';
-  if (score >= 80) return 'excellent';
-  if (score >= 60) return 'good';
-  if (score >= 40) return 'average';
-  return 'poor';
-};
-
-const getProgressColor = (score) => {
-  if (score >= 80) return '#10b981';
-  if (score >= 60) return '#3b82f6';
-  if (score >= 40) return '#f59e0b';
-  return '#ef4444';
-};
-
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric'
-  });
-};
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap");
+
 .students-section {
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
-  border-radius: 24px;
+  border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
-  border: 1px solid rgba(139, 92, 246, 0.1);
+  box-shadow: 0 8px 30px rgba(75, 150, 243, 0.15);
+  border: 1px solid rgba(75, 150, 243, 0.1);
+  font-family: "Nunito", sans-serif;
 }
 
 .section-header {
@@ -192,10 +201,11 @@ const formatDate = (date) => {
 }
 
 .title-badge h2 {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: 1.5rem;
   margin: 0;
-  color: #1e293b;
+  color: #2D3748;
+  font-weight: 700;
 }
 
 .badge-icon {
@@ -221,34 +231,42 @@ const formatDate = (date) => {
 
 .search-input {
   padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(75, 150, 243, 0.2);
   border-radius: 100px;
   font-size: 0.9rem;
   width: 250px;
   transition: all 0.3s ease;
+  font-size: 16px; /* Prevents iOS zoom on focus */
+  -webkit-appearance: none; /* Better appearance on iOS */
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #7c3aed;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  border-color: #3178E6;
+  box-shadow: 0 0 0 3px rgba(75, 150, 243, 0.1);
 }
 
 .class-filter {
   padding: 0.75rem 1.5rem;
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(75, 150, 243, 0.2);
   border-radius: 100px;
   font-size: 0.9rem;
-  color: #1e293b;
+  color: #2D3748;
   background: white;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 16px; /* Prevents iOS zoom on focus */
+  -webkit-appearance: none; /* Better appearance on iOS */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234B96F3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
 }
 
 .class-filter:focus {
   outline: none;
-  border-color: #7c3aed;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  border-color: #3178E6;
+  box-shadow: 0 0 0 3px rgba(75, 150, 243, 0.1);
 }
 
 .table-container {
@@ -266,22 +284,34 @@ const formatDate = (date) => {
   text-align: left;
   color: #64748b;
   font-weight: 600;
-  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+  border-bottom: 1px solid rgba(75, 150, 243, 0.1);
 }
 
 .student-row {
   background: white;
   border-radius: 12px;
   transition: transform 0.3s ease;
+  box-shadow: 0 2px 10px rgba(75, 150, 243, 0.05);
 }
 
 .student-row:hover {
   transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(75, 150, 243, 0.1);
 }
 
 .student-row td {
   padding: 1rem;
   vertical-align: middle;
+}
+
+.student-row td:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+.student-row td:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .student-info {
@@ -293,13 +323,14 @@ const formatDate = (date) => {
 .student-avatar {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  background: linear-gradient(135deg, #4B96F3, #3178E6);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .student-details {
@@ -309,7 +340,7 @@ const formatDate = (date) => {
 
 .student-name {
   font-weight: 600;
-  color: #1e293b;
+  color: #2D3748;
 }
 
 .student-id {
@@ -317,48 +348,15 @@ const formatDate = (date) => {
   color: #64748b;
 }
 
-.performance-indicator {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.score {
-  font-weight: 600;
-}
-
-.score.excellent { color: #10b981; }
-.score.good { color: #3b82f6; }
-.score.average { color: #f59e0b; }
-.score.poor { color: #ef4444; }
-.score.na { color: #64748b; }
-
-.progress-bar {
-  width: 100px;
-  height: 6px;
-  background: rgba(139, 92, 246, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.progress {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
-.last-test {
+.student-class {
   font-size: 0.9rem;
+  color: #4B96F3;
+  font-weight: 500;
 }
 
-.test-date {
-  color: #64748b;
-  font-size: 0.85rem;
-}
-
-.no-test {
-  color: #64748b;
-  font-size: 0.9rem;
+/* Performance and test styles removed */
+.spacer {
+  height: 10px;
 }
 
 .action-buttons {
@@ -370,6 +368,7 @@ const formatDate = (date) => {
 .btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   border-radius: 100px;
@@ -378,30 +377,42 @@ const formatDate = (date) => {
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  white-space: nowrap;
+  text-align: center;
+  touch-action: manipulation;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  background: linear-gradient(135deg, #4B96F3, #3178E6);
   color: white;
 }
 
 .btn-secondary {
-  background: rgba(139, 92, 246, 0.1);
-  color: #7c3aed;
+  background: rgba(75, 150, 243, 0.1);
+  color: #3178E6;
+  border: 1px solid rgba(75, 150, 243, 0.2);
 }
 
 .btn-tertiary {
   background: rgba(245, 158, 11, 0.1);
   color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .btn-attendance {
   background: rgba(59, 130, 246, 0.1);
   color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
 .btn:hover {
   transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
 }
 
 .no-results {
@@ -415,32 +426,152 @@ const formatDate = (date) => {
   margin-bottom: 1rem;
 }
 
+/* Mobile Card View Styling */
+.mobile-student-cards {
+  display: none;
+}
+
+.student-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 15px rgba(75, 150, 243, 0.1);
+}
+
+.card-header {
+  margin-bottom: 1rem;
+}
+
+.spacer {
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(75, 150, 243, 0.1);
+}
+
+.card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+/* Responsive Adaptations */
+@media (max-width: 1200px) {
+  .action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    width: 100%;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
+
+/* Media query removed as Performance and Last Test columns were removed */
+
 @media (max-width: 768px) {
   .section-header {
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
+    align-items: flex-start;
   }
 
   .search-filter {
     width: 100%;
     flex-direction: column;
+    gap: 0.75rem;
   }
 
   .search-input,
   .class-filter {
     width: 100%;
   }
-
-  .action-buttons {
-    display: grid;
+  
+  .students-table {
+    display: none;
+  }
+  
+  .mobile-student-cards {
+    display: block;
+  }
+  
+  .card-actions {
     grid-template-columns: 1fr 1fr;
-    width: 100%;
+  }
+  
+  .card-item {
+    padding: 0.5rem 0;
   }
 }
 
 @media (max-width: 480px) {
-  .action-buttons {
+  .students-section {
+    padding: 1.25rem;
+    border-radius: 12px;
+  }
+  
+  .title-badge h2 {
+    font-size: 1.25rem;
+  }
+  
+  .badge-icon {
+    font-size: 1.25rem;
+  }
+  
+  .student-card {
+    padding: 1rem;
+  }
+  
+  .card-actions {
     grid-template-columns: 1fr;
+  }
+  
+  /* Card item styles adjusted */
+  
+  .search-input, 
+  .class-filter {
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .search-input {
+    padding-left: 2.25rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .students-section {
+    padding: 1rem;
+  }
+  
+  .section-header {
+    margin-bottom: 1.25rem;
+  }
+  
+  .student-card {
+    padding: 0.875rem;
+  }
+  
+  .student-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+  }
+  
+  .btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* iOS safe areas */
+@supports (padding: max(0px)) {
+  .students-section {
+    padding-left: max(1.5rem, env(safe-area-inset-left));
+    padding-right: max(1.5rem, env(safe-area-inset-right));
   }
 }
 </style>

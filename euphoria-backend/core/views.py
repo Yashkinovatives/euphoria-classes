@@ -31,7 +31,6 @@ def get_tokens_for_user(user):
     }
 
 
-# ✅ Teacher Signup Requires Approval Code
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.conf import settings
@@ -43,46 +42,41 @@ from .models import CustomUser
 @api_view(['POST'])
 def signup(request):
     data = request.data
-    email = data['email'].lower()  # Convert email to lowercase for consistency
+    email = data['email'].lower()  
 
     if CustomUser.objects.filter(email=email).exists():
         return Response({"error": "User already exists"}, status=400)
 
-    # ✅ If user is a teacher, generate an approval code
     if data['user_type'] == "teacher":
         approval_code = get_random_string(6, allowed_chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
-        # ✅ Store approval code in Django cache for 30 minutes
         cache_key = f"approval_code_{email}"
         cache.set(cache_key, approval_code, timeout=1800)
 
-        # ✅ Print to verify cache storage
         print(f"Stored Approval Code for {email}: {cache.get(cache_key)}")  
 
-        # ✅ Create teacher but keep inactive until approved
         user = CustomUser.objects.create_user(
             username=email,
             email=email,
             password=data['password'],
             first_name=data['name'],
             user_type="teacher",
-            pending_approval=True,  # Mark as awaiting approval
-            is_active=False  # Keep inactive until approved
+            pending_approval=True,  
+            is_active=False 
         )
 
-        # ✅ Send approval code email to admin
         send_mail(
             "Teacher Signup Approval Code",
             f"Approval Code: {approval_code}\nUse this code to approve the teacher.",
             settings.DEFAULT_FROM_EMAIL,
-            [settings.ADMIN_EMAIL],  # 🔹 Replace with actual admin email
+            [settings.ADMIN_EMAIL], 
             fail_silently=False,
         )
 
         return Response({"message": "Signup request received. Awaiting admin approval."}, status=201)
 
     else:  
-        # ✅ Parent Signup (No approval required)
+        
         user = CustomUser.objects.create_user(
             username=email,
             email=email,
@@ -90,7 +84,7 @@ def signup(request):
             first_name=data['name'],
             user_type="parent",
             pending_approval=False,
-            is_active=True  # Parents are active immediately
+            is_active=True  
         )
         return Response({"message": "Parent registered successfully"}, status=201)
 
@@ -98,12 +92,12 @@ def signup(request):
 
 @api_view(['POST'])
 def verify_teacher_code(request):
-    email = request.data.get("email").lower()  # Lowercase email for consistency
+    email = request.data.get("email").lower()  
     approval_code = request.data.get("approval_code")
 
-    stored_code = cache.get(f"approval_code_{email}")  # Fetch with lowercase email
-    print(f"Incoming Data: {request.data}")  # Debugging
-    print(f"Stored Code: {stored_code}, Received Code: {approval_code}")  # Debugging
+    stored_code = cache.get(f"approval_code_{email}") 
+    print(f"Incoming Data: {request.data}")  
+    print(f"Stored Code: {stored_code}, Received Code: {approval_code}")  
 
     if stored_code and stored_code == approval_code:
         user = CustomUser.objects.filter(email=email).first()
@@ -111,7 +105,7 @@ def verify_teacher_code(request):
             user.pending_approval = False
             user.is_active = True
             user.save()
-            cache.delete(f"approval_code_{email}")  # Remove code after use
+            cache.delete(f"approval_code_{email}")  
             return Response({"message": "Teacher account approved"}, status=200)
 
     return Response({"error": "Invalid approval code"}, status=400)
@@ -159,9 +153,9 @@ def parent_dashboard(request):
     students = Student.objects.filter(parent=request.user).values("id", "name", "class_section__name")
 
     if not students:
-        return Response({"enrollment_required": True}, status=200)  # 👈 Tell frontend to show student enrollment form
+        return Response({"enrollment_required": True}, status=200)  
 
-    return Response({"students": list(students)}, status=200)  # 👈 Show enrolled students
+    return Response({"students": list(students)}, status=200)  
 
 
 @api_view(['POST'])
@@ -218,7 +212,7 @@ def get_student_results(request):
 
     students = Student.objects.filter(parent=request.user)
     if not students.exists():
-        return Response({"results": []})  # ✅ Always return an array, never None
+        return Response({"results": []}) 
 
     results = []
     for student in students:
@@ -227,11 +221,11 @@ def get_student_results(request):
         )
         results.append({
             "student_name": student.name,
-            "class_section": student.class_section.name,  # ✅ Added class section
+            "class_section": student.class_section.name,  
             "results": list(student_results)
         })
 
-    return Response({"results": results})  # ✅ Always return an array
+    return Response({"results": results})  
 
 
 
@@ -340,7 +334,7 @@ def mark_attendance(request):
     if not student:
         return Response({"error": "Student not found"}, status=404)
 
-    # Ensure no duplicate attendance for the same day
+
     attendance, created = Attendance.objects.get_or_create(
         student=student,
         date=datetime.strptime(data["date"], "%Y-%m-%d"),
@@ -410,7 +404,7 @@ def add_notice(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_notices(request):
-    # Both teachers and parents can view notices
+    
     notices = Notice.objects.all().order_by('-created_at').values(
         "id", "title", "content", "created_by__first_name", "created_at"
     )
@@ -449,7 +443,7 @@ def update_notice(request, notice_id):
 
 
 @api_view(['GET'])
-@permission_classes([AllowAny])  # Anyone can view reviews
+@permission_classes([AllowAny])  
 def get_reviews(request):
     reviews = Review.objects.all().order_by('-created_at')
     data = []
@@ -466,7 +460,7 @@ def get_reviews(request):
     return Response(data)
 
 @api_view(['POST'])
-@permission_classes([AllowAny])  # Anyone (public) can submit a review
+@permission_classes([AllowAny])  
 def add_review(request):
     try:
         name = request.data.get('name')
@@ -481,7 +475,7 @@ def add_review(request):
             review=review_text
         )
         
-        # Handle image if provided
+        
         if 'image' in request.FILES:
             review.image = request.FILES['image']
             
@@ -492,7 +486,7 @@ def add_review(request):
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])  # Only authenticated users (teachers) can delete reviews
+@permission_classes([IsAuthenticated]) 
 def delete_review(request, review_id):
     if request.user.user_type != "teacher":
         return Response({"error": "Unauthorized, only teachers can delete reviews"}, status=status.HTTP_403_FORBIDDEN)
@@ -504,37 +498,37 @@ def delete_review(request, review_id):
     review.delete()
     return Response({"message": "Review deleted successfully"}, status=status.HTTP_200_OK)
 
-    # ✅ Parent Uploads Student Results
+  
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_student_result(request):
     try:
-        print("Raw Request Data:", request.data)  # ✅ Debugging
+        print("Raw Request Data:", request.data) 
 
         student_id = request.data.get("student_id")
-        semester_name = request.data.get("semester")  # This is a string (e.g., "Semester 1")
+        semester_name = request.data.get("semester")  
         year = request.data.get("year")
-        subjects_json = request.data.get("subjects")  # JSON string
+        subjects_json = request.data.get("subjects")  
 
-        print("Subjects JSON (Before Parsing):", subjects_json)  # ✅ Debugging
+        print("Subjects JSON (Before Parsing):", subjects_json) 
 
-        # ✅ Convert JSON string to Python list
+        
         try:
             subjects = json.loads(subjects_json)
         except json.JSONDecodeError:
             return Response({"error": "Invalid subjects format"}, status=400)
 
-        # ✅ Validate subjects is a list
+        
         if not isinstance(subjects, list):
             return Response({"error": "Subjects must be a list"}, status=400)
 
-        # ✅ Validate the student exists
+        
         student = Student.objects.filter(id=student_id).first()
         if not student:
             return Response({"error": "Invalid student ID"}, status=400)
 
-        # ✅ Fix: Ensure we retrieve/create a `ParentUploadedSemester` instance
+       
         semester_instance, created = ParentUploadedSemester.objects.get_or_create(
             student=student,
             semester=semester_name,
@@ -542,18 +536,17 @@ def upload_student_result(request):
             uploaded_by=request.user
         )
 
-        print("Semester Instance:", semester_instance)  # ✅ Debugging
+        print("Semester Instance:", semester_instance) 
 
-        # ✅ Save result document if uploaded
+        
         document = request.FILES.get("document")
         if document:
             file_path = default_storage.save(f"results/{document.name}", document)
         else:
             file_path = None
 
-        # ✅ Save results in the database (link to semester instance)
         result = ParentUploadedResult.objects.create(
-            semester=semester_instance,  # 🔥 Now linking to the correct instance
+            semester=semester_instance,  
             document=file_path
         )
 

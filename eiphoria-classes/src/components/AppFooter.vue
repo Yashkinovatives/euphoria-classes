@@ -11,10 +11,10 @@
         <div class="brand-section">
           <router-link to="/" class="footer-logo">
             <span class="gradient-text">Euphoria</span>
-            <span class="logo-dot">.</span>
+            <span class="logo-dot">Tutorials</span>
           </router-link>
           <p class="brand-description">
-            Empowering minds through innovative learning experiences. Join our global community of lifelong learners.
+            Empowering students through personalized education. Join our community of dedicated teachers and engaged parents.
           </p>
           <div class="social-links">
             <a v-for="social in socialLinks" 
@@ -56,7 +56,14 @@
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                 <path d="M22 6l-10 7L2 6"/>
               </svg>
-              <a href="mailto:hello@euphoriaclasses.com" class="contact-link">hello@euphoriaclasses.com</a>
+              <a href="mailto:info@classconnect.com" class="contact-link">info@classconnect.com</a>
+            </li>
+            <li class="contact-item">
+              <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <a href="https://maps.google.com" target="_blank" class="contact-link">123 Education St, Learning City</a>
             </li>
           </ul>
         </div>
@@ -65,7 +72,7 @@
       <!-- Bottom Bar -->
       <div class="bottom-bar">
         <p class="copyright-text">
-          © {{ currentYear }} Euphoria Classes. All rights reserved.
+          © {{ currentYear }} Euphoria Tutorials. All rights reserved.
         </p>
         <div class="legal-links">
           <a href="/privacy" class="legal-link">Privacy Policy</a>
@@ -80,11 +87,11 @@
 const currentYear = new Date().getFullYear()
 
 const menuItems = [
+  { name: 'Home', path: '/' },
   { name: 'About Us', path: '/about' },
-  { name: 'Courses', path: '/courses' },
-  { name: 'Blog', path: '/blog' },
-  { name: 'Careers', path: '/careers' },
-  { name: 'Contact', path: '/contact' }
+  { name: 'Reviews', path: '/reviews' },
+  { name: 'Contact', path: '/contact' },
+  { name: 'Login', path: '/login' }
 ]
 
 const socialLinks = [
@@ -94,9 +101,9 @@ const socialLinks = [
     icon: 'TwitterIcon'
   },
   {
-    name: 'LinkedIn',
+    name: 'Facebook',
     url: '#',
-    icon: 'LinkedInIcon'
+    icon: 'FacebookIcon'
   },
   {
     name: 'Instagram',
@@ -108,15 +115,15 @@ const socialLinks = [
 
 <style scoped>
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 .footer-container {
-  background: linear-gradient(to bottom, #fff9e6, #fff3cc);
-  color: #1e293b;
+  background: linear-gradient(to bottom, #F0F7FF, #E6F2FF);
+  color: #2D3748;
   padding: 6rem 1.5rem 2rem;
   position: relative;
   overflow: hidden;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 
 .footer-container::before {
@@ -126,7 +133,7 @@ const socialLinks = [
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(to right, transparent, #FFD700, transparent);
+  background: linear-gradient(to right, transparent, #4B96F3, transparent);
 }
 
 /* Animated Background */
@@ -142,7 +149,7 @@ const socialLinks = [
 
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 199, 44, 0.1));
+  background: linear-gradient(45deg, rgba(75, 150, 243, 0.1), rgba(49, 120, 230, 0.1));
   border-radius: 50%;
   filter: blur(1px);
   animation: float 25s infinite ease-in-out alternate;
@@ -184,31 +191,31 @@ const socialLinks = [
   font-weight: 800;
   text-decoration: none;
   margin-bottom: 1.5rem;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .gradient-text {
-  background: linear-gradient(45deg, #FFD700, #FFC72C);
+  background: linear-gradient(45deg, #4B96F3, #3178E6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .logo-dot {
-  color: #FFD700;
+  color: #3178E6;
 }
 
 .brand-description {
-  color: #555;
+  color: #4A5568;
   font-size: 1.1rem;
   line-height: 1.7;
   margin-bottom: 2rem;
 }
 
 .section-title {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1e293b;
+  color: #2D3748;
   margin-bottom: 1.5rem;
   position: relative;
   display: inline-block;
@@ -221,7 +228,7 @@ const socialLinks = [
   left: 0;
   width: 40px;
   height: 3px;
-  background: linear-gradient(45deg, #FFD700, #FFC72C);
+  background: linear-gradient(45deg, #4B96F3, #3178E6);
   border-radius: 2px;
 }
 
@@ -233,7 +240,7 @@ const socialLinks = [
 }
 
 .footer-link {
-  color: #555;
+  color: #4A5568;
   text-decoration: none;
   font-size: 1.1rem;
   display: block;
@@ -242,7 +249,7 @@ const socialLinks = [
 }
 
 .footer-link:hover {
-  color: #FFD700;
+  color: #3178E6;
   transform: translateX(4px);
 }
 
@@ -256,18 +263,18 @@ const socialLinks = [
 .contact-icon {
   width: 1.25rem;
   height: 1.25rem;
-  stroke: #FFD700;
+  stroke: #4B96F3;
   stroke-width: 2;
 }
 
 .contact-link {
-  color: #555;
+  color: #4A5568;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .contact-link:hover {
-  color: #FFD700;
+  color: #3178E6;
 }
 
 .social-links {
@@ -283,17 +290,17 @@ const socialLinks = [
   height: 2.5rem;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.8);
-  color: #FFD700;
-  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: #4B96F3;
+  border: 1px solid rgba(75, 150, 243, 0.3);
   transition: all 0.3s ease;
 }
 
 .social-link:hover {
   transform: translateY(-2px);
-  background: linear-gradient(45deg, #FFD700, #FFC72C);
+  background: linear-gradient(45deg, #4B96F3, #3178E6);
   color: white;
   border-color: transparent;
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(75, 150, 243, 0.3);
 }
 
 /* Bottom Bar */
@@ -302,11 +309,11 @@ const socialLinks = [
   justify-content: space-between;
   align-items: center;
   padding-top: 2rem;
-  border-top: 1px solid rgba(255, 215, 0, 0.2);
+  border-top: 1px solid rgba(75, 150, 243, 0.2);
 }
 
 .copyright-text {
-  color: #777;
+  color: #718096;
 }
 
 .legal-links {
@@ -315,13 +322,13 @@ const socialLinks = [
 }
 
 .legal-link {
-  color: #777;
+  color: #718096;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .legal-link:hover {
-  color: #FFD700;
+  color: #3178E6;
 }
 
 /* Responsive Design */
@@ -337,6 +344,10 @@ const socialLinks = [
 }
 
 @media (max-width: 768px) {
+  .footer-container {
+    padding: 4rem 1.5rem 2rem;
+  }
+  
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -353,6 +364,9 @@ const socialLinks = [
 
   .section-title {
     text-align: center;
+    margin-top: 1rem;
+    display: block;
+    width: 100%;
   }
   
   .section-title::after {
@@ -367,12 +381,58 @@ const socialLinks = [
 
   .contact-item {
     justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .contact-link {
+    display: block;
+    width: 100%;
+    text-align: center;
   }
 
   .bottom-bar {
     flex-direction: column;
     gap: 1rem;
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-container {
+    padding: 3rem 1rem 1.5rem;
+  }
+  
+  .footer-logo {
+    font-size: 2rem;
+  }
+  
+  .brand-description {
+    font-size: 1rem;
+  }
+  
+  .footer-link {
+    font-size: 1rem;
+    padding: 0.4rem 0;
+  }
+  
+  .social-link {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+  
+  .legal-links {
+    gap: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .contact-item {
+    margin-bottom: 1.5rem;
+  }
+  
+  .contact-icon {
+    margin-bottom: 0.25rem;
   }
 }
 </style>

@@ -13,31 +13,31 @@
           <div class="badge" v-motion
             :initial="{ scale: 0, opacity: 0 }"
             :enter="{ scale: 1, opacity: 1, transition: { delay: 300 } }">
-            <span class="badge-icon">🚀</span>
-            <span>Elevate Your Learning</span>
+            <span class="badge-icon">🎓</span>
+            <span>Euphoria Tutorials</span>
           </div>
         </div>
 
         <h1 class="title">
-          Step into the Future with
+          Helping Children
           <div class="gradient-text-wrapper">
-            <span class="gradient-text">Limitless Possibilities</span>
+            <span class="gradient-text">Discover Their Potential</span>
           </div>
         </h1>
 
         <p class="description">
-          Unlock the full potential of your skills with interactive courses,
-          AI-driven insights, and personalized guidance tailored to your unique learning journey.
+          Stay connected with your child's educational journey through our interactive platform. 
+          Monitor progress, view assignments, and celebrate achievements all in one place.
         </p>
 
         <div class="cta-group">
           <button class="primary-btn" @click="$router.push('/Login')">
             <span class="btn-icon">✨</span>
-            <span>Get Started</span>
+            <span>Parent Login</span>
           </button>
 
-          <button class="secondary-btn" @click="$router.push('/courses')">
-            <span>Explore Courses</span>
+          <button class="secondary-btn" @click="$router.push('/About')">
+            <span>About Classes</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
@@ -55,7 +55,7 @@
       </div>
 
       <div class="features-section">
-        <h2 class="features-title">Why Choose Our Platform</h2>
+        <h2 class="features-title">Why Parents Choose Us</h2>
 
         <div class="features-grid">
           <div v-for="(feature, index) in features"
@@ -87,42 +87,42 @@ import ScrollingSection from '@/components/HomePageComponents/ScrollingSection.v
 
 // Uncomment this section to properly define stats
 const stats = [
-  { value: '50K+', label: 'Active Learners' },
-  { value: '200+', label: 'Expert Courses' },
-  { value: '95%', label: 'Success Rate' }
+  { value: '500+', label: 'Happy Students' },
+  { value: '15+', label: 'Years of Excellence' },
+  { value: '98%', label: 'Parent Satisfaction' }
 ];
 
 const features = [
   {
-    icon: '🎯',
-    title: 'Practical Oriented Lectures',
-    description: 'Practical Oriented Lectures focus on applying knowledge, not just memorizing it, ensuring you gain skills ready for real-world use',
-    bgColor: 'linear-gradient(135deg, #FFD700, #FFC72C)' // Yellow gradient for AI
+    icon: '📚',
+    title: 'Engaging Curriculum',
+    description: 'Our curriculum balances fun and learning, designed to keep children motivated while building essential skills for their future.',
+    bgColor: 'linear-gradient(135deg, #4B96F3, #3178E6)' // Blue gradient for learning
   },
   {
-    icon: '⚡',
-    title: 'All Inclusive Study Material',
-    description: 'Everything you need, in one place: Our materials offer a complete learning experience, from core concepts to advanced applications.',
-    bgColor: 'linear-gradient(135deg, #FFECB3, #FFE082)' // Lighter yellow gradient for performance
+    icon: '📱',
+    title: 'Real-time Progress Updates',
+    description: 'Get instant notifications about assignments, grades, and milestones so you\'re always informed about your child\'s progress.',
+    bgColor: 'linear-gradient(135deg, #A076F9, #7C4AE0)' // Purple gradient for technology
   },
   {
-    icon: '🌎',
-    title: 'Interactive Quizzes & Assessments',
-    description: 'Test your knowledge and track your progress with engaging quizzes and assessments, designed to reinforce learning.',
-    bgColor: 'linear-gradient(135deg, #FFEB3B, #FFD600)' // Brighter yellow gradient for community
+    icon: '👨‍👩‍👧‍👦',
+    title: 'Parent-Teacher Partnership',
+    description: 'Schedule meetings, exchange messages, and collaborate with teachers to create the best learning environment for your child.',
+    bgColor: 'linear-gradient(135deg, #FF9671, #F46036)' // Orange gradient for community
   },
   {
     icon: '🔍',
-    title: 'Flexible Learning Schedule',
-    description: 'Learn on your own terms: Our flexible schedules allow you to study when it suits you, fitting education into your life.',
-    bgColor: 'linear-gradient(135deg, #FFF9C4, #FFF59D)' // Very light yellow gradient for resources
+    title: 'Personalized Learning Path',
+    description: 'Every child learns differently. Our adaptive system tailors resources and activities to match your child\'s unique learning style.',
+    bgColor: 'linear-gradient(135deg, #57C89F, #38B2AC)' // Teal gradient for personalization
   }
 ]
 </script>
 
 <style scoped>
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 /* Base Styles */
 * {
@@ -133,13 +133,13 @@ const features = [
 
 .hero {
   min-height: 100vh;
-  background: linear-gradient(135deg, hsl(55, 100%, 95%), #f1f0dc); /* Light yellow background */
+  background: linear-gradient(135deg, #F0F7FF, #E6F2FF); /* Soft blue background */
   position: relative;
   overflow: hidden;
   padding: 4rem 1rem; /* Reduced side padding for mobile */
-  color: #333; /* Darker text for better contrast */
-  font-family: 'Outfit', sans-serif;
-  letter-spacing: -0.02em;
+  color: #2D3748; /* Dark blue-gray text for readability */
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: -0.01em;
 }
 
 /* Animated Background */
@@ -155,7 +155,7 @@ const features = [
 
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 199, 44, 0.1)); /* Yellow floating elements */
+  background: linear-gradient(45deg, rgba(75, 150, 243, 0.1), rgba(49, 120, 230, 0.1)); /* Blue floating elements */
   border-radius: 50%;
   filter: blur(1px);
   animation: float 25s infinite ease-in-out alternate;
@@ -207,17 +207,17 @@ const features = [
   display: flex;
   align-items: center;
   padding: 0.6rem 1rem; /* Slightly smaller padding for mobile */
-  background: rgba(255, 215, 0, 0.15);
+  background: rgba(75, 150, 243, 0.15);
   border-radius: 100px;
   backdrop-filter: blur(10px);
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: clamp(0.8rem, 2.5vw, 1rem); /* Responsive font size */
   font-weight: 600;
   letter-spacing: 0.02em;
-  border: 1px solid rgba(255, 215, 0, 0.3);
-  box-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);
+  border: 1px solid rgba(75, 150, 243, 0.3);
+  box-shadow: 0 2px 10px rgba(75, 150, 243, 0.2);
   gap: 0.5rem;
-  color: #B8860B; 
+  color: #3178E6; 
   width: fit-content; /* Ensure the badge only takes the space it needs */
 }
 
@@ -226,13 +226,13 @@ const features = [
 }
 
 .title {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: clamp(2rem, 6vw, 4.5rem); /* Responsive font size */
   font-weight: 700;
   line-height: 1.1;
   margin-bottom: 1.5rem; /* Reduced margin for mobile */
-  letter-spacing: -0.03em;
-  color: #333;
+  letter-spacing: -0.02em;
+  color: #2D3748;
 }
 
 .gradient-text-wrapper {
@@ -241,7 +241,7 @@ const features = [
 }
 
 .gradient-text {
-  background: linear-gradient(45deg, #FFD700, #FFC72C); /* Yellow gradient text */
+  background: linear-gradient(45deg, #4B96F3, #3178E6); /* Blue gradient text */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 800;
@@ -255,14 +255,14 @@ const features = [
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(45deg, #FFD700, #FFC72C); /* Yellow gradient underline */
+  background: linear-gradient(45deg, #4B96F3, #3178E6); /* Blue gradient underline */
   border-radius: 4px;
 }
 
 .description {
   font-size: clamp(1rem, 3vw, 1.25rem); /* Responsive font size */
   font-weight: 400;
-  color: #555; /* Darker grey description */
+  color: #4A5568; /* Medium gray description */
   margin-bottom: 2rem; /* Reduced margin for mobile */
   line-height: 1.7;
   letter-spacing: -0.01em;
@@ -293,17 +293,18 @@ const features = [
   cursor: pointer;
   min-width: 140px; /* Minimum width for buttons */
   justify-content: center; /* Center content on mobile */
+  font-family: 'Quicksand', sans-serif;
 }
 
 .primary-btn {
-  background: linear-gradient(45deg, #FFD700, #FFC72C); /* Yellow primary button */
-  color: #333; /* Darker text */
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  background: linear-gradient(45deg, #4B96F3, #3178E6); /* Blue primary button */
+  color: white; /* White text */
+  box-shadow: 0 4px 15px rgba(75, 150, 243, 0.3);
 }
 
 .primary-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(75, 150, 243, 0.4);
 }
 
 .btn-icon {
@@ -312,15 +313,15 @@ const features = [
 
 .secondary-btn {
   background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 215, 0, 0.3);
-  color: #B8860B; /* Dark goldenrod for secondary */
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(75, 150, 243, 0.3);
+  color: #3178E6; /* Blue for secondary */
+  box-shadow: 0 4px 15px rgba(75, 150, 243, 0.1);
 }
 
 .secondary-btn:hover {
   background: rgba(255, 255, 255, 0.95);
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.2);
+  box-shadow: 0 8px 20px rgba(75, 150, 243, 0.2);
 }
 
 /* Stats Section */
@@ -339,18 +340,18 @@ const features = [
 }
 
 .stat-value {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive font size */
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(45deg, #FFD700, #FFC72C); 
+  background: linear-gradient(45deg, #4B96F3, #3178E6); 
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .stat-label {
   font-size: clamp(0.8rem, 2.5vw, 1rem); /* Responsive font size */
-  color: #555;
+  color: #4A5568;
   font-weight: 500;
 }
 
@@ -362,12 +363,12 @@ const features = [
 
 .features-title {
   text-align: center;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive font size */
   font-weight: 700;
   margin-bottom: 3rem;
   letter-spacing: -0.02em;
-  color: #333;
+  color: #2D3748;
   position: relative;
   display: inline-block;
   left: 50%;
@@ -384,7 +385,7 @@ const features = [
   transform: translateX(-50%);
   width: clamp(50px, 15vw, 80px); /* Responsive width */
   height: 4px;
-  background: linear-gradient(45deg, #FFD700, #FFC72C); /* Yellow gradient feature title underline */
+  background: linear-gradient(45deg, #4B96F3, #3178E6); /* Blue gradient feature title underline */
   border-radius: 4px;
 }
 
@@ -398,20 +399,20 @@ const features = [
 .feature-card {
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
-  border-radius: 24px;
+  border-radius: 16px;
   padding: clamp(1.5rem, 5vw, 2.5rem); /* Responsive padding */
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(255, 215, 0, 0.1); /* Yellow border */
+  border: 1px solid rgba(75, 150, 243, 0.1); /* Blue border */
   height: 100%;
 }
 
 .feature-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 14px 40px rgba(255, 215, 0, 0.12);
-  border: 1px solid rgba(255, 215, 0, 0.2); /* Slightly darker yellow border */
+  box-shadow: 0 14px 40px rgba(75, 150, 243, 0.12);
+  border: 1px solid rgba(75, 150, 243, 0.2); /* Slightly darker blue border */
 }
 
 .feature-icon-container {
@@ -423,7 +424,8 @@ const features = [
   justify-content: center;
   margin-bottom: 1.25rem; /* Reduced margin for mobile */
   transition: all 0.3s ease;
-  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.15); /* Yellow icon container shadow */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  color: white;
 }
 
 .feature-card:hover .feature-icon-container {
@@ -441,17 +443,17 @@ const features = [
 }
 
 .feature-title {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   margin-bottom: 0.75rem; /* Reduced margin for mobile */
   font-size: clamp(1.2rem, 3.5vw, 1.5rem); /* Responsive font size */
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #333;
+  color: #2D3748;
 }
 
 .feature-description {
   font-size: clamp(0.9rem, 3vw, 1.125rem); /* Responsive font size */
-  color: #555;
+  color: #4A5568;
   line-height: 1.6;
   font-weight: 400;
   flex: 1;

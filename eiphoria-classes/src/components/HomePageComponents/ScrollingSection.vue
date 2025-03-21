@@ -6,7 +6,7 @@
     </div>
     
     <div class="container">
-      <h2 class="section-heading">Success Stories</h2>
+      <h2 class="section-heading">What Parents Say</h2>
       
       <div v-if="loading" class="loading-state">
         <div class="loading-spinner"></div>
@@ -17,7 +17,7 @@
         <p>No testimonials available yet. Be the first to share your experience!</p>
       </div>
       
-      <div v-else class="testimonial-carousel">
+      <div v-else class="testimonial-carousel" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
         <div class="testimonial-track" ref="trackRef">
           <div 
             v-for="(testimonial, index) in testimonials" 
@@ -39,42 +39,24 @@
               </div>
               <div class="user-details">
                 <h3 class="user-name">{{ testimonial.name }}</h3>
-                <p class="user-role">{{ testimonial.role || "Learner" }}</p>
+                <p class="user-role">{{ testimonial.role || "Parent" }}</p>
               </div>
             </div>
           </div>
         </div>
         
-        <!-- Navigation buttons below the testimonial cards -->
-        <div class="controls-container" v-if="testimonials.length > 1">
-          <div class="controls">
-            <button @click="prevTestimonial" class="control-btn prev" aria-label="Previous testimonial">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </button>
-            
-            <div class="indicators">
-              <button 
-                v-for="(_, index) in testimonials" 
-                :key="index"
-                @click="setTestimonial(index)"
-                class="indicator-dot"
-                :class="{ active: currentIndex === index }"
-                :aria-label="`Go to testimonial ${index + 1}`"
-              ></button>
-            </div>
-            
-            <button @click="nextTestimonial" class="control-btn next" aria-label="Next testimonial">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
+        <!-- Indicators only (no buttons) -->
+        <div class="indicators-container" v-if="testimonials.length > 1">
+          <div class="indicators">
+            <div 
+              v-for="(_, index) in testimonials" 
+              :key="index"
+              class="indicator-dot"
+              :class="{ active: currentIndex === index }"
+            ></div>
           </div>
         </div>
       </div>
-      
-    
     </div>
   </section>
 </template>
@@ -91,6 +73,34 @@ const autoplayInterval = ref(null);
 const trackRef = ref(null);
 const defaultAvatar = '/default-avatar.png';
 
+// Touch handling
+const touchStartX = ref(0);
+const touchEndX = ref(0);
+
+const touchStart = (e) => {
+  touchStartX.value = e.changedTouches[0].screenX;
+};
+
+const touchMove = (e) => {
+  touchEndX.value = e.changedTouches[0].screenX;
+};
+
+const touchEnd = () => {
+  // Minimum distance required for swipe
+  const minSwipeDistance = 50;
+  const distance = touchEndX.value - touchStartX.value;
+  
+  if (Math.abs(distance) > minSwipeDistance) {
+    if (distance > 0) {
+      // Swipe right
+      prevTestimonial();
+    } else {
+      // Swipe left
+      nextTestimonial();
+    }
+  }
+};
+
 // Fetch testimonials from the database (limited to 6)
 const fetchTestimonials = async () => {
   loading.value = true;
@@ -98,14 +108,39 @@ const fetchTestimonials = async () => {
     const response = await axios.get('http://127.0.0.1:8000/api/reviews/');
     // Limit to 6 testimonials maximum
     testimonials.value = response.data.slice(0, 6);
+    
+    // Start autoplay after testimonials are loaded
+    if (testimonials.value.length > 1) {
+      startAutoplay();
+    }
   } catch (error) {
     console.error('Error fetching testimonials:', error);
+    // Fallback testimonials in case API is not available
+    testimonials.value = [
+      {
+        name: "Sarah Johnson",
+        role: "Parent",
+        review: "The teachers are exceptional and truly care about each student's progress. My daughter has shown remarkable improvement in her confidence and academic skills.",
+        image: null
+      },
+      {
+        name: "Michael Roberts",
+        role: "Parent",
+        review: "The personalized attention my son receives has made all the difference. The regular progress updates keep us informed, and we're very happy with the results.",
+        image: null
+      },
+      {
+        name: "Jennifer Williams",
+        role: "Parent",
+        review: "We've tried several educational programs, but this one stands out for its quality curriculum and dedicated staff. Highly recommended for any parent looking for quality education.",
+        image: null
+      }
+    ];
+    startAutoplay();
   } finally {
     loading.value = false;
   }
 };
-
-
 
 // Carousel navigation functions
 const nextTestimonial = () => {
@@ -124,17 +159,12 @@ const prevTestimonial = () => {
   }
 };
 
-const setTestimonial = (index) => {
-  currentIndex.value = index;
-  resetAutoplay();
-};
-
 // Autoplay functions
 const startAutoplay = () => {
   if (testimonials.value.length > 1) {
     autoplayInterval.value = setInterval(() => {
       nextTestimonial();
-    }, 6000);
+    }, 5000); // 5 second interval as requested
   }
 };
 
@@ -166,15 +196,15 @@ onBeforeUnmount(() => {
 
 <style scoped>
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 .testimonials-section {
   padding: 5rem 0;
-  background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+  background: linear-gradient(135deg, #F0F7FF, #E6F2FF); /* Soft blue background matching homepage */
   position: relative;
   overflow: hidden;
-  color: #1e293b;
-  font-family: 'Outfit', sans-serif;
+  color: #2D3748;
+  font-family: 'Nunito', sans-serif;
   min-height: 50vh;
 }
 
@@ -191,7 +221,7 @@ onBeforeUnmount(() => {
 
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(139, 92, 246, 0.1), rgba(192, 132, 252, 0.1));
+  background: linear-gradient(45deg, rgba(75, 150, 243, 0.1), rgba(49, 120, 230, 0.1)); /* Blue floating elements */
   border-radius: 50%;
   filter: blur(1px);
   animation: float 25s infinite ease-in-out alternate;
@@ -221,16 +251,15 @@ onBeforeUnmount(() => {
 }
 
 .section-heading {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: 2.5rem;
-  font-weight: 800;
+  font-weight: 700;
   text-align: center;
   margin-bottom: 3rem;
-  color: #1e293b;
+  color: #2D3748;
   position: relative;
-  display: inline-block;
-  left: 50%;
-  transform: translateX(-50%);
+  display: block;
+  width: 100%;
 }
 
 .section-heading::after {
@@ -241,8 +270,8 @@ onBeforeUnmount(() => {
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background: linear-gradient(90deg, #7C3AED, #C084FC);
-  border-radius: 2px;
+  background: linear-gradient(45deg, #4B96F3, #3178E6); /* Blue gradient underline */
+  border-radius: 4px;
 }
 
 /* Loading State */
@@ -258,8 +287,8 @@ onBeforeUnmount(() => {
 .loading-spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid rgba(139, 92, 246, 0.2);
-  border-top: 4px solid #7C3AED;
+  border: 4px solid rgba(75, 150, 243, 0.2);
+  border-top: 4px solid #4B96F3;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -277,10 +306,10 @@ onBeforeUnmount(() => {
   padding: 2rem;
   text-align: center;
   font-size: 1.125rem;
-  color: #475569;
+  color: #4A5568;
   max-width: 600px;
   margin: 0 auto;
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(75, 150, 243, 0.2);
   min-height: 150px;
   display: flex;
   align-items: center;
@@ -293,55 +322,14 @@ onBeforeUnmount(() => {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem 0 4rem;
-}
-
-.controls-container {
-  margin-top: 2rem;
-  width: 100%;
-}
-
-.controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 1rem;
-}
-
-.control-btn {
-  background: white;
-  border: none;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
-  color: #7C3AED;
-  transition: all 0.3s ease;
-}
-
-.control-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.25);
-  background: #7C3AED;
-  color: white;
-}
-
-.control-btn:active {
-  transform: translateY(0);
-}
-
-.control-btn svg {
-  width: 24px;
-  height: 24px;
+  touch-action: pan-y;
+  overflow: hidden;
 }
 
 .testimonial-track {
   position: relative;
-  min-height: 350px;
+  min-height: 300px;
+  width: 100%;
 }
 
 .testimonial-card {
@@ -349,29 +337,27 @@ onBeforeUnmount(() => {
   top: 0;
   left: 0;
   width: 100%;
-  opacity: 0;
-  transform: translateX(20px);
-  transition: all 0.6s ease;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.08);
+  box-shadow: 0 10px 30px rgba(75, 150, 243, 0.08);
   padding: 2rem;
   z-index: 1;
-  pointer-events: none;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  opacity: 0;
+  transform: translateX(100%);
 }
 
 .testimonial-card.active {
   opacity: 1;
   transform: translateX(0);
   z-index: 2;
-  pointer-events: auto;
 }
 
 .quote-mark {
   position: absolute;
   top: -25px;
   left: 25px;
-  background: linear-gradient(135deg, #7C3AED, #C084FC);
+  background: linear-gradient(135deg, #4B96F3, #3178E6);
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -379,7 +365,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   color: white;
-  box-shadow: 0 6px 15px rgba(124, 58, 237, 0.2);
+  box-shadow: 0 6px 15px rgba(75, 150, 243, 0.2);
 }
 
 .quote-mark svg {
@@ -390,7 +376,7 @@ onBeforeUnmount(() => {
 .testimonial-content {
   font-size: 1.125rem;
   line-height: 1.8;
-  color: #4b5563;
+  color: #4A5568;
   margin-bottom: 1.5rem;
   font-style: italic;
 }
@@ -408,9 +394,9 @@ onBeforeUnmount(() => {
   height: 60px;
   margin-right: 1rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, #7C3AED, #C084FC);
+  background: linear-gradient(135deg, #4B96F3, #3178E6);
   padding: 3px;
-  box-shadow: 0 4px 10px rgba(124, 58, 237, 0.2);
+  box-shadow: 0 4px 10px rgba(75, 150, 243, 0.2);
 }
 
 .user-avatar {
@@ -426,17 +412,23 @@ onBeforeUnmount(() => {
 }
 
 .user-name {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: 1.125rem;
   font-weight: 700;
-  color: #1e293b;
+  color: #2D3748;
   margin: 0 0 0.25rem;
 }
 
 .user-role {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: #4A5568;
   margin: 0;
+}
+
+.indicators-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
 }
 
 .indicators {
@@ -451,21 +443,33 @@ onBeforeUnmount(() => {
   height: 10px;
   border-radius: 50%;
   background: #e5e7eb;
-  border: none;
-  cursor: pointer;
   transition: all 0.3s ease;
-  padding: 0;
+  cursor: pointer;
 }
 
 .indicator-dot.active {
-  background: #7C3AED;
-  transform: scale(1.2);
+  background: #4B96F3;
+  transform: scale(1.3);
+  width: 12px;
+  height: 12px;
 }
 
-
-
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .section-heading {
+    font-size: 2.25rem;
+  }
+  
+  .testimonial-card {
+    padding: 1.75rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .testimonials-section {
+    padding: 4rem 0;
+  }
+  
   .section-heading {
     font-size: 2rem;
   }
@@ -474,29 +478,27 @@ onBeforeUnmount(() => {
     font-size: 1rem;
   }
   
-  .control-btn {
-    width: 40px;
-    height: 40px;
-  }
-  
   .testimonial-track {
-    min-height: 400px; /* Increase height for mobile */
-  }
-  
-  .controls {
-    gap: 0.75rem;
+    min-height: 350px; /* Increase height for mobile */
   }
   
   .container {
     padding: 0 1.5rem;
   }
-  
-
 }
 
 @media (max-width: 480px) {
+  .testimonials-section {
+    padding: 3rem 0 4rem;
+  }
+  
+  .section-heading {
+    font-size: 1.75rem;
+    margin-bottom: 2.5rem;
+  }
+  
   .testimonial-track {
-    min-height: 450px; /* Further increase height for small mobile */
+    min-height: 420px; /* Further increase height for small mobile */
   }
   
   .testimonial-card {
@@ -515,8 +517,60 @@ onBeforeUnmount(() => {
     height: 20px;
   }
   
-  .modal-content {
-    padding: 1.75rem;
+  .user-avatar-container {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .testimonial-content {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  
+  .user-name {
+    font-size: 1rem;
+  }
+  
+  .user-role {
+    font-size: 0.8rem;
+  }
+  
+  .container {
+    padding: 0 1.25rem;
+  }
+  
+  .indicator-dot {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .indicator-dot.active {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .testimonial-track {
+    min-height: 480px;
+  }
+  
+  .testimonial-card {
+    padding: 1.25rem;
+  }
+  
+  .testimonial-content {
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-element,
+  .testimonial-card,
+  .slide-enter-active,
+  .slide-leave-active {
+    animation: none;
+    transition: none;
   }
 }
 </style>

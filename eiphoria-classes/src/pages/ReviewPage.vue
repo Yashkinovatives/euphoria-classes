@@ -51,7 +51,6 @@
           <div class="quote-mark">"</div>
           <p class="review">{{ testimonial.review }}</p>
           <div class="user-info">
-            <img :src="testimonial.image || defaultImage" :alt="testimonial.name" class="user-image">
             <div class="user-details">
               <h3 class="user-name">{{ testimonial.name }}</h3>
               <p class="user-role">{{ testimonial.role || "Learner" }}</p>
@@ -59,39 +58,41 @@
           </div>
         </div>
       </div>
+    </div>
+    
+    <!-- Fixed share story button outside content flow -->
+    <button @click="showModal = true" class="add-review-btn">
+      <span class="btn-icon">✏️</span>
+      <span>Share Your Story</span>
+    </button>
 
-      <button @click="showModal = true" class="add-review-btn">
-        <span class="btn-icon">✏️</span>
-        <span>Share Your Story</span>
-      </button>
-
-      <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
-        <div class="modal-content">
-          <button @click="showModal = false" class="close-modal-btn">×</button>
-          <h2 class="modal-title">Share Your Experience</h2>
+    <!-- Fixed modal overlay -->
+    <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
+      <div class="modal-content">
+        <button @click="showModal = false" class="close-modal-btn">×</button>
+        <h2 class="modal-title">Share Your Experience</h2>
+        
+        <form @submit.prevent="submitReview" class="review-form">
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" v-model="newReview.name" placeholder="Enter your name" required />
+          </div>
           
-          <form @submit.prevent="submitReview" class="review-form">
-            <div class="form-group">
-              <label for="name">Your Name</label>
-              <input type="text" id="name" v-model="newReview.name" placeholder="Enter your name" required />
-            </div>
-            
-            <div class="form-group">
-              <label for="role">Your Role</label>
-              <input type="text" id="role" v-model="newReview.role" placeholder="Student, Professional, etc. (Optional)" />
-            </div>
-            
-            <div class="form-group">
-              <label for="review">Your Review</label>
-              <textarea id="review" v-model="newReview.review" placeholder="Share your experience with our platform..." required></textarea>
-            </div>
-            
-            <button type="submit" :disabled="submitting" class="submit-btn">
-              <span v-if="submitting">Submitting...</span>
-              <span v-else>Submit Review</span>
-            </button>
-          </form>
-        </div>
+          <div class="form-group">
+            <label for="role">Your Role</label>
+            <input type="text" id="role" v-model="newReview.role" placeholder="Student, Professional, etc. (Optional)" />
+          </div>
+          
+          <div class="form-group">
+            <label for="review">Your Review</label>
+            <textarea id="review" v-model="newReview.review" placeholder="Share your experience with our platform..." required></textarea>
+          </div>
+          
+          <button type="submit" :disabled="submitting" class="submit-btn">
+            <span v-if="submitting">Submitting...</span>
+            <span v-else>Submit Review</span>
+          </button>
+        </form>
       </div>
     </div>
   </div>
@@ -112,8 +113,7 @@ export default {
         name: "",
         role: "",
         review: ""
-      },
-      defaultImage: "/default-avatar.png"
+      }
     };
   },
   methods: {
@@ -160,8 +160,10 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
+/* Base Styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -170,13 +172,13 @@ export default {
 
 .testimonials-section {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+  background: linear-gradient(135deg, #F0F7FF, #E6F2FF);
   position: relative;
   overflow: hidden;
-  padding: 4rem 2rem;
-  color: #1e293b;
-  font-family: 'Outfit', sans-serif;
-  letter-spacing: -0.02em;
+  padding: 4rem 1rem;
+  color: #2D3748;
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: -0.01em;
 }
 
 /* Animated Background */
@@ -192,20 +194,20 @@ export default {
 
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(139, 92, 246, 0.1), rgba(192, 132, 252, 0.1));
+  background: linear-gradient(45deg, rgba(75, 150, 243, 0.1), rgba(49, 120, 230, 0.1));
   border-radius: 50%;
   filter: blur(1px);
   animation: float 25s infinite ease-in-out alternate;
 }
 
-.floating-element:nth-child(1) { width: 300px; height: 300px; top: 5%; left: 10%; animation-delay: 0s; }
-.floating-element:nth-child(2) { width: 200px; height: 200px; top: 65%; left: 85%; animation-delay: -4s; }
-.floating-element:nth-child(3) { width: 350px; height: 350px; top: 35%; left: 55%; animation-delay: -8s; }
-.floating-element:nth-child(4) { width: 150px; height: 150px; top: 75%; left: 15%; animation-delay: -12s; }
-.floating-element:nth-child(5) { width: 250px; height: 250px; top: 20%; left: 75%; animation-delay: -16s; }
-.floating-element:nth-child(6) { width: 180px; height: 180px; top: 80%; left: 45%; animation-delay: -5s; }
-.floating-element:nth-child(7) { width: 220px; height: 220px; top: 15%; left: 35%; animation-delay: -9s; }
-.floating-element:nth-child(8) { width: 270px; height: 270px; top: 60%; left: 70%; animation-delay: -13s; }
+.floating-element:nth-child(1) { width: 20%; height: 20vw; top: 5%; left: 10%; animation-delay: 0s; }
+.floating-element:nth-child(2) { width: 15%; height: 15vw; top: 65%; left: 85%; animation-delay: -4s; }
+.floating-element:nth-child(3) { width: 25%; height: 25vw; top: 35%; left: 55%; animation-delay: -8s; }
+.floating-element:nth-child(4) { width: 10%; height: 10vw; top: 75%; left: 15%; animation-delay: -12s; }
+.floating-element:nth-child(5) { width: 18%; height: 18vw; top: 20%; left: 75%; animation-delay: -16s; }
+.floating-element:nth-child(6) { width: 12%; height: 12vw; top: 80%; left: 45%; animation-delay: -5s; }
+.floating-element:nth-child(7) { width: 14%; height: 14vw; top: 15%; left: 35%; animation-delay: -9s; }
+.floating-element:nth-child(8) { width: 20%; height: 20vw; top: 60%; left: 70%; animation-delay: -13s; }
 
 @keyframes float {
   0% { transform: translateY(0) rotate(0deg); }
@@ -215,6 +217,7 @@ export default {
 
 /* Content Container */
 .content-container {
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
   position: relative;
@@ -222,6 +225,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 3rem;
+  padding: 0 1rem;
 }
 
 /* Testimonials Header */
@@ -229,44 +233,45 @@ export default {
   max-width: 750px;
   margin: 0 auto;
   text-align: center;
-  padding-top: 2rem;
+  padding-top: 1rem;
 }
 
 .badge-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .badge {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1.25rem;
-  background: rgba(139, 92, 246, 0.15);
+  padding: 0.6rem 1rem;
+  background: rgba(75, 150, 243, 0.15);
   border-radius: 100px;
   backdrop-filter: blur(10px);
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1rem;
+  font-family: 'Quicksand', sans-serif;
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
   font-weight: 600;
   letter-spacing: 0.02em;
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(75, 150, 243, 0.3);
+  box-shadow: 0 2px 10px rgba(75, 150, 243, 0.2);
   gap: 0.5rem;
-  color: #4c1d95;
+  color: #3178E6;
+  width: fit-content;
 }
 
 .badge-icon {
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 3vw, 1.25rem);
 }
 
 .title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 3.5rem;
+  font-family: 'Quicksand', sans-serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
   font-weight: 700;
   line-height: 1.1;
-  margin-bottom: 1.75rem;
-  letter-spacing: -0.03em;
-  color: #1e293b;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+  color: #2D3748;
 }
 
 .gradient-text-wrapper {
@@ -275,7 +280,7 @@ export default {
 }
 
 .gradient-text {
-  background: linear-gradient(45deg, #7C3AED, #C084FC);
+  background: linear-gradient(45deg, #4B96F3, #3178E6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 800;
@@ -289,14 +294,14 @@ export default {
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(45deg, #7C3AED, #C084FC);
+  background: linear-gradient(45deg, #4B96F3, #3178E6);
   border-radius: 4px;
 }
 
 .description {
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 3vw, 1.25rem);
   font-weight: 400;
-  color: #475569;
+  color: #4A5568;
   margin-bottom: 2rem;
   line-height: 1.7;
   letter-spacing: -0.01em;
@@ -315,14 +320,14 @@ export default {
   padding: 3rem;
   text-align: center;
   font-size: 1.125rem;
-  color: #6d28d9;
+  color: #3178E6;
 }
 
 .loading-spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid rgba(139, 92, 246, 0.2);
-  border-top: 4px solid #7C3AED;
+  border: 4px solid rgba(75, 150, 243, 0.2);
+  border-top: 4px solid #4B96F3;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -339,29 +344,29 @@ export default {
   padding: 2rem;
   text-align: center;
   font-size: 1.125rem;
-  color: #475569;
+  color: #4A5568;
   max-width: 600px;
   margin: 0 auto;
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(75, 150, 243, 0.2);
 }
 
 /* Testimonials Grid */
 .testimonials-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
   margin-bottom: 2rem;
 }
 
 .testimonial-card {
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
-  border-radius: 24px;
-  padding: 2.5rem;
+  border-radius: 16px;
+  padding: 2rem;
   position: relative;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(139, 92, 246, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(75, 150, 243, 0.1);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -369,17 +374,17 @@ export default {
 
 .testimonial-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow: 0 15px 35px rgba(75, 150, 243, 0.15);
+  border: 1px solid rgba(75, 150, 243, 0.2);
 }
 
 .quote-mark {
   position: absolute;
   top: 20px;
-  left: 25px;
+  right: 25px;
   font-size: 60px;
   font-family: 'Georgia', serif;
-  color: rgba(139, 92, 246, 0.15);
+  color: rgba(75, 150, 243, 0.15);
   line-height: 0;
 }
 
@@ -388,7 +393,7 @@ export default {
   flex: 1;
   font-size: 1.125rem;
   line-height: 1.7;
-  color: #475569;
+  color: #4A5568;
   margin-bottom: 1.5rem;
 }
 
@@ -396,17 +401,8 @@ export default {
   display: flex;
   align-items: center;
   gap: 1rem;
-  border-top: 1px solid rgba(139, 92, 246, 0.1);
+  border-top: 1px solid rgba(75, 150, 243, 0.1);
   padding-top: 1.25rem;
-}
-
-.user-image {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #7C3AED;
-  box-shadow: 0 4px 10px rgba(139, 92, 246, 0.2);
 }
 
 .user-details {
@@ -415,69 +411,69 @@ export default {
 }
 
 .user-name {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: 1.125rem;
   font-weight: 700;
-  color: #1e293b;
+  color: #2D3748;
   margin-bottom: 0.25rem;
 }
 
 .user-role {
   font-size: 0.875rem;
-  color: #6d28d9;
+  color: #3178E6;
   font-weight: 500;
 }
 
-/* Add Review Button */
+/* Fixed Add Review Button - Won't scroll with page */
 .add-review-btn {
   position: fixed;
-  bottom: 2rem;
+  bottom: 2.5rem; /* Adjusted position */
   right: 2rem;
   padding: 1rem 1.5rem;
-  border-radius: 100px;
+  border-radius: 50px;
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: 1rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   transition: all 0.3s ease;
-  background: linear-gradient(45deg, #7C3AED, #A855F7);
+  background: linear-gradient(45deg, #4B96F3, #3178E6);
   color: white;
-  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
-  letter-spacing: 0;
+  box-shadow: 0 4px 15px rgba(75, 150, 243, 0.3);
   border: none;
   cursor: pointer;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .add-review-btn:hover {
   transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5);
+  box-shadow: 0 8px 25px rgba(75, 150, 243, 0.4);
 }
+
 
 .btn-icon {
   font-size: 1.25rem;
 }
 
-/* Modal */
+/* Fixed Modal - Won't scroll with page */
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(30, 41, 59, 0.7);
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: rgba(45, 55, 72, 0.7);
   backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 10000 !important; /* Even higher than the button */
   padding: 1rem;
 }
 
 .modal-content {
   background: white;
-  border-radius: 24px;
+  border-radius: 16px;
   padding: 2.5rem;
   width: 100%;
   max-width: 600px;
@@ -495,7 +491,7 @@ export default {
   border: none;
   font-size: 1.75rem;
   cursor: pointer;
-  color: #64748b;
+  color: #4A5568;
   width: 2rem;
   height: 2rem;
   display: flex;
@@ -506,16 +502,16 @@ export default {
 }
 
 .close-modal-btn:hover {
-  background: #f1f5f9;
-  color: #1e293b;
+  background: #F0F7FF;
+  color: #3178E6;
 }
 
 .modal-title {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   font-size: 1.875rem;
   font-weight: 700;
   margin-bottom: 2rem;
-  color: #1e293b;
+  color: #2D3748;
   text-align: center;
 }
 
@@ -534,7 +530,7 @@ export default {
 
 .form-group label {
   font-weight: 500;
-  color: #475569;
+  color: #4A5568;
   font-size: 0.875rem;
 }
 
@@ -542,18 +538,18 @@ export default {
 .form-group textarea {
   padding: 1rem;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #E2E8F0;
   font-size: 1rem;
-  font-family: 'Outfit', sans-serif;
-  background: #f8fafc;
+  font-family: 'Nunito', sans-serif;
+  background: #F8FAFC;
   transition: all 0.2s ease;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #7C3AED;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  border-color: #4B96F3;
+  box-shadow: 0 0 0 3px rgba(75, 150, 243, 0.1);
   background: white;
 }
 
@@ -568,17 +564,18 @@ export default {
   font-weight: 600;
   font-size: 1.125rem;
   transition: all 0.3s ease;
-  background: linear-gradient(45deg, #7C3AED, #A855F7);
+  background: linear-gradient(45deg, #4B96F3, #3178E6);
   color: white;
-  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.2);
+  box-shadow: 0 4px 15px rgba(75, 150, 243, 0.2);
   border: none;
   cursor: pointer;
   margin-top: 0.5rem;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.3);
+  box-shadow: 0 6px 20px rgba(75, 150, 243, 0.3);
 }
 
 .submit-btn:disabled {
@@ -590,17 +587,17 @@ export default {
 /* Responsive Design */
 @media (max-width: 1024px) {
   .testimonials-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
   .testimonials-section {
-    padding: 3rem 1.5rem;
+    padding: 3rem 1rem;
   }
 
   .title {
-    font-size: 2.75rem;
+    font-size: 2.5rem;
   }
 
   .description {
@@ -608,29 +605,40 @@ export default {
   }
 
   .testimonials-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
   }
 
+  /* Move button to the top right instead of bottom right on mobile */
   .add-review-btn {
-    bottom: 1.5rem;
-    right: 1.5rem;
-    padding: 0.875rem 1.25rem;
-    font-size: 1rem;
+    bottom: auto !important;
+    top: 7rem !important;
+    right: 1.5rem !important;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
   .testimonials-section {
-    padding: 2rem 1rem;
+    padding: 2rem 0.75rem;
+  }
+
+  .content-container {
+    padding: 0 0.5rem;
   }
 
   .title {
-    font-size: 2.25rem;
+    font-size: 2rem;
   }
 
   .badge {
     font-size: 0.875rem;
+    padding: 0.5rem 0.875rem;
+  }
+
+  .testimonials-grid {
+    grid-template-columns: 1fr;
   }
 
   .testimonial-card {
@@ -645,5 +653,45 @@ export default {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
   }
+
+  @media (max-width: 768px) {
+  .add-review-btn {
+    bottom: 6rem; /* Move slightly up to avoid navbar */
+    right: 1.5rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+}
+
+@media (max-width: 360px) {
+  .testimonials-section {
+    padding: 1.5rem 0.5rem;
+  }
+  
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .description {
+    font-size: 0.95rem;
+  }
+  
+  .testimonial-card {
+    padding: 1.5rem;
+  }
+  
+  .review {
+    font-size: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+  .add-review-btn {
+    bottom: 6.5rem; /* Move up more to avoid overlapping with navbar */
+    right: 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+}
 }
 </style>

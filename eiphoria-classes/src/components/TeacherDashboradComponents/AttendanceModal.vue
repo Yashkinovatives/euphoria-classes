@@ -3,7 +3,13 @@
   <div class="modal-backdrop">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Manage Attendance - {{ student.name }}</h3>
+        <div class="student-info">
+          <div class="student-avatar">{{ student.name[0] }}</div>
+          <div>
+            <h3>Manage Attendance</h3>
+            <p class="student-name">{{ student.name }}</p>
+          </div>
+        </div>
         <button @click="$emit('close')" class="close-btn">×</button>
       </div>
 
@@ -23,8 +29,9 @@
           <h4>Mark Attendance</h4>
           
           <div class="form-group">
-            <label>Date</label>
+            <label for="attendance-date">Date</label>
             <input 
+              id="attendance-date"
               type="date" 
               v-model="attendanceDate"
               class="date-input"
@@ -55,15 +62,6 @@
                 <span>Absent</span>
               </button>
               
-              <button 
-                type="button"
-                class="status-btn late"
-                :class="{ active: attendanceStatus === 'late' }"
-                @click="attendanceStatus = 'late'"
-              >
-                <span class="status-icon">⏱</span>
-                <span>Late</span>
-              </button>
             </div>
           </div>
 
@@ -275,6 +273,8 @@ const formatDate = (dateString) => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -282,10 +282,12 @@ const formatDate = (dateString) => {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 1rem;
 }
 
 .modal-content {
@@ -295,55 +297,91 @@ const formatDate = (dateString) => {
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  font-family: 'Inter', sans-serif;
 }
 
 .modal-header {
-  padding: 1.5rem;
-  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+  padding: 1.25rem;
+  border-bottom: 1px solid #E2E8F0;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.student-info {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.student-avatar {
+  width: 44px;
+  height: 44px;
+  background: #4B96F3;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
 .modal-header h3 {
   margin: 0;
-  color: #1e293b;
-  font-family: 'Space Grotesk', sans-serif;
+  color: #4A5568;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.student-name {
+  color: #718096;
+  margin: 0.25rem 0 0 0;
+  font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .close-btn {
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: #64748b;
+  color: #718096;
   cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0.75;
 }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: 1.25rem;
 }
 
 .success-message {
   background-color: rgba(34, 197, 94, 0.15);
   color: rgb(22, 163, 74);
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   text-align: center;
-  font-weight: 600;
+  font-weight: 500;
   animation: fadeIn 0.3s;
+  font-size: 0.95rem;
 }
 
 .error-message {
   background-color: rgba(239, 68, 68, 0.15);
   color: rgb(220, 38, 38);
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   text-align: center;
-  font-weight: 600;
+  font-weight: 500;
   animation: fadeIn 0.3s;
+  font-size: 0.95rem;
 }
 
 @keyframes fadeIn {
@@ -352,41 +390,52 @@ const formatDate = (dateString) => {
 }
 
 .attendance-form, .attendance-history {
-  background: #f8f7ff;
+  background: #F8FAFC;
   border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid #E2E8F0;
 }
 
 h4 {
-  color: #1e293b;
+  color: #2D3748;
   margin-top: 0;
   margin-bottom: 1rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #1e293b;
+  color: #4A5568;
+  font-size: 0.95rem;
 }
 
 .date-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid #E2E8F0;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  background-color: white;
+  color: #4A5568;
+  font-family: 'Inter', sans-serif;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #4B96F3;
 }
 
 .status-options {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .status-btn {
@@ -402,23 +451,22 @@ h4 {
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease;
+  background: white;
+  font-size: 0.9rem;
 }
 
 .status-btn.present {
   border-color: rgba(22, 163, 74, 0.3);
-  background: rgba(22, 163, 74, 0.05);
   color: #16a34a;
 }
 
 .status-btn.absent {
   border-color: rgba(220, 38, 38, 0.3);
-  background: rgba(220, 38, 38, 0.05);
   color: #dc2626;
 }
 
 .status-btn.late {
   border-color: rgba(234, 179, 8, 0.3);
-  background: rgba(234, 179, 8, 0.05);
   color: #eab308;
 }
 
@@ -449,19 +497,20 @@ h4 {
 }
 
 .submit-btn {
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  padding: 0.75rem 1.25rem;
+  background: #4B96F3;
   color: white;
   border: none;
   border-radius: 8px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
 }
 
 .submit-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.2);
+  background: #3178E6;
 }
 
 .submit-btn:disabled {
@@ -478,9 +527,11 @@ h4 {
 .loading-history, .no-history {
   text-align: center;
   padding: 1rem;
-  color: #64748b;
-  background: rgba(139, 92, 246, 0.05);
+  color: #718096;
+  background: #F8FAFC;
   border-radius: 8px;
+  border: 1px solid #E2E8F0;
+  font-size: 0.95rem;
 }
 
 .history-item {
@@ -491,6 +542,7 @@ h4 {
   border-radius: 8px;
   background: white;
   border-left: 4px solid transparent;
+  border: 1px solid #E2E8F0;
 }
 
 .present-record {
@@ -507,14 +559,15 @@ h4 {
 
 .history-date {
   font-weight: 500;
-  color: #1e293b;
+  color: #4A5568;
+  font-size: 0.95rem;
 }
 
 .status-badge {
   padding: 0.35rem 0.75rem;
   border-radius: 100px;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .status-badge.present {
@@ -533,8 +586,8 @@ h4 {
 }
 
 .edit-btn {
-  background: rgba(139, 92, 246, 0.1);
-  color: #7c3aed;
+  background: rgba(75, 150, 243, 0.1);
+  color: #4B96F3;
   border: none;
   padding: 0.35rem 0.75rem;
   border-radius: 6px;
@@ -545,7 +598,7 @@ h4 {
 }
 
 .edit-btn:hover {
-  background: rgba(139, 92, 246, 0.2);
+  background: rgba(75, 150, 243, 0.2);
 }
 
 @media (max-width: 640px) {
