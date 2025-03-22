@@ -1,82 +1,94 @@
 <template>
-  <div class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>View Results - {{ student?.name }}</h2>
-        <button @click="$emit('close')" class="close-modal-btn">&times;</button>
-      </div>
+  <teleport to="body">
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>View Results - {{ student?.name }}</h2>
+          <button @click="$emit('close')" class="close-modal-btn">&times;</button>
+        </div>
 
-      <div class="modal-body">
-        <!-- Select Semester -->
-        <div class="form-group">
-          <label for="semester">Select Semester</label>
-          <select 
-            id="semester"
-            v-model="selectedSemester" 
-            @change="fetchResults"
-            class="semester-select"
-          >
-            <option value="" disabled selected>Choose a semester</option>
-            <option 
-              v-for="semester in semesters" 
-              :key="semester.id" 
-              :value="semester.id"
+        <div class="modal-body">
+          <!-- Select Semester -->
+          <div class="form-group">
+            <label for="semester">Select Semester</label>
+            <select 
+              id="semester"
+              v-model="selectedSemester" 
+              @change="fetchResults"
+              class="semester-select"
             >
-              {{ semester.semester }} ({{ semester.year }})
-            </option>
-          </select>
-        </div>
-
-        <!-- Display Results -->
-        <div v-if="loadingResults" class="loading-section">
-          <div class="loader-spinner"></div>
-          <p>Loading results...</p>
-        </div>
-
-        <div v-else-if="studentResults.length > 0" class="results-section">
-          <div class="table-container">
-            <table class="results-table">
-              <thead>
-                <tr>
-                  <th>Subject</th>
-                  <th>Marks Obtained</th>
-                  <th>Total Marks</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="result in studentResults" :key="result.subject">
-                  <td>{{ result.subject }}</td>
-                  <td>{{ result.marks_obtained }}</td>
-                  <td>{{ result.total_marks }}</td>
-                </tr>
-              </tbody>
-            </table>
+              <option value="" disabled selected>Choose a semester</option>
+              <option 
+                v-for="semester in semesters" 
+                :key="semester.id" 
+                :value="semester.id"
+              >
+                {{ semester.semester }} ({{ semester.year }})
+              </option>
+            </select>
           </div>
 
-          <!-- Display Uploaded Document -->
-          <div v-if="resultDocument" class="document-section">
-            <p>Uploaded Result:</p>
-            <a :href="resultDocument" target="_blank" class="view-document-btn">
-              <span class="doc-icon">📄</span> View Result
-            </a>
+          <!-- Display Results -->
+          <div v-if="loadingResults" class="loading-section">
+            <div class="loader-spinner"></div>
+            <p>Loading results...</p>
+          </div>
+
+          <div v-else-if="studentResults.length > 0" class="results-section">
+            <div class="table-container">
+              <table class="results-table">
+                <thead>
+                  <tr>
+                    <th>Subject</th>
+                    <th>Marks Obtained</th>
+                    <th>Total Marks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="result in studentResults" :key="result.subject">
+                    <td>{{ result.subject }}</td>
+                    <td>{{ result.marks_obtained }}</td>
+                    <td>{{ result.total_marks }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Display Uploaded Document -->
+            <div v-if="resultDocument" class="document-section">
+              <p>Uploaded Result:</p>
+              <a :href="resultDocument" target="_blank" class="view-document-btn">
+                <span class="doc-icon">📄</span> View Result
+              </a>
+            </div>
+
+            <!-- Delete Button for Teachers -->
+            <div v-if="selectedSemester" class="delete-section">
+              <button @click="deleteResult" class="delete-btn" :disabled="isDeleting">
+                <span class="delete-icon">🗑️</span>
+                <span v-if="isDeleting">Deleting...</span>
+                <span v-else>Delete Result</span>
+              </button>
+            </div>
+
+          </div>
+
+          <div v-else class="no-results">
+            <p>No results found for this semester.</p>
           </div>
         </div>
 
-        <div v-else class="no-results">
-          <p>No results found for this semester.</p>
+        <!-- Close Button -->
+        <div class="modal-footer">
+          <button @click="$emit('close')" class="close-btn">Close</button>
         </div>
-      </div>
-
-      <!-- Close Button -->
-      <div class="modal-footer">
-        <button @click="$emit('close')" class="close-btn">Close</button>
       </div>
     </div>
-  </div>
+  </teleport>
 </template>
 
 <script setup>
-import { ref, watch, defineProps, onMounted } from "vue";
+import { ref, watch, defineProps, onMounted, onBeforeUnmount } from "vue";
 import axios from "axios";
 
 const props = defineProps({
@@ -88,6 +100,28 @@ const semesters = ref([]);
 const studentResults = ref([]);
 const resultDocument = ref(null);
 const loadingResults = ref(false);
+const isDeleting = ref(false);
+
+// Lock body scrolling when modal is open
+onMounted(() => {
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.width = '100%';
+  document.body.style.top = `-${window.scrollY}px`;
+  fetchSemesters();
+});
+
+// Restore scrolling when modal is closed
+onBeforeUnmount(() => {
+  const scrollY = document.body.style.top;
+  document.documentElement.style.overflow = '';
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.width = '';
+  document.body.style.top = '';
+  window.scrollTo(0, parseInt(scrollY || '0') * -1);
+});
 
 // ✅ Fetch available semesters for the selected student
 const fetchSemesters = async () => {
@@ -124,16 +158,38 @@ const fetchResults = async () => {
   }
 };
 
+// ✅ Delete result API call
+const deleteResult = async () => {
+  if (!selectedSemester.value) return;
+
+  if (!confirm("Are you sure you want to delete this result? This action cannot be undone.")) return;
+
+  try {
+    isDeleting.value = true;
+    const token = localStorage.getItem("access_token");
+
+    await axios.delete(`http://127.0.0.1:8000/api/teacher/delete-result/${selectedSemester.value}/`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    alert("Result deleted successfully.");
+    fetchSemesters(); // Refresh available results
+    studentResults.value = [];
+    resultDocument.value = null;
+    selectedSemester.value = "";
+  } catch (error) {
+    console.error("Error deleting result:", error);
+    alert("Failed to delete result.");
+  } finally {
+    isDeleting.value = false;
+  }
+};
+
 // ✅ Trigger data fetch when student is selected
 watch(() => props.student, (newStudent) => {
   if (newStudent) {
     fetchSemesters();
   }
-});
-
-// ✅ Fetch semesters when modal is opened
-onMounted(() => {
-  fetchSemesters();
 });
 </script>
 
@@ -144,29 +200,48 @@ onMounted(() => {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  padding: 0 15px;
+  z-index: 999999;
+  padding: 0;
+  margin: 0;
   box-sizing: border-box;
+  overflow: hidden !important;
 }
 
 .modal-content {
   background: white;
   border-radius: 16px;
   width: 600px;
-  max-width: 100%;
+  max-width: 90%;
+  height: auto;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
+  position: relative;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(75, 150, 243, 0.2);
   border: 1px solid rgba(75, 150, 243, 0.1);
   font-family: "Nunito", sans-serif;
+  z-index: 1000000;
+  animation: modalFade 0.25s ease;
+}
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modal-header {
@@ -179,6 +254,7 @@ onMounted(() => {
   position: sticky;
   top: 0;
   z-index: 10;
+  flex-shrink: 0;
 }
 
 .modal-header h2 {
@@ -203,6 +279,7 @@ onMounted(() => {
   border-radius: 50%;
   transition: all 0.2s ease;
   -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
 }
 
 .close-modal-btn:hover {
@@ -213,7 +290,10 @@ onMounted(() => {
 .modal-body {
   padding: 1.5rem;
   overflow-y: auto;
+  overflow-x: hidden;
   flex-grow: 1;
+  -webkit-overflow-scrolling: touch;
+  background-color: white;
 }
 
 .modal-footer {
@@ -221,6 +301,7 @@ onMounted(() => {
   border-top: 1px solid rgba(75, 150, 243, 0.1);
   text-align: right;
   background: white;
+  flex-shrink: 0;
 }
 
 .form-group {
@@ -249,6 +330,8 @@ onMounted(() => {
   background-position: right 1rem center;
   padding-right: 2.5rem;
   transition: all 0.2s ease;
+  box-sizing: border-box;
+  height: 3.25rem;
 }
 
 .semester-select:focus {
@@ -321,6 +404,7 @@ onMounted(() => {
   border-radius: 8px;
   text-align: center;
   border: 1px solid rgba(75, 150, 243, 0.1);
+  margin-bottom: 1.5rem;
 }
 
 .document-section p {
@@ -381,6 +465,45 @@ onMounted(() => {
   transform: translateY(-2px);
 }
 
+.delete-section {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.delete-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
+
+.delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+}
+
+.delete-btn:disabled {
+  background: linear-gradient(135deg, #f1a7a7, #f87171);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+.delete-icon {
+  font-size: 1.1rem;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
   .modal-content {
@@ -408,14 +531,15 @@ onMounted(() => {
 
 @media (max-width: 480px) {
   .modal-overlay {
-    align-items: flex-end;
+    align-items: center;
     padding: 0 10px;
   }
   
   .modal-content {
     width: 100%;
-    border-radius: 20px 20px 0 0;
-    max-height: 92vh;
+    border-radius: 20px;
+    max-height: 85vh;
+    margin-bottom: 20px;
   }
   
   .modal-header {
@@ -457,6 +581,11 @@ onMounted(() => {
   }
   
   .view-document-btn {
+    width: 100%;
+    padding: 0.7rem 1rem;
+  }
+  
+  .delete-btn {
     width: 100%;
     padding: 0.7rem 1rem;
   }

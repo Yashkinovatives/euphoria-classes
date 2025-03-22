@@ -1,8 +1,7 @@
-# components/StudentOverview.vue
 <template>
   <div class="student-overview">
     <div v-for="student in studentActivities" :key="student.id" class="student-card">
-        <div class="student-header">
+      <div class="student-header">
         <div class="student-avatar">
           {{ student.name[0] }}
         </div>
@@ -13,59 +12,26 @@
         <div class="status-badge">Active</div>
       </div>
 
-      <div class="student-stats">
-        <div class="stat-item">
-          <div class="stat-label">Attendance</div>
-          <div class="stat-ring">
-            <svg width="60" height="60" viewBox="0 0 60 60">
-              <circle cx="30" cy="30" r="25" class="stat-ring-bg"/>
-              <circle cx="30" cy="30" r="25" class="stat-ring-progress" 
-                      :style="{ 'stroke-dashoffset': calculateOffset(96) }"/>
-              <text x="30" y="30" class="stat-text">96%</text>
-            </svg>
-          </div>
-        </div>
-
-        <div class="stat-item">
-          <div class="stat-label">Assignments</div>
-          <div class="stat-ring">
-            <svg width="60" height="60" viewBox="0 0 60 60">
-              <circle cx="30" cy="30" r="25" class="stat-ring-bg"/>
-              <circle cx="30" cy="30" r="25" class="stat-ring-progress" 
-                      :style="{ 'stroke-dashoffset': calculateOffset(92) }"/>
-              <text x="30" y="30" class="stat-text">92%</text>
-            </svg>
-          </div>
-        </div>
-
-        <div class="stat-item">
-          <div class="stat-label">Average</div>
-          <div class="stat-ring">
-            <svg width="60" height="60" viewBox="0 0 60 60">
-              <circle cx="30" cy="30" r="25" class="stat-ring-bg"/>
-              <circle cx="30" cy="30" r="25" class="stat-ring-progress" 
-                      :style="{ 'stroke-dashoffset': calculateOffset(88) }"/>
-              <text x="30" y="30" class="stat-text">88%</text>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div class="upcoming-activities">
-        <h4>Upcoming Activities</h4>
-        <div class="activity-list">
-          <div class="activity-item">
-            <div class="activity-icon">📚</div>
-            <div class="activity-info">
-              <h5>Mathematics Test</h5>
-              <p>March 15, 2025</p>
+      <div class="additional-stats">
+        <div class="additional-stat-card tertiary-gradient">
+          <div class="stat-content">
+            <h4>Completed Assignments</h4>
+            <div class="compact-stat-value">45/48</div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 94%"></div>
             </div>
           </div>
-          <div class="activity-item">
-            <div class="activity-icon">🏆</div>
-            <div class="activity-info">
-              <h5>Science Project Due</h5>
-              <p>March 20, 2025</p>
+        </div>
+
+        <div class="additional-stat-card quaternary-gradient">
+          <div class="stat-content">
+            <h4>Next Assessment</h4>
+            <div class="upcoming-test">
+              <span class="test-icon">📝</span>
+              <div class="test-info">
+                <div class="test-name">Mathematics</div>
+                <div class="test-date">March 15, 2025</div>
+              </div>
             </div>
           </div>
         </div>
@@ -75,7 +41,7 @@
 </template>
 
 <script setup>
-import { defineProps ,computed} from 'vue';
+import { computed ,defineProps} from 'vue';
 
 const props = defineProps({
   students: {
@@ -84,26 +50,10 @@ const props = defineProps({
   }
 });
 
-const calculateOffset = (percentage) => {
-  const circumference = 2 * Math.PI * 25; // r = 25
-  return circumference - (percentage / 100) * circumference;
-};
-
 const studentActivities = computed(() => {
   return props.students.map(student => ({
     ...student,
-    activities: [
-      {
-        icon: '📚',
-        title: 'Mathematics Test',
-        date: 'March 15, 2025'
-      },
-      {
-        icon: '🏆',
-        title: 'Science Project Due',
-        date: 'March 20, 2025'
-      }
-    ]
+    class_section: student.class_section__name || student.class_section
   }));
 });
 </script>
@@ -119,7 +69,7 @@ const studentActivities = computed(() => {
 .student-card {
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
-  border-radius: 24px;
+  border-radius: 16px;
   padding: 1.5rem;
   box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
   border: 1px solid rgba(139, 92, 246, 0.1);
@@ -134,14 +84,14 @@ const studentActivities = computed(() => {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .student-avatar {
   width: 60px;
   height: 60px;
   background: linear-gradient(135deg, #7c3aed, #a855f7);
-  border-radius: 20px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -170,118 +120,111 @@ const studentActivities = computed(() => {
   padding: 0.5rem 1rem;
   background: rgba(16, 185, 129, 0.1);
   color: #059669;
-  border-radius: 100px;
+  border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 600;
 }
 
-.student-stats {
+.additional-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  margin-bottom: 2rem;
 }
 
-.stat-item {
-  text-align: center;
+.additional-stat-card {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: transform 0.3s ease;
 }
 
-.stat-label {
-  font-size: 0.875rem;
-  color: #64748b;
+.additional-stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.tertiary-gradient {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
+}
+
+.quaternary-gradient {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1));
+}
+
+.stat-content h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
+}
+
+.compact-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'Space Grotesk', sans-serif;
+  color: #1e293b;
   margin-bottom: 0.5rem;
 }
 
-.stat-ring {
-  position: relative;
-  display: inline-block;
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
 }
 
-.stat-ring-bg {
-  fill: none;
-  stroke: rgba(139, 92, 246, 0.1);
-  stroke-width: 5;
+.progress {
+  height: 100%;
+  background: linear-gradient(90deg, #7c3aed, #a855f7);
+  border-radius: 3px;
+  transition: width 0.3s ease;
 }
 
-.stat-ring-progress {
-  fill: none;
-  stroke: #7c3aed;
-  stroke-width: 5;
-  stroke-linecap: round;
-  transform: rotate(-90deg);
-  transform-origin: 50% 50%;
-  transition: stroke-dashoffset 0.3s ease;
-  stroke-dasharray: 157; /* 2 * PI * 25 */
-}
-
-.stat-text {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 14px;
-  fill: #1e293b;
-  text-anchor: middle;
-  dominant-baseline: middle;
-  font-weight: 600;
-}
-
-.upcoming-activities {
-  border-top: 1px solid rgba(139, 92, 246, 0.1);
-  padding-top: 1.5rem;
-}
-
-.upcoming-activities h4 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.1rem;
-  color: #1e293b;
-  margin: 0 0 1rem 0;
-}
-
-.activity-list {
-  display: grid;
-  gap: 1rem;
-}
-
-.activity-item {
+.upcoming-test {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: rgba(139, 92, 246, 0.05);
-  border-radius: 12px;
-  transition: background-color 0.3s ease;
+  gap: 0.75rem;
 }
 
-.activity-item:hover {
-  background: rgba(139, 92, 246, 0.1);
+.test-icon {
+  font-size: 1.25rem;
 }
 
-.activity-icon {
-  font-size: 1.5rem;
+.test-info {
+  flex: 1;
 }
 
-.activity-info h5 {
-  font-size: 1rem;
+.test-name {
+  font-weight: 600;
   color: #1e293b;
-  margin: 0 0 0.25rem 0;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
 }
 
-.activity-info p {
-  font-size: 0.875rem;
+.test-date {
+  font-size: 0.8rem;
   color: #64748b;
-  margin: 0;
 }
 
 @media (max-width: 768px) {
   .student-overview {
     grid-template-columns: 1fr;
   }
-
-  .student-stats {
-    gap: 0.5rem;
+  
+  .additional-stats {
+    grid-template-columns: 1fr;
   }
+}
 
-  .stat-ring svg {
-    width: 50px;
-    height: 50px;
+@media (max-width: 480px) {
+  .student-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .status-badge {
+    align-self: flex-start;
   }
 }
 </style>

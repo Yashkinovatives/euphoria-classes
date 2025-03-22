@@ -1,107 +1,107 @@
-# FeesModal.vue
-<!-- Updated with blue theme to match dashboard styling -->
 <template>
-  <div class="modal-backdrop">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Fees Management - {{ student.name }}</h3>
-        <button @click="$emit('close')" class="close-btn">×</button>
-      </div>
-
-      <div class="modal-body">
-        <!-- Success Message -->
-        <div v-if="successMessage" class="success-message">
-          {{ successMessage }}
+  <teleport to="body">
+    <div class="modal-backdrop">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Fees Management - {{ student.name }}</h3>
+          <button @click="$emit('close')" class="close-btn">×</button>
         </div>
 
-        <div class="fees-summary">
-          <div class="summary-item">
-            <span>Total Fees:</span>
-            <span>₹{{ feeRecord?.total_fees || 0 }}</span>
+        <div class="modal-body">
+          <!-- Success Message -->
+          <div v-if="successMessage" class="success-message">
+            {{ successMessage }}
           </div>
-          <div class="summary-item">
-            <span>Remaining Fees:</span>
-            <span>₹{{ feeRecord?.remaining_fees || 0 }}</span>
-          </div>
-        </div>
 
-        <!-- Set Total Fees Section -->
-        <div class="fees-section">
-          <h4>Set Total Fees</h4>
-          <div class="input-group">
-            <input 
-              v-model="totalFees" 
-              type="number" 
-              placeholder="Enter total fees amount"
-              class="fees-input"
-              :disabled="isTotalFeesSet"
-            />
-            <button 
-              @click="setTotalFees" 
-              :disabled="!totalFees || isTotalFeesSet"
-              class="btn btn-primary"
-            >
-              Set Total Fees
-            </button>
-          </div>
-          <p v-if="isTotalFeesSet" class="help-text">Total fees can only be set once</p>
-        </div>
-
-        <!-- Add Monthly Payment Section -->
-        <div class="fees-section">
-          <h4>Add Monthly Payment</h4>
-          <div class="payment-form">
-            <select v-model="selectedMonth" class="month-select">
-              <option value="">Select Month</option>
-              <option 
-                v-for="month in availableMonths" 
-                :key="month"
-                :value="month"
-              >
-                {{ month }}
-              </option>
-            </select>
-            <input 
-              v-model="monthlyPayment" 
-              type="number" 
-              placeholder="Enter payment amount"
-              class="fees-input"
-            />
-            <button 
-              @click="addMonthlyPayment"
-              :disabled="!selectedMonth || !monthlyPayment"
-              class="btn btn-primary"
-            >
-              Add Payment
-            </button>
-          </div>
-        </div>
-
-        <!-- Payment History -->
-        <div class="fees-section">
-          <h4>Payment History</h4>
-          <div class="payment-history">
-            <div v-if="payments.length === 0" class="no-payments">
-              No payments recorded yet
+          <div class="fees-summary">
+            <div class="summary-item">
+              <span>Total Fees:</span>
+              <span>₹{{ feeRecord?.total_fees || 0 }}</span>
             </div>
-            <div 
-              v-else
-              v-for="payment in payments" 
-              :key="payment.id" 
-              class="payment-record"
-            >
-              <span class="payment-month">{{ payment.month }}</span>
-              <span class="payment-amount">₹{{ payment.amount_paid }}</span>
+            <div class="summary-item">
+              <span>Remaining Fees:</span>
+              <span>₹{{ feeRecord?.remaining_fees || 0 }}</span>
+            </div>
+          </div>
+
+          <!-- Set Total Fees Section -->
+          <div class="fees-section">
+            <h4>Set Total Fees</h4>
+            <div class="input-group">
+              <input 
+                v-model="totalFees" 
+                type="number" 
+                placeholder="Enter total fees amount"
+                class="fees-input"
+                :disabled="isTotalFeesSet"
+              />
+              <button 
+                @click="setTotalFees" 
+                :disabled="!totalFees || isTotalFeesSet"
+                class="btn btn-primary"
+              >
+                Set Total Fees
+              </button>
+            </div>
+            <p v-if="isTotalFeesSet" class="help-text">Total fees can only be set once</p>
+          </div>
+
+          <!-- Add Monthly Payment Section -->
+          <div class="fees-section">
+            <h4>Add Monthly Payment</h4>
+            <div class="payment-form">
+              <select v-model="selectedMonth" class="month-select">
+                <option value="">Select Month</option>
+                <option 
+                  v-for="month in availableMonths" 
+                  :key="month"
+                  :value="month"
+                >
+                  {{ month }}
+                </option>
+              </select>
+              <input 
+                v-model="monthlyPayment" 
+                type="number" 
+                placeholder="Enter payment amount"
+                class="fees-input"
+              />
+              <button 
+                @click="addMonthlyPayment"
+                :disabled="!selectedMonth || !monthlyPayment"
+                class="btn btn-primary"
+              >
+                Add Payment
+              </button>
+            </div>
+          </div>
+
+          <!-- Payment History -->
+          <div class="fees-section">
+            <h4>Payment History</h4>
+            <div class="payment-history">
+              <div v-if="payments.length === 0" class="no-payments">
+                No payments recorded yet
+              </div>
+              <div 
+                v-else
+                v-for="payment in payments" 
+                :key="payment.id" 
+                class="payment-record"
+              >
+                <span class="payment-month">{{ payment.month }}</span>
+                <span class="payment-amount">₹{{ payment.amount_paid }}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </teleport>
 </template>
 
 <script setup>
-import { ref, onMounted, defineProps, defineEmits, computed } from 'vue';
+import { ref, onMounted, onBeforeUnmount, defineProps, defineEmits, computed } from 'vue';
 import axios from 'axios';
 
 const props = defineProps({
@@ -131,23 +131,46 @@ const availableMonths = computed(() => {
   return months.filter(month => !paidMonths.has(month));
 });
 
-onMounted(async () => {
-  await fetchFeeData();
+// Lock body scrolling when modal is open
+onMounted(() => {
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.width = '100%';
+  document.body.style.top = `-${window.scrollY}px`;
+  fetchFeeData();
 });
 
+// Restore scrolling when modal is closed
+onBeforeUnmount(() => {
+  const scrollY = document.body.style.top;
+  document.documentElement.style.overflow = '';
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.width = '';
+  document.body.style.top = '';
+  window.scrollTo(0, parseInt(scrollY || '0') * -1);
+});
+
+// ✅ Fetch Fee Data from Teacher API
 const fetchFeeData = async () => {
   try {
     const token = localStorage.getItem('access_token');
-    const response = await axios.get(`http://127.0.0.1:8000/api/student/${props.student.id}/fees/`, {
+    const response = await axios.get(`http://127.0.0.1:8000/api/teacher/student-fees/${props.student.id}/`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    feeRecord.value = response.data.fee_record;
-    payments.value = response.data.payments;
+
+    feeRecord.value = {
+      total_fees: response.data.total_fees,
+      remaining_fees: response.data.remaining_fees
+    };
+    payments.value = response.data.monthly_payments || [];
   } catch (error) {
     console.error('Error fetching fee data:', error);
   }
 };
 
+// ✅ Set Total Fees
 const setTotalFees = async () => {
   try {
     const token = localStorage.getItem('access_token');
@@ -171,6 +194,7 @@ const setTotalFees = async () => {
   }
 };
 
+// ✅ Add Monthly Fee Payment
 const addMonthlyPayment = async () => {
   try {
     const token = localStorage.getItem('access_token');
@@ -197,20 +221,25 @@ const addMonthlyPayment = async () => {
 };
 </script>
 
+
 <style scoped>
 .modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  padding: 0 15px;
+  z-index: 999999;
+  padding: 0;
+  margin: 0;
   box-sizing: border-box;
+  overflow: hidden !important;
 }
 
 .modal-content {
@@ -219,11 +248,26 @@ const addMonthlyPayment = async () => {
   width: 90%;
   max-width: 600px;
   max-height: 90vh;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   position: relative;
   margin: 0 auto;
   box-shadow: 0 4px 20px rgba(75, 150, 243, 0.1);
   border: 1px solid rgba(75, 150, 243, 0.1);
+  z-index: 1000000;
+  animation: modalFade 0.25s ease;
+  overflow: hidden;
+}
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modal-header {
@@ -237,6 +281,7 @@ const addMonthlyPayment = async () => {
   background: white;
   z-index: 5;
   border-radius: 16px 16px 0 0;
+  flex-shrink: 0;
 }
 
 .modal-header h3 {
@@ -263,10 +308,15 @@ const addMonthlyPayment = async () => {
   justify-content: center;
   min-width: 32px;
   min-height: 32px;
+  flex-shrink: 0;
 }
 
 .modal-body {
   padding: 1.5rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-grow: 1;
+  -webkit-overflow-scrolling: touch;
 }
 
 .success-message {
@@ -343,7 +393,24 @@ const addMonthlyPayment = async () => {
   gap: 1rem;
 }
 
-
+.month-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(75, 150, 243, 0.2);
+  border-radius: 8px;
+  background-color: white;
+  font-size: 16px;
+  font-family: inherit;
+  color: #2D3748;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234B96F3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  height: 3.25rem;
+}
 
 .payment-history {
   background: rgba(75, 150, 243, 0.05);
@@ -382,6 +449,10 @@ const addMonthlyPayment = async () => {
   user-select: none;
   white-space: nowrap;
   text-align: center;
+  height: 3.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-primary {
@@ -476,12 +547,13 @@ const addMonthlyPayment = async () => {
 @media (max-width: 480px) {
   .modal-backdrop {
     padding: 0 10px;
-    align-items: flex-end;
+    align-items: center;
   }
   
   .modal-content {
     max-height: 85vh;
-    border-radius: 20px 20px 0 0;
+    border-radius: 20px;
+    margin-bottom: 20px;
   }
   
   .modal-header {
@@ -519,6 +591,7 @@ const addMonthlyPayment = async () => {
 @supports (padding: max(0px)) {
   .modal-backdrop {
     padding-bottom: max(15px, env(safe-area-inset-bottom));
+    padding-top: max(15px, env(safe-area-inset-top));
   }
 }
 

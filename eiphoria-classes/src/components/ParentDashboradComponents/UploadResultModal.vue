@@ -42,12 +42,6 @@
           <button type="button" @click="addSubject" class="add-subject-btn">+ Add Subject</button>
         </div>
 
-        <!-- File Upload -->
-        <div class="form-group">
-          <label for="document">Upload Result File (Optional)</label>
-          <input type="file" @change="handleFileUpload" accept=".pdf,.jpg,.png" />
-        </div>
-
         <!-- Submit & Close Buttons -->
         <div class="form-actions">
           <button type="submit" class="submit-btn" :disabled="loading">
@@ -96,10 +90,7 @@ const removeSubject = (index) => {
 subjects.value.splice(index, 1);
 };
 
-// Handle file selection
-const handleFileUpload = (event) => {
-resultFile.value = event.target.files[0];
-};
+// Handle file selectio
 
 // Upload results function
 const uploadResults = async () => {

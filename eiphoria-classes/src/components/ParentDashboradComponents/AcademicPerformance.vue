@@ -1,4 +1,3 @@
-# components/AcademicPerformance.vue
 <template>
   <div class="performance-section">
     <div class="section-header">
@@ -30,9 +29,11 @@
       <div class="results-card">
         <h3>Recent Assessments</h3>
         <div class="results-list">
-          <div v-for="(result, index) in latestResults" 
-               :key="index"
-               class="result-item">
+          <div 
+            v-for="(result, index) in latestResults" 
+            :key="index"
+            class="result-item"
+          >
             <div class="result-info">
               <h4>{{ result.subject }}</h4>
               <p>{{ result.date }}</p>
@@ -51,8 +52,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed,defineProps } from 'vue';
-import Chart from 'chart.js/auto';
+import { ref, onMounted, computed, defineProps } from "vue";
+import Chart from "chart.js/auto";
 
 const props = defineProps({
   testResults: {
@@ -64,36 +65,91 @@ const props = defineProps({
 const subjectChart = ref(null);
 const progressChart = ref(null);
 
+// Extract subject-wise performance
+const subjectPerformance = computed(() => {
+  const subjectScores = {};
+  props.testResults.forEach(student => {
+    student.results?.forEach(result => {
+      const subject = result.subject;
+      const score = Math.round((result.marks_obtained / result.total_marks) * 100);
+      
+      if (!subjectScores[subject]) {
+        subjectScores[subject] = [];
+      }
+      subjectScores[subject].push(score);
+    });
+  });
+
+  // Calculate average score for each subject
+  const subjects = Object.keys(subjectScores);
+  const scores = subjects.map(subject => {
+    const avgScore = subjectScores[subject].reduce((a, b) => a + b, 0) / subjectScores[subject].length;
+    return Math.round(avgScore);
+  });
+
+  return { subjects, scores };
+});
+
+// Extract performance trend over time
+const progressTimeline = computed(() => {
+  const monthlyScores = {};
+  
+  props.testResults.forEach(student => {
+    student.results?.forEach(result => {
+      const date = result.date || "Unknown"; // ✅ Provide fallback value
+      const month = date.includes(" ") ? date.split(" ")[0] : date; // ✅ Ensure split() only applies if valid
+      const score = Math.round((result.marks_obtained / result.total_marks) * 100);
+      
+      if (!monthlyScores[month]) {
+        monthlyScores[month] = [];
+      }
+      monthlyScores[month].push(score);
+    });
+  });
+
+  const months = Object.keys(monthlyScores).sort();
+  const scores = months.map(month => {
+    const avgScore = monthlyScores[month].reduce((a, b) => a + b, 0) / monthlyScores[month].length;
+    return Math.round(avgScore);
+  });
+
+  return { months, scores };
+});
+
+// Extract latest test results
 const latestResults = computed(() => {
-  // Process test results to get latest assessments
   const results = [];
+  
   props.testResults.forEach(student => {
     student.results?.forEach(result => {
       results.push({
         subject: result.subject,
         score: Math.round((result.marks_obtained / result.total_marks) * 100),
-        date: 'March 2025' // You would calculate this from your actual data
+        date: result.date || "N/A"
       });
     });
   });
-  return results.slice(0, 5); // Return latest 5 results
+
+  return results.slice(0, 5); // Show the latest 5 results
 });
 
 onMounted(() => {
-  // Initialize Subject Performance Chart
+  // Subject Performance Chart
   if (subjectChart.value) {
     new Chart(subjectChart.value, {
-      type: 'radar',
+      type: "radar",
       data: {
-        labels: ['Mathematics', 'Science', 'English', 'History', 'Art'],
-        datasets: [{
-          label: 'Performance',
-          data: [85, 92, 78, 88, 95],
-          backgroundColor: 'rgba(124, 58, 237, 0.2)',
-          borderColor: '#7c3aed',
-          borderWidth: 2,
-          pointBackgroundColor: '#7c3aed'
-        }]
+        labels: subjectPerformance.value.subjects,
+        datasets: [
+          {
+            label: "Performance",
+            data: subjectPerformance.value.scores,
+            backgroundColor: "rgba(124, 58, 237, 0.2)",
+            borderColor: "#7c3aed",
+            borderWidth: 2,
+            pointBackgroundColor: "#7c3aed"
+          }
+        ]
       },
       options: {
         scales: {
@@ -106,28 +162,28 @@ onMounted(() => {
           }
         },
         plugins: {
-          legend: {
-            display: false
-          }
+          legend: { display: false }
         }
       }
     });
   }
 
-  // Initialize Progress Timeline Chart
+  // Progress Timeline Chart
   if (progressChart.value) {
     new Chart(progressChart.value, {
-      type: 'line',
+      type: "line",
       data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-        datasets: [{
-          label: 'Average Score',
-          data: [75, 82, 88, 85, 90],
-          borderColor: '#7c3aed',
-          tension: 0.4,
-          fill: true,
-          backgroundColor: 'rgba(124, 58, 237, 0.1)'
-        }]
+        labels: progressTimeline.value.months,
+        datasets: [
+          {
+            label: "Average Score",
+            data: progressTimeline.value.scores,
+            borderColor: "#7c3aed",
+            tension: 0.4,
+            fill: true,
+            backgroundColor: "rgba(124, 58, 237, 0.1)"
+          }
+        ]
       },
       options: {
         scales: {
@@ -137,9 +193,7 @@ onMounted(() => {
           }
         },
         plugins: {
-          legend: {
-            display: false
-          }
+          legend: { display: false }
         }
       }
     });
@@ -174,7 +228,7 @@ onMounted(() => {
 }
 
 h2 {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 2rem;
   color: #1e293b;
   margin: 0;
@@ -211,72 +265,9 @@ h2 {
 }
 
 h3 {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 1.25rem;
   color: #1e293b;
   margin: 0 0 1.5rem 0;
-}
-
-.results-list {
-  display: grid;
-  gap: 1rem;
-}
-
-.result-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background: rgba(139, 92, 246, 0.05);
-  border-radius: 12px;
-}
-
-.result-info h4 {
-  font-weight: 600;
-  color: #1e293b;
-  margin: 0 0 0.25rem 0;
-}
-
-.result-info p {
-  color: #64748b;
-  font-size: 0.9rem;
-  margin: 0;
-}
-
-.result-score {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.5rem;
-}
-
-.score-value {
-  font-weight: 700;
-  color: #7c3aed;
-}
-
-.progress-bar {
-  width: 100px;
-  height: 6px;
-  background: rgba(139, 92, 246, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.progress {
-  height: 100%;
-  background: linear-gradient(90deg, #7c3aed, #a855f7);
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
-@media (max-width: 768px) {
-  .charts-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .results-card {
-    grid-column: span 1;
-  }
 }
 </style>

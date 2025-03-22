@@ -1,4 +1,3 @@
-# components/ParentDashboradComponents/StudentAttendance.vue
 <template>
   <div class="attendance-section">
     <div class="section-header">
@@ -8,15 +7,18 @@
       </div>
     </div>
 
+    <!-- Loading State -->
     <div v-if="loading" class="loading">
       <div class="loading-spinner"></div>
       <p>Loading attendance records...</p>
     </div>
 
+    <!-- No Attendance Data -->
     <div v-else-if="!studentsAttendance || studentsAttendance.length === 0" class="no-data">
       <p>No attendance records found</p>
     </div>
 
+    <!-- Attendance Cards -->
     <div v-else class="attendance-cards">
       <div v-for="studentData in studentsAttendance" :key="studentData.student_id" class="attendance-card">
         <div class="student-info">
@@ -29,16 +31,12 @@
 
         <div class="attendance-stats">
           <div class="stat-item">
-            <span class="stat-value present">{{ getAttendanceCount(studentData.attendance, 'present') }}</span>
+            <span class="stat-value present">{{ getAttendanceCount(studentData.attendance, 'Present') }}</span>
             <span class="stat-label">Present</span>
           </div>
           <div class="stat-item">
-            <span class="stat-value absent">{{ getAttendanceCount(studentData.attendance, 'absent') }}</span>
+            <span class="stat-value absent">{{ getAttendanceCount(studentData.attendance, 'Absent') }}</span>
             <span class="stat-label">Absent</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value late">{{ getAttendanceCount(studentData.attendance, 'late') }}</span>
-            <span class="stat-label">Late</span>
           </div>
         </div>
 
@@ -56,26 +54,63 @@
         </div>
 
         <div class="attendance-history">
-          <h4>Recent Attendance</h4>
+          <div class="history-header">
+            <h4>Recent Attendance</h4>
+            <button 
+              class="toggle-button" 
+              @click="toggleExpandedState(studentData.student_id)"
+              :aria-expanded="expandedStudents.includes(studentData.student_id)"
+            >
+              {{ expandedStudents.includes(studentData.student_id) ? 'Show Less' : 'Show More' }}
+              <span class="toggle-icon" :class="{ 'expanded': expandedStudents.includes(studentData.student_id) }">
+                ▼
+              </span>
+            </button>
+          </div>
+          
           <div class="history-list">
             <div v-if="studentData.attendance.length === 0" class="no-records">
               No attendance records yet
             </div>
-            <div 
-              v-else
-              v-for="record in getRecentAttendance(studentData.attendance)" 
-              :key="record.date"
-              class="history-item"
-            >
-              <div class="record-date">
-                {{ formatDate(record.date) }}
+            
+            <template v-else>
+              <!-- Always show the first 3 recent records -->
+              <div 
+                v-for="record in getVisibleAttendance(studentData.attendance, studentData.student_id, 3)" 
+                :key="record.date"
+                class="history-item"
+              >
+                <div class="record-date">
+                  {{ formatDate(record.date) }}
+                </div>
+                <div class="record-status">
+                  <span class="status-badge" :class="record.status.toLowerCase()">
+                    {{ record.status.charAt(0).toUpperCase() + record.status.slice(1) }}
+                  </span>
+                </div>
               </div>
-              <div class="record-status">
-                <span class="status-badge" :class="record.status">
-                  {{ record.status.charAt(0).toUpperCase() + record.status.slice(1) }}
-                </span>
+              
+              <!-- Show additional records when expanded -->
+              <div 
+                v-if="expandedStudents.includes(studentData.student_id) && studentData.attendance.length > 3"
+                class="expanded-records"
+              >
+                <div 
+                  v-for="record in getExpandedAttendance(studentData.attendance)" 
+                  :key="record.date"
+                  class="history-item"
+                >
+                  <div class="record-date">
+                    {{ formatDate(record.date) }}
+                  </div>
+                  <div class="record-status">
+                    <span class="status-badge" :class="record.status.toLowerCase()">
+                      {{ record.status.charAt(0).toUpperCase() + record.status.slice(1) }}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
+            </template>
           </div>
         </div>
       </div>
@@ -84,44 +119,83 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
-defineProps({
-  studentsAttendance: {
-    type: Array,
-    default: () => []
-  },
-  loading: {
-    type: Boolean,
-    default: false
+const studentsAttendance = ref([]);
+const loading = ref(true);
+const expandedStudents = ref([]);
+
+// Toggle expanded state for a student
+const toggleExpandedState = (studentId) => {
+  if (expandedStudents.value.includes(studentId)) {
+    // Remove from expanded if already expanded
+    expandedStudents.value = expandedStudents.value.filter(id => id !== studentId);
+  } else {
+    // Add to expanded if not already expanded
+    expandedStudents.value.push(studentId);
   }
+};
+
+// ✅ Fetch Attendance Records for Parents
+const fetchAttendance = async () => {
+  try {
+    loading.value = true;
+    const token = localStorage.getItem('access_token');
+    const response = await axios.get("http://127.0.0.1:8000/api/parent/student-attendance/", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (response.data && response.data.attendance_records) {
+      studentsAttendance.value = response.data.attendance_records;
+    } else {
+      studentsAttendance.value = [];
+    }
+  } catch (error) {
+    console.error("Error fetching attendance records:", error);
+    studentsAttendance.value = [];
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchAttendance();
 });
 
+// ✅ Count attendance based on status
 const getAttendanceCount = (attendance, status) => {
   if (!attendance || !Array.isArray(attendance)) return 0;
-  return attendance.filter(record => record.status === status).length;
+  return attendance.filter(record => record.status.toLowerCase() === status.toLowerCase()).length;
 };
 
-const getRecentAttendance = (attendance) => {
+// Get visible attendance records (first 'limit' records)
+const getVisibleAttendance = (attendance, studentId, limit) => {
   if (!attendance || !Array.isArray(attendance)) return [];
-  
-  // Sort attendance by date (newest first) and take the 5 most recent
   return [...attendance]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .slice(0, 5);
+    .slice(0, limit);
 };
 
+// Get expanded attendance records (records after the first 3)
+const getExpandedAttendance = (attendance) => {
+  if (!attendance || !Array.isArray(attendance)) return [];
+  return [...attendance]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(3);
+};
+
+// ✅ Calculate Attendance Rate (Only Present vs Absent)
 const calculateAttendanceRate = (attendance) => {
   if (!attendance || !Array.isArray(attendance) || attendance.length === 0) return 0;
   
-  const presentDays = getAttendanceCount(attendance, 'present');
-  const lateDays = getAttendanceCount(attendance, 'late');
+  const presentDays = getAttendanceCount(attendance, 'Present');
   const totalDays = attendance.length;
   
-  // Count late as half-present (customize as needed)
-  return Math.round(((presentDays + (lateDays * 0.5)) / totalDays) * 100);
+  return Math.round((presentDays / totalDays) * 100);
 };
 
+// ✅ Format Date
 const formatDate = (dateString) => {
   const options = { weekday: 'short', month: 'short', day: 'numeric' };
   return new Date(dateString).toLocaleDateString(undefined, options);
@@ -294,10 +368,45 @@ h2 {
   transition: width 0.3s ease;
 }
 
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
 .attendance-history h4 {
   font-size: 1rem;
   color: #1e293b;
-  margin: 0 0 1rem;
+  margin: 0;
+}
+
+.toggle-button {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: transparent;
+  border: none;
+  color: #7c3aed;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.toggle-button:hover {
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.toggle-icon {
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+}
+
+.toggle-icon.expanded {
+  transform: rotate(180deg);
 }
 
 .history-list {
@@ -312,6 +421,18 @@ h2 {
   padding: 0.75rem;
   background: rgba(139, 92, 246, 0.05);
   border-radius: 8px;
+}
+
+.expanded-records {
+  margin-top: 0.5rem;
+  display: grid;
+  gap: 0.75rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .record-date {

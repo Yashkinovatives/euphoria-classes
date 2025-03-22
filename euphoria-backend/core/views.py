@@ -628,3 +628,137 @@ def delete_uploaded_result(request, semester_id):
 
     semester.delete()
     return Response({"message": "Result deleted successfully"}, status=200)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_student_attendance_history(request, student_id):
+    if request.user.user_type != "teacher":
+        return Response({"error": "Unauthorized"}, status=403)
+
+    student = Student.objects.filter(id=student_id).first()
+    if not student:
+        return Response({"error": "Student not found"}, status=404)
+
+    attendance_records = Attendance.objects.filter(student=student).values(
+        "date", "status"
+    )
+
+    if not attendance_records:
+        return Response({"message": "No attendance records found for this student"}, status=200)
+
+    return Response({
+        "student_name": student.name,
+        "class_section": student.class_section.name,
+        "attendance_records": list(attendance_records)
+    }, status=200)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_student_fees_history(request, student_id):
+    if request.user.user_type != "teacher":
+        return Response({"error": "Unauthorized"}, status=403)
+
+    student = Student.objects.filter(id=student_id).first()
+    if not student:
+        return Response({"error": "Student not found"}, status=404)
+
+    fee_record = FeeRecord.objects.filter(student=student).first()
+    if not fee_record:
+        return Response({"error": "No fee record found for this student"}, status=404)
+
+    monthly_payments = FeePayment.objects.filter(student=student).values("month", "amount_paid", "payment_date")
+
+    return Response({
+        "student_name": student.name,
+        "class_section": student.class_section.name,
+        "total_fees": fee_record.total_fees,
+        "remaining_fees": fee_record.remaining_fees,
+        "monthly_payments": list(monthly_payments)
+    }, status=200)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_uploaded_result_by_teacher(request, semester_id):
+    """Allows teachers to delete results uploaded by parents."""
+    if request.user.user_type != "teacher":
+        return Response({"error": "Unauthorized"}, status=403)
+
+    semester = ParentUploadedSemester.objects.filter(id=semester_id).first()
+    
+    if not semester:
+        return Response({"error": "Result not found"}, status=404)
+
+    # Get associated subjects and documents
+    subjects = ParentUploadedSubjectResult.objects.filter(semester=semester)
+    result_document = ParentUploadedResult.objects.filter(semester=semester).first()
+
+    # Delete subjects and document
+    subjects.delete()
+    if result_document:
+        result_document.delete()
+
+    # Finally, delete the semester result
+    semester.delete()
+
+    return Response({"message": "Result deleted successfully by the teacher"}, status=200)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_parent_uploaded_results(request):
+    """API for parents to view their uploaded results"""
+    if request.user.user_type != "parent":
+        return Response({"error": "Unauthorized"}, status=403)
+
+    # Fetch all uploaded results by the parent
+    semesters = ParentUploadedSemester.objects.filter(uploaded_by=request.user).order_by('-uploaded_at')
+
+    results_data = []
+    for semester in semesters:
+        subjects = ParentUploadedSubjectResult.objects.filter(semester=semester).values(
+            "subject", "marks_obtained", "total_marks"
+        )
+        
+        document = ParentUploadedResult.objects.filter(semester=semester).first()
+        document_url = document.document.url if document and document.document else None
+
+        results_data.append({
+            "id": semester.id,
+            "student_name": semester.student.name,
+            "semester": semester.semester,
+            "year": semester.year,
+            "uploaded_at": semester.uploaded_at.strftime('%Y-%m-%d %H:%M:%S'),
+            "subjects": list(subjects),
+            "document_url": document_url
+        })
+
+    return Response({"uploaded_results": results_data}, status=200)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def bulk_mark_attendance(request):
+    """
+    API to mark attendance for multiple students in one request.
+    """
+    try:
+        data = request.data
+        student_ids = data.get("student_ids", [])  # List of student IDs
+        date = data.get("date", datetime.today().strftime('%Y-%m-%d'))  # Default to today
+        status = data.get("status", "present")  # Default to present
+
+        if not student_ids:
+            return Response({"error": "No student IDs provided"}, status=400)
+
+        # Bulk create attendance entries
+        attendance_entries = [
+            Attendance(student_id=student_id, date=date, status=status) for student_id in student_ids
+        ]
+        Attendance.objects.bulk_create(attendance_entries)
+
+        return Response({"message": "Attendance marked successfully for selected students"}, status=201)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)

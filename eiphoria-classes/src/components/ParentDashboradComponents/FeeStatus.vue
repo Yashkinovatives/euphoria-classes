@@ -1,4 +1,3 @@
-# FeeStatus.vue
 <template>
   <div class="fee-status-section">
     <div class="section-header">
@@ -42,23 +41,58 @@
         </div>
 
         <div class="payment-history">
-          <h4>Payment History</h4>
+          <div class="history-header">
+            <h4>Payment History</h4>
+            <button 
+              v-if="hasMorePayments(status.monthly_payments)"
+              class="toggle-button" 
+              @click="toggleExpandedPayments(status.student_name)"
+              :aria-expanded="expandedPayments.includes(status.student_name)"
+            >
+              {{ expandedPayments.includes(status.student_name) ? 'Show Less' : 'Show More' }}
+              <span class="toggle-icon" :class="{ 'expanded': expandedPayments.includes(status.student_name) }">
+                ▼
+              </span>
+            </button>
+          </div>
+          
           <div class="payment-list">
             <div v-if="!status.monthly_payments || status.monthly_payments.length === 0" class="no-payments">
               No payments recorded yet
             </div>
-            <div 
-              v-else
-              v-for="payment in status.monthly_payments" 
-              :key="payment.month"
-              class="payment-item"
-            >
-              <div class="payment-details">
-                <span class="payment-month">{{ payment.month }}</span>
-                <span class="payment-date">{{ formatDate(payment.payment_date) }}</span>
+            
+            <template v-else>
+              <!-- Always show the first 3 payment entries -->
+              <div 
+                v-for="payment in getVisiblePayments(status.monthly_payments)" 
+                :key="payment.month"
+                class="payment-item"
+              >
+                <div class="payment-details">
+                  <span class="payment-month">{{ payment.month }}</span>
+                  <span class="payment-date">{{ formatDate(payment.payment_date) }}</span>
+                </div>
+                <span class="payment-amount">₹{{ payment.amount_paid }}</span>
               </div>
-              <span class="payment-amount">₹{{ payment.amount_paid }}</span>
-            </div>
+              
+              <!-- Show additional payments when expanded -->
+              <div 
+                v-if="expandedPayments.includes(status.student_name) && status.monthly_payments.length > 3"
+                class="expanded-payments"
+              >
+                <div 
+                  v-for="payment in getExpandedPayments(status.monthly_payments)" 
+                  :key="payment.month"
+                  class="payment-item"
+                >
+                  <div class="payment-details">
+                    <span class="payment-month">{{ payment.month }}</span>
+                    <span class="payment-date">{{ formatDate(payment.payment_date) }}</span>
+                  </div>
+                  <span class="payment-amount">₹{{ payment.amount_paid }}</span>
+                </div>
+              </div>
+            </template>
           </div>
         </div>
       </div>
@@ -67,7 +101,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, ref } from 'vue';
 
 defineProps({
   feeStatus: {
@@ -76,6 +110,41 @@ defineProps({
     default: () => []
   }
 });
+
+// Track which students have expanded payment history
+const expandedPayments = ref([]);
+
+// Toggle expanded state for a student's payment history
+const toggleExpandedPayments = (studentName) => {
+  if (expandedPayments.value.includes(studentName)) {
+    // Remove from expanded if already expanded
+    expandedPayments.value = expandedPayments.value.filter(name => name !== studentName);
+  } else {
+    // Add to expanded if not already expanded
+    expandedPayments.value.push(studentName);
+  }
+};
+
+// Check if there are more than 3 payments
+const hasMorePayments = (payments) => {
+  return payments && payments.length > 3;
+};
+
+// Get only the first 3 payment entries
+const getVisiblePayments = (payments) => {
+  if (!payments || !Array.isArray(payments)) return [];
+  return [...payments]
+    .sort((a, b) => new Date(b.payment_date) - new Date(a.payment_date))
+    .slice(0, 3);
+};
+
+// Get payment entries after the first 3
+const getExpandedPayments = (payments) => {
+  if (!payments || !Array.isArray(payments)) return [];
+  return [...payments]
+    .sort((a, b) => new Date(b.payment_date) - new Date(a.payment_date))
+    .slice(3);
+};
 
 const calculateProgress = (total, remaining) => {
   if (!total) return 0;
@@ -228,10 +297,45 @@ h2 {
   transition: width 0.3s ease;
 }
 
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
 .payment-history h4 {
   font-size: 1rem;
   color: #1e293b;
-  margin: 0 0 1rem;
+  margin: 0;
+}
+
+.toggle-button {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: transparent;
+  border: none;
+  color: #7c3aed;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.toggle-button:hover {
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.toggle-icon {
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+}
+
+.toggle-icon.expanded {
+  transform: rotate(180deg);
 }
 
 .payment-list {
@@ -246,6 +350,18 @@ h2 {
   padding: 0.75rem;
   background: rgba(139, 92, 246, 0.05);
   border-radius: 8px;
+}
+
+.expanded-payments {
+  margin-top: 0.5rem;
+  display: grid;
+  gap: 0.75rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .payment-details {

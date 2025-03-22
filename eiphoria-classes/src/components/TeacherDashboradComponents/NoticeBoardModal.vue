@@ -1,95 +1,97 @@
 <!-- NoticeBoardModal.vue -->
 <template>
-  <div class="modal-overlay">
-    <div class="modal-container">
-      <div class="modal-header">
-        <h2>Notice Board</h2>
-        <button @click="$emit('close')" class="close-btn">&times;</button>
-      </div>
-      
-      <div class="modal-body">
-        <!-- Add Notice Form (Only for teachers) -->
-        <div class="add-notice-form">
-          <h3>{{ isEditing ? 'Update Notice' : 'Add New Notice' }}</h3>
-          <div class="form-group">
-            <label for="noticeTitle">Title</label>
-            <input 
-              id="noticeTitle" 
-              v-model="newNotice.title" 
-              type="text" 
-              placeholder="Enter notice title"
-              required
-            >
-          </div>
-          <div class="form-group">
-            <label for="noticeContent">Content</label>
-            <textarea 
-              id="noticeContent" 
-              v-model="newNotice.content" 
-              placeholder="Enter notice content" 
-              rows="4"
-              required
-            ></textarea>
-          </div>
-          <div class="form-actions">
-            <button 
-              v-if="isEditing" 
-              @click="cancelEdit" 
-              class="cancel-btn"
-            >
-              Cancel
-            </button>
-            <button 
-              @click="isEditing ? updateNotice() : addNotice()" 
-              class="submit-btn"
-              :disabled="!newNotice.title || !newNotice.content"
-            >
-              {{ isEditing ? 'Update' : 'Add' }} Notice
-            </button>
-          </div>
+  <teleport to="body">
+    <div class="modal-overlay">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h2>Notice Board</h2>
+          <button @click="$emit('close')" class="close-btn">&times;</button>
         </div>
-
-        <div v-if="loading" class="notice-loader">
-          <div class="loader-spinner"></div>
-          <p>Loading notices...</p>
-        </div>
-
-        <!-- Notices List -->
-        <div v-else class="notices-list">
-          <h3>All Notices</h3>
-          
-          <div v-if="notices.length === 0" class="no-notices">
-            <p>No notices available. Add your first notice!</p>
+        
+        <div class="modal-body">
+          <!-- Add Notice Form (Only for teachers) -->
+          <div class="add-notice-form">
+            <h3>{{ isEditing ? 'Update Notice' : 'Add New Notice' }}</h3>
+            <div class="form-group">
+              <label for="noticeTitle">Title</label>
+              <input 
+                id="noticeTitle" 
+                v-model="newNotice.title" 
+                type="text" 
+                placeholder="Enter notice title"
+                required
+              >
+            </div>
+            <div class="form-group">
+              <label for="noticeContent">Content</label>
+              <textarea 
+                id="noticeContent" 
+                v-model="newNotice.content" 
+                placeholder="Enter notice content" 
+                rows="4"
+                required
+              ></textarea>
+            </div>
+            <div class="form-actions">
+              <button 
+                v-if="isEditing" 
+                @click="cancelEdit" 
+                class="cancel-btn"
+              >
+                Cancel
+              </button>
+              <button 
+                @click="isEditing ? updateNotice() : addNotice()" 
+                class="submit-btn"
+                :disabled="!newNotice.title || !newNotice.content"
+              >
+                {{ isEditing ? 'Update' : 'Add' }} Notice
+              </button>
+            </div>
           </div>
-          
-          <div v-else class="notice-items">
-            <div v-for="notice in notices" :key="notice.id" class="notice-item">
-              <div class="notice-header">
-                <h4>{{ notice.title }}</h4>
-                <div class="notice-actions">
-                  <button @click="editNotice(notice)" class="edit-btn">
-                    <span class="edit-icon">✏️</span>
-                  </button>
-                  <button @click="deleteNotice(notice.id)" class="delete-btn">
-                    <span class="delete-icon">🗑️</span>
-                  </button>
+
+          <div v-if="loading" class="notice-loader">
+            <div class="loader-spinner"></div>
+            <p>Loading notices...</p>
+          </div>
+
+          <!-- Notices List -->
+          <div v-else class="notices-list">
+            <h3>All Notices</h3>
+            
+            <div v-if="notices.length === 0" class="no-notices">
+              <p>No notices available. Add your first notice!</p>
+            </div>
+            
+            <div v-else class="notice-items">
+              <div v-for="notice in notices" :key="notice.id" class="notice-item">
+                <div class="notice-header">
+                  <h4>{{ notice.title }}</h4>
+                  <div class="notice-actions">
+                    <button @click="editNotice(notice)" class="edit-btn">
+                      <span class="edit-icon">✏️</span>
+                    </button>
+                    <button @click="deleteNotice(notice.id)" class="delete-btn">
+                      <span class="delete-icon">🗑️</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <p class="notice-content">{{ notice.content }}</p>
-              <div class="notice-meta">
-                <span class="notice-author">Posted by: {{ notice.created_by__first_name }}</span>
-                <span class="notice-date">{{ formatDate(notice.created_at) }}</span>
+                <p class="notice-content">{{ notice.content }}</p>
+                <div class="notice-meta">
+                  <span class="notice-author">Posted by: {{ notice.created_by__first_name }}</span>
+                  <span class="notice-date">{{ formatDate(notice.created_at) }}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </teleport>
 </template>
 
 <script setup>
-import { ref, onMounted,defineEmits } from 'vue';
+import { ref, onMounted, onBeforeUnmount, defineEmits } from 'vue';
 import axios from 'axios';
 
 const emit = defineEmits(['close', 'update']);
@@ -103,8 +105,25 @@ const newNotice = ref({
 const editingNoticeId = ref(null);
 const isEditing = ref(false);
 
-onMounted(async () => {
-  await fetchNotices();
+// Lock body scrolling when modal is open
+onMounted(() => {
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.width = '100%';
+  document.body.style.top = `-${window.scrollY}px`;
+  fetchNotices();
+});
+
+// Restore scrolling when modal is closed
+onBeforeUnmount(() => {
+  const scrollY = document.body.style.top;
+  document.documentElement.style.overflow = '';
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.width = '';
+  document.body.style.top = '';
+  window.scrollTo(0, parseInt(scrollY || '0') * -1);
 });
 
 const fetchNotices = async () => {
@@ -212,13 +231,17 @@ const formatDate = (dateString) => {
   left: 0;
   right: 0;
   bottom: 0;
+  width: 100vw;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  padding: 0 15px;
+  z-index: 999999;
+  padding: 0;
+  margin: 0;
   box-sizing: border-box;
+  overflow: hidden !important;
 }
 
 .modal-container {
@@ -227,12 +250,25 @@ const formatDate = (dateString) => {
   width: 90%;
   max-width: 800px;
   max-height: 90vh;
-  overflow-y: auto;
   box-shadow: 0 4px 20px rgba(75, 150, 243, 0.2);
   display: flex;
   flex-direction: column;
   border: 1px solid rgba(75, 150, 243, 0.1);
   font-family: "Nunito", sans-serif;
+  z-index: 1000000;
+  animation: modalFade 0.25s ease;
+  overflow: hidden;
+}
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modal-header {
@@ -247,6 +283,7 @@ const formatDate = (dateString) => {
   z-index: 10;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
+  flex-shrink: 0;
 }
 
 .modal-header h2 {
@@ -272,6 +309,7 @@ const formatDate = (dateString) => {
   border-radius: 50%;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  flex-shrink: 0;
 }
 
 .close-btn:hover {
@@ -282,9 +320,12 @@ const formatDate = (dateString) => {
 .modal-body {
   padding: 1.5rem;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  flex-grow: 1;
+  -webkit-overflow-scrolling: touch;
 }
 
 .add-notice-form {
@@ -555,14 +596,15 @@ const formatDate = (dateString) => {
 
 @media (max-width: 480px) {
   .modal-overlay {
-    align-items: flex-end;
+    align-items: center;
     padding: 0 10px;
   }
   
   .modal-container {
     width: 100%;
     max-height: 85vh;
-    border-radius: 20px 20px 0 0;
+    border-radius: 20px;
+    margin-bottom: 20px;
   }
   
   .modal-header {
@@ -623,6 +665,7 @@ const formatDate = (dateString) => {
 @supports (padding: max(0px)) {
   .modal-overlay {
     padding-bottom: max(15px, env(safe-area-inset-bottom));
+    padding-top: max(15px, env(safe-area-inset-top));
   }
 }
 

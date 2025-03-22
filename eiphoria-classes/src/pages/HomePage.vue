@@ -97,25 +97,25 @@ const features = [
     icon: '📚',
     title: 'Engaging Curriculum',
     description: 'Our curriculum balances fun and learning, designed to keep children motivated while building essential skills for their future.',
-    bgColor: 'linear-gradient(135deg, #4B96F3, #3178E6)' // Blue gradient for learning
+    bgColor: 'linear-gradient(135deg, #FFD54F, #F9A825)' // Warm yellow to amber
   },
   {
     icon: '📱',
     title: 'Real-time Progress Updates',
     description: 'Get instant notifications about assignments, grades, and milestones so you\'re always informed about your child\'s progress.',
-    bgColor: 'linear-gradient(135deg, #A076F9, #7C4AE0)' // Purple gradient for technology
+    bgColor: 'linear-gradient(135deg, #FFB300, #FB8C00)' // Amber to orange - energy and enthusiasm
   },
   {
     icon: '👨‍👩‍👧‍👦',
     title: 'Parent-Teacher Partnership',
     description: 'Schedule meetings, exchange messages, and collaborate with teachers to create the best learning environment for your child.',
-    bgColor: 'linear-gradient(135deg, #FF9671, #F46036)' // Orange gradient for community
+    bgColor: 'linear-gradient(135deg, #FDD835, #F57F17)' // Yellow to deep amber - community warmth
   },
   {
     icon: '🔍',
     title: 'Personalized Learning Path',
     description: 'Every child learns differently. Our adaptive system tailors resources and activities to match your child\'s unique learning style.',
-    bgColor: 'linear-gradient(135deg, #57C89F, #38B2AC)' // Teal gradient for personalization
+    bgColor: 'linear-gradient(135deg, #FFEE58, #FFB300)' // Light yellow to amber - soft and inviting
   }
 ]
 </script>
@@ -133,11 +133,11 @@ const features = [
 
 .hero {
   min-height: 100vh;
-  background: linear-gradient(135deg, #F0F7FF, #E6F2FF); /* Soft blue background */
+  background: linear-gradient(135deg, #FFF8E1, #FFFDE7); /* Soft cream-yellow background */
   position: relative;
   overflow: hidden;
   padding: 4rem 1rem; /* Reduced side padding for mobile */
-  color: #2D3748; /* Dark blue-gray text for readability */
+  color: #37474F; /* Darker text for better contrast on light background */
   font-family: 'Nunito', sans-serif;
   letter-spacing: -0.01em;
 }
@@ -155,9 +155,9 @@ const features = [
 
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(75, 150, 243, 0.1), rgba(49, 120, 230, 0.1)); /* Blue floating elements */
+  background: linear-gradient(45deg, rgba(255, 193, 7, 0.08), rgba(255, 152, 0, 0.07)); /* Subtle yellow floating elements */
   border-radius: 50%;
-  filter: blur(1px);
+  filter: blur(2px);
   animation: float 25s infinite ease-in-out alternate;
 }
 
@@ -207,17 +207,17 @@ const features = [
   display: flex;
   align-items: center;
   padding: 0.6rem 1rem; /* Slightly smaller padding for mobile */
-  background: rgba(75, 150, 243, 0.15);
+  background: rgba(255, 193, 7, 0.13);
   border-radius: 100px;
   backdrop-filter: blur(10px);
   font-family: 'Quicksand', sans-serif;
   font-size: clamp(0.8rem, 2.5vw, 1rem); /* Responsive font size */
   font-weight: 600;
   letter-spacing: 0.02em;
-  border: 1px solid rgba(75, 150, 243, 0.3);
-  box-shadow: 0 2px 10px rgba(75, 150, 243, 0.2);
+  border: 1px solid rgba(255, 193, 7, 0.25);
+  box-shadow: 0 2px 10px rgba(255, 193, 7, 0.15);
   gap: 0.5rem;
-  color: #3178E6; 
+  color: #F57F17; /* Deeper yellow-orange for better readability */
   width: fit-content; /* Ensure the badge only takes the space it needs */
 }
 
@@ -232,7 +232,7 @@ const features = [
   line-height: 1.1;
   margin-bottom: 1.5rem; /* Reduced margin for mobile */
   letter-spacing: -0.02em;
-  color: #2D3748;
+  color: #455A64; /* Slate blue-gray for better contrast */
 }
 
 .gradient-text-wrapper {
@@ -241,7 +241,7 @@ const features = [
 }
 
 .gradient-text {
-  background: linear-gradient(45deg, #4B96F3, #3178E6); /* Blue gradient text */
+  background: linear-gradient(45deg, #FFC107, #FF9800); /* Gold to orange gradient */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 800;
@@ -255,14 +255,14 @@ const features = [
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(45deg, #4B96F3, #3178E6); /* Blue gradient underline */
+  background: linear-gradient(45deg, #FFC107, #FF9800);
   border-radius: 4px;
 }
 
 .description {
   font-size: clamp(1rem, 3vw, 1.25rem); /* Responsive font size */
   font-weight: 400;
-  color: #4A5568; /* Medium gray description */
+  color: #546E7A; /* Medium blue-gray description for better contrast */
   margin-bottom: 2rem; /* Reduced margin for mobile */
   line-height: 1.7;
   letter-spacing: -0.01em;
@@ -297,14 +297,14 @@ const features = [
 }
 
 .primary-btn {
-  background: linear-gradient(45deg, #4B96F3, #3178E6); /* Blue primary button */
+  background: linear-gradient(45deg, #FFB300, #FF8F00); /* Amber to dark amber for better contrast */
   color: white; /* White text */
-  box-shadow: 0 4px 15px rgba(75, 150, 243, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 179, 0, 0.25);
 }
 
 .primary-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(75, 150, 243, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 143, 0, 0.3);
 }
 
 .btn-icon {
@@ -312,16 +312,16 @@ const features = [
 }
 
 .secondary-btn {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(75, 150, 243, 0.3);
-  color: #3178E6; /* Blue for secondary */
-  box-shadow: 0 4px 15px rgba(75, 150, 243, 0.1);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 152, 0, 0.25);
+  color: #F57F17; /* Deep amber for better readability */
+  box-shadow: 0 4px 15px rgba(255, 152, 0, 0.08);
 }
 
 .secondary-btn:hover {
   background: rgba(255, 255, 255, 0.95);
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(75, 150, 243, 0.2);
+  box-shadow: 0 8px 20px rgba(255, 152, 0, 0.15);
 }
 
 /* Stats Section */
@@ -344,14 +344,14 @@ const features = [
   font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive font size */
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(45deg, #4B96F3, #3178E6); 
+  background: linear-gradient(45deg, #FFC107, #FF9800); 
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .stat-label {
   font-size: clamp(0.8rem, 2.5vw, 1rem); /* Responsive font size */
-  color: #4A5568;
+  color: #546E7A;
   font-weight: 500;
 }
 
@@ -368,7 +368,7 @@ const features = [
   font-weight: 700;
   margin-bottom: 3rem;
   letter-spacing: -0.02em;
-  color: #2D3748;
+  color: #455A64;
   position: relative;
   display: inline-block;
   left: 50%;
@@ -385,7 +385,7 @@ const features = [
   transform: translateX(-50%);
   width: clamp(50px, 15vw, 80px); /* Responsive width */
   height: 4px;
-  background: linear-gradient(45deg, #4B96F3, #3178E6); /* Blue gradient feature title underline */
+  background: linear-gradient(45deg, #FFC107, #FF9800);
   border-radius: 4px;
 }
 
@@ -397,22 +397,22 @@ const features = [
 }
 
 .feature-card {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: clamp(1.5rem, 5vw, 2.5rem); /* Responsive padding */
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(75, 150, 243, 0.1); /* Blue border */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 152, 0, 0.08); /* Subtle border */
   height: 100%;
 }
 
 .feature-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 14px 40px rgba(75, 150, 243, 0.12);
-  border: 1px solid rgba(75, 150, 243, 0.2); /* Slightly darker blue border */
+  box-shadow: 0 14px 40px rgba(255, 152, 0, 0.1);
+  border: 1px solid rgba(255, 152, 0, 0.15); /* Slightly darker border on hover */
 }
 
 .feature-icon-container {
@@ -424,7 +424,7 @@ const features = [
   justify-content: center;
   margin-bottom: 1.25rem; /* Reduced margin for mobile */
   transition: all 0.3s ease;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   color: white;
 }
 
@@ -448,12 +448,12 @@ const features = [
   font-size: clamp(1.2rem, 3.5vw, 1.5rem); /* Responsive font size */
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #2D3748;
+  color: #455A64;
 }
 
 .feature-description {
   font-size: clamp(0.9rem, 3vw, 1.125rem); /* Responsive font size */
-  color: #4A5568;
+  color: #546E7A;
   line-height: 1.6;
   font-weight: 400;
   flex: 1;

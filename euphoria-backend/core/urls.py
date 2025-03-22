@@ -4,7 +4,8 @@ from core.views import (
     enroll_student, add_test_result, get_student_results, get_students,
     get_class_sections, add_monthly_fee, get_monthly_fee_status, set_total_fees, mark_attendance, update_attendance,
     get_student_attendance, add_notice, get_notices, delete_notice, update_notice, get_reviews, add_review, delete_review,
-    upload_student_result, get_uploaded_results, get_uploaded_result_details, delete_uploaded_result,verify_teacher_code
+    upload_student_result, get_uploaded_results, get_uploaded_result_details, delete_uploaded_result,verify_teacher_code,get_student_attendance_history,
+    get_student_fees_history,delete_uploaded_result_by_teacher,get_parent_uploaded_results,bulk_mark_attendance
 )
 
 urlpatterns = [
@@ -39,4 +40,13 @@ urlpatterns = [
 
     # Parent Delete Results
     path('parent/delete-result/<int:semester_id>/', delete_uploaded_result, name='delete_uploaded_result'),
+
+    path('teacher/student-attendance/<int:student_id>/', get_student_attendance_history, name='get_student_attendance_history'),
+    path('teacher/student-fees/<int:student_id>/', get_student_fees_history, name='get_student_fees_history'),
+    path('teacher/delete-result/<int:semester_id>/', delete_uploaded_result_by_teacher, name='delete_uploaded_result_by_teacher'),
+
+    path('parent/view-uploaded-results/', get_parent_uploaded_results, name='get_parent_uploaded_results'),
+    path("teacher/bulk-mark-attendance/", bulk_mark_attendance, name="bulk_mark_attendance"),
+
+
 ]
