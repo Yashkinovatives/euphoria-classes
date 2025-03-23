@@ -6,10 +6,6 @@
         <div class="stat-content">
           <h3>Overall Performance</h3>
           <div class="stat-value">{{ averagePerformance }}%</div>
-          <div class="stat-trend" :class="{ 'positive': performanceTrend >= 0 }">
-            <span class="trend-icon">{{ performanceTrend >= 0 ? '↑' : '↓' }}</span>
-            <span>{{ Math.abs(performanceTrend) }}% from last term</span>
-          </div>
         </div>
       </div>
 
@@ -22,10 +18,6 @@
           </div>
           <template v-else>
             <div class="stat-value">{{ attendanceRate }}%</div>
-            <div class="stat-trend" :class="{ 'positive': attendanceTrend >= 0 }">
-              <span class="trend-icon">{{ attendanceTrend >= 0 ? '↑' : '↓' }}</span>
-              <span>{{ Math.abs(attendanceTrend) }}% this month</span>
-            </div>
             <div class="attendance-details">
               <span>Present: {{ totalPresent }} days</span>
               <span>Absent: {{ totalAbsent }} days</span>
@@ -83,11 +75,6 @@ const totalAbsent = computed(() => {
     sum + (student.attendance?.filter(a => a.status.toLowerCase() === 'absent').length || 0), 0);
 });
 
-// ✅ Compute Attendance Trend
-const attendanceTrend = computed(() => {
-  return Math.floor(Math.random() * 6) - 3; // Random trend between -3% to +3%
-});
-
 // ✅ Compute Performance
 const averagePerformance = computed(() => {
   if (!props.testResults?.length) return 0;
@@ -105,10 +92,6 @@ const averagePerformance = computed(() => {
   return totalTests ? Math.round(totalScore / totalTests) : 0;
 });
 
-// ✅ Compute Performance Trend
-const performanceTrend = computed(() => {
-  return Math.floor(Math.random() * 10) - 5; // Random trend between -5% to +5%
-});
 </script>
 
 <style scoped>

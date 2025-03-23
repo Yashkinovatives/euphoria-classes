@@ -33,6 +33,7 @@
     </div>
   </section>
   <MissionComponent/>
+  <ClassroomPreviewComponent/>
   <TeamComponent/>
   <ValuesComponent/>
 </template>
@@ -41,6 +42,7 @@
 import ValuesComponent from "@/components/AboutPageComponents/ValuesComponent.vue";
 import TeamComponent from "@/components/AboutPageComponents/TeamComponent.vue";
 import MissionComponent from "@/components/AboutPageComponents/MissionComponent.vue";
+import ClassroomPreviewComponent from "@/components/AboutPageComponents/ClassroomPreviewComponent.vue";
 import { ref } from "vue";
 
 const stats = ref([
