@@ -1,594 +1,729 @@
 <template>
-  <section class="hero">
-    <div class="animated-bg">
-      <div v-for="n in 8" :key="n" class="floating-element"></div>
-    </div>
-
-    <div class="content-container">
-      <div class="hero-content" v-motion
-        :initial="{ opacity: 0, y: 100 }"
-        :enter="{ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 50, damping: 15 } }">
-
-        <div class="badge-container">
-          <div class="badge" v-motion
-            :initial="{ scale: 0, opacity: 0 }"
-            :enter="{ scale: 1, opacity: 1, transition: { delay: 300 } }">
-            <span class="badge-icon">🎓</span>
-            <span>Euphoria Tutorials</span>
+  <div class="main-container">
+    <!-- Abstract shapes for background effect -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    
+    <div class="content-wrapper">
+      <!-- Main content pushed down to account for navbar -->
+      <div class="hero-section">
+        <div class="left-column">
+          <h1 class="main-heading">
+            <span class="line">Helping</span>
+            <span class="line">Children</span>
+            <span class="line">Discover Their</span>
+            <span class="line accent">Potential</span>
+          </h1>
+          
+          <p class="subtitle">
+            Stay connected with your child's educational journey through our interactive platform. 
+            Monitor progress, view assignments, and celebrate achievements all in one place.
+          </p>
+          
+          <div class="action-buttons">
+            <button class="action-button primary">Get Started</button>
+            <button class="action-button secondary">Learn More</button>
           </div>
         </div>
-
-        <h1 class="title">
-          Helping Children
-          <div class="gradient-text-wrapper">
-            <span class="gradient-text">Discover Their Potential</span>
+        
+        <div class="right-column">
+          <div class="stats-container">
+            <div class="stat-item" v-for="(stat, index) in stats" :key="index" ref="statItems">
+              <div class="stat-number">
+                <span ref="countElements">{{ stat.currentValue }}</span>{{ stat.suffix }}
+              </div>
+              <div class="stat-label">{{ stat.label }}</div>
+            </div>
           </div>
-        </h1>
-
-        <p class="description">
-          Stay connected with your child's educational journey through our interactive platform. 
-          Monitor progress, view assignments, and celebrate achievements all in one place.
-        </p>
-
-        <div class="cta-group">
-          <button class="primary-btn" @click="$router.push('/Login')">
-            <span class="btn-icon">✨</span>
-            <span>Parent Login</span>
-          </button>
-
-          <button class="secondary-btn" @click="$router.push('/About')">
-            <span>About Classes</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-
-        <div class="stats-container">
-          <div class="stat-item" v-for="(stat, index) in stats" :key="index"
-            v-motion :initial="{ opacity: 0, y: 20 }"
-            :enter="{ opacity: 1, y: 0, transition: { delay: 300 + (index * 100) } }">
-            <h3 class="stat-value">{{ stat.value }}</h3>
-            <p class="stat-label">{{ stat.label }}</p>
+          
+          <div class="card-grid">
+            <div class="info-card" v-for="(card, index) in infoCards" :key="index">
+              <div class="card-icon">{{ card.icon }}</div>
+              <div class="card-title">{{ card.title }}</div>
+            </div>
           </div>
         </div>
       </div>
-
-      <div class="features-section">
-        <h2 class="features-title">Why Parents Choose Us</h2>
-
+      
+      <section class="features-section">
+        <h2 class="section-title">Why Parents Choose Us</h2>
+        
         <div class="features-grid">
-          <div v-for="(feature, index) in features"
-            :key="feature.title"
-            class="feature-card"
-            v-motion
-            :initial="{ opacity: 0, y: 50 }"
-            :enter="{ opacity: 1, y: 0, transition: { delay: index * 150 } }">
-            <div class="feature-icon-container" :style="{ background: feature.bgColor }">
-              <div class="feature-icon">{{ feature.icon }}</div>
-            </div>
-            <div class="feature-content">
+          <div class="feature" v-for="(feature, index) in features" :key="index">
+            <div class="feature-header">
+              <div class="modern-icon" v-html="feature.modernIcon"></div>
               <h3 class="feature-title">{{ feature.title }}</h3>
-              <p class="feature-description">{{ feature.description }}</p>
             </div>
+            <p class="feature-description">{{ feature.description }}</p>
           </div>
         </div>
-      </div>
+      </section>
     </div>
-  </section>
+  </div>
   <AboutUsComponent />
   <ScrollingSection />
 </template>
 
 <script setup>
-// import FeaturedClasses from '@/components/FeaturedClasses.vue';
+import { ref, onMounted } from 'vue';
 import AboutUsComponent from '@/components/HomePageComponents/AboutUsComponent.vue';
 import ScrollingSection from '@/components/HomePageComponents/ScrollingSection.vue';
 
-// Uncomment this section to properly define stats
-const stats = [
-  { value: '500+', label: 'Happy Students' },
-  { value: '15+', label: 'Years of Excellence' },
-  { value: '98%', label: 'Parent Satisfaction' }
+const statItems = ref([]);
+const countElements = ref([]);
+
+const stats = ref([
+  { value: '1500+', currentValue: '0', endValue: 1500, suffix: '+', label: 'Happy Students' },
+  { value: '15+', currentValue: '0', endValue: 15, suffix: '+', label: 'Years of Excellence' },
+  { value: '98%', currentValue: '0', endValue: 98, suffix: '%', label: 'Parent Satisfaction' }
+]);
+
+const infoCards = [
+  { icon: '🎨', title: 'Creative Arts' },
+  { icon: '🧮', title: 'Mathematics' },
+  { icon: '🔬', title: 'Sciences' },
+  { icon: '📝', title: 'Languages' }
 ];
 
 const features = [
   {
-    icon: '📚',
+    modernIcon: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>`,
     title: 'Engaging Curriculum',
     description: 'Our curriculum balances fun and learning, designed to keep children motivated while building essential skills for their future.',
-    bgColor: 'linear-gradient(135deg, #FFD54F, #F9A825)' // Warm yellow to amber
   },
   {
-    icon: '📱',
+    modernIcon: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <path d="M21 15l-5-5L5 21"></path>
+                </svg>`,
     title: 'Real-time Progress Updates',
     description: 'Get instant notifications about assignments, grades, and milestones so you\'re always informed about your child\'s progress.',
-    bgColor: 'linear-gradient(135deg, #FFB300, #FB8C00)' // Amber to orange - energy and enthusiasm
   },
   {
-    icon: '👨‍👩‍👧‍👦',
+    modernIcon: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>`,
     title: 'Parent-Teacher Partnership',
     description: 'Schedule meetings, exchange messages, and collaborate with teachers to create the best learning environment for your child.',
-    bgColor: 'linear-gradient(135deg, #FDD835, #F57F17)' // Yellow to deep amber - community warmth
   },
   {
-    icon: '🔍',
+    modernIcon: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>`,
     title: 'Personalized Learning Path',
     description: 'Every child learns differently. Our adaptive system tailors resources and activities to match your child\'s unique learning style.',
-    bgColor: 'linear-gradient(135deg, #FFEE58, #FFB300)' // Light yellow to amber - soft and inviting
   }
-]
+];
+
+onMounted(() => {
+  // Wait for a short delay to ensure the page is fully loaded
+  setTimeout(() => {
+    animateCounters();
+    
+    // Add intersection observer for scroll-triggered animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    // Observe elements that should animate on scroll
+    document.querySelectorAll('.feature, .info-card').forEach(el => {
+      observer.observe(el);
+    });
+  }, 300);
+});
+
+const animateCounters = () => {
+  stats.value.forEach((stat, index) => {
+    const endValue = stat.endValue;
+    const duration = 3000; // 3 seconds for animation
+    const startTime = Date.now();
+    const startValue = 0;
+    
+    const updateCounter = () => {
+      const currentTime = Date.now();
+      const elapsedTime = currentTime - startTime;
+      
+      if (elapsedTime < duration) {
+        // Calculate the current value based on elapsed time
+        const progress = elapsedTime / duration;
+        // Use easeOutQuad easing function for smoother animation
+        const easedProgress = 1 - (1 - progress) * (1 - progress);
+        const currentValue = Math.floor(startValue + easedProgress * (endValue - startValue));
+        
+        // Update the displayed value
+        stats.value[index].currentValue = currentValue.toString();
+        
+        // Continue animation
+        requestAnimationFrame(updateCounter);
+      } else {
+        // Animation complete, set to final value
+        stats.value[index].currentValue = endValue.toString();
+      }
+    };
+    
+    // Start animation
+    updateCounter();
+  });
+};
 </script>
 
 <style scoped>
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap');
+/* Import Google Fonts - Montserrat for headings, Roboto for body text */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap');
 
-/* Base Styles */
+:root {
+  --yellow-primary: #FFC107;
+  --yellow-secondary: #FFD54F;
+  --yellow-light: #FFF8E1;
+  --text-dark: #1a1a2e;
+  --text-medium: #3a506b;
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --shape-color-1: rgba(255, 193, 7, 0.1);
+  --shape-color-2: rgba(255, 236, 179, 0.15);
+}
+
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-.hero {
+.main-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #FFF8E1, #FFFDE7); /* Soft cream-yellow background */
+  background: linear-gradient(135deg, #e9eaf4 0%, #f6f7f9 25%, #eceeeb 50%, #dee0f5 75%, #f1f2f7 100%);
+  color: var(--text-dark);
+  font-family: 'Roboto', sans-serif;
   position: relative;
   overflow: hidden;
-  padding: 4rem 1rem; /* Reduced side padding for mobile */
-  color: #37474F; /* Darker text for better contrast on light background */
-  font-family: 'Nunito', sans-serif;
-  letter-spacing: -0.01em;
+  /* Added top padding to account for the navbar */
+  padding-top: 130px;
 }
 
-/* Animated Background */
-.animated-bg {
+/* Abstract shapes */
+.shape {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
   z-index: 0;
+  filter: blur(70px);
+  opacity: 0.5;
 }
 
-.floating-element {
-  position: absolute;
-  background: linear-gradient(45deg, rgba(255, 193, 7, 0.08), rgba(255, 152, 0, 0.07)); /* Subtle yellow floating elements */
-  border-radius: 50%;
-  filter: blur(2px);
-  animation: float 25s infinite ease-in-out alternate;
+.shape-1 {
+  width: 600px;
+  height: 600px;
+  background: var(--shape-color-1);
+  top: -200px;
+  right: -200px;
+  border-radius: 100%;
 }
 
-.floating-element:nth-child(1) { width: 20%; height: 20vw; top: 5%; left: 10%; animation-delay: 0s; }
-.floating-element:nth-child(2) { width: 15%; height: 15vw; top: 65%; left: 85%; animation-delay: -4s; }
-.floating-element:nth-child(3) { width: 25%; height: 25vw; top: 35%; left: 55%; animation-delay: -8s; }
-.floating-element:nth-child(4) { width: 10%; height: 10vw; top: 75%; left: 15%; animation-delay: -12s; }
-.floating-element:nth-child(5) { width: 18%; height: 18vw; top: 20%; left: 75%; animation-delay: -16s; }
-.floating-element:nth-child(6) { width: 12%; height: 12vw; top: 80%; left: 45%; animation-delay: -5s; }
-.floating-element:nth-child(7) { width: 14%; height: 14vw; top: 15%; left: 35%; animation-delay: -9s; }
-.floating-element:nth-child(8) { width: 20%; height: 20vw; top: 60%; left: 70%; animation-delay: -13s; }
-
-@keyframes float {
-  0% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(3deg); }
-  100% { transform: translateY(-40px) rotate(-3deg); }
+.shape-2 {
+  width: 400px;
+  height: 400px;
+  background: var(--shape-color-2);
+  bottom: 10%;
+  left: -100px;
+  border-radius: 100%;
 }
 
-/* Main Content */
-.content-container {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
+.shape-3 {
+  width: 300px;
+  height: 300px;
+  background: var(--shape-color-1);
+  top: 40%;
+  left: 10%;
+  border-radius: 100%;
+}
+
+.shape-4 {
+  width: 500px;
+  height: 500px;
+  background: var(--shape-color-2);
+  bottom: -200px;
+  right: 15%;
+  border-radius: 100%;
+}
+
+.content-wrapper {
   position: relative;
   z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Hero section - adjusted spacing */
+.hero-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  margin-top: 2rem;
+  margin-bottom: 8rem;
+}
+
+.left-column {
   display: flex;
   flex-direction: column;
-  gap: 4rem; /* Reduced gap for mobile */
-  padding: 0 1rem; /* Added padding for all screen sizes */
-}
-
-.hero-content {
-  width: 100%;
-  max-width: 750px;
-  margin: 0 auto;
-  text-align: center;
-  padding-top: 1rem; /* Reduced top padding for mobile */
-}
-
-.badge-container {
-  display: flex;
   justify-content: center;
-  margin-bottom: 1.25rem; /* Slightly reduced margin for mobile */
 }
 
-.badge {
-  display: flex;
-  align-items: center;
-  padding: 0.6rem 1rem; /* Slightly smaller padding for mobile */
-  background: rgba(255, 193, 7, 0.13);
-  border-radius: 100px;
-  backdrop-filter: blur(10px);
-  font-family: 'Quicksand', sans-serif;
-  font-size: clamp(0.8rem, 2.5vw, 1rem); /* Responsive font size */
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  border: 1px solid rgba(255, 193, 7, 0.25);
-  box-shadow: 0 2px 10px rgba(255, 193, 7, 0.15);
-  gap: 0.5rem;
-  color: #F57F17; /* Deeper yellow-orange for better readability */
-  width: fit-content; /* Ensure the badge only takes the space it needs */
-}
-
-.badge-icon {
-  font-size: clamp(1rem, 3vw, 1.25rem); /* Responsive icon size */
-}
-
-.title {
-  font-family: 'Quicksand', sans-serif;
-  font-size: clamp(2rem, 6vw, 4.5rem); /* Responsive font size */
-  font-weight: 700;
-  line-height: 1.1;
-  margin-bottom: 1.5rem; /* Reduced margin for mobile */
-  letter-spacing: -0.02em;
-  color: #455A64; /* Slate blue-gray for better contrast */
-}
-
-.gradient-text-wrapper {
-  display: inline-block;
-  position: relative;
-}
-
-.gradient-text {
-  background: linear-gradient(45deg, #FFC107, #FF9800); /* Gold to orange gradient */
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.main-heading {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
   font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  color: var(--text-dark);
+  letter-spacing: -0.02em;
+}
+
+.line {
+  display: block;
+}
+
+.accent {
+  color: var(--yellow-primary);
   position: relative;
 }
 
-.gradient-text::after {
+.accent::after {
   content: '';
   position: absolute;
-  bottom: -5px;
-  left: 0;
   width: 100%;
-  height: 4px;
-  background: linear-gradient(45deg, #FFC107, #FF9800);
-  border-radius: 4px;
+  height: 1px;
+  background: var(--yellow-secondary);
+  bottom: -10px;
+  left: 0;
+  z-index: -1;
+  opacity: 0.8;
 }
 
-.description {
-  font-size: clamp(1rem, 3vw, 1.25rem); /* Responsive font size */
+.subtitle {
+  font-family: 'Roboto', sans-serif;
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--text-medium);
+  margin-bottom: 3rem;
+  max-width: 500px;
   font-weight: 400;
-  color: #546E7A; /* Medium blue-gray description for better contrast */
-  margin-bottom: 2rem; /* Reduced margin for mobile */
-  line-height: 1.7;
-  letter-spacing: -0.01em;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-.cta-group {
+.action-buttons {
   display: flex;
   gap: 1rem;
-  justify-content: center;
-  margin-bottom: 2.5rem; /* Reduced margin for mobile */
-  flex-wrap: wrap; /* Allow buttons to wrap on very small screens */
+  flex-wrap: wrap;
 }
 
-.primary-btn, .secondary-btn {
-  padding: clamp(0.8rem, 2.5vw, 1.25rem) clamp(1.5rem, 5vw, 2.5rem); /* Responsive padding */
-  border-radius: 100px;
+.action-button {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
   font-weight: 600;
-  font-size: clamp(0.9rem, 2.5vw, 1.125rem); /* Responsive font size */
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  transition: all 0.3s ease;
-  letter-spacing: 0;
-  border: none;
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+  border-radius: 8px;
   cursor: pointer;
-  min-width: 140px; /* Minimum width for buttons */
-  justify-content: center; /* Center content on mobile */
-  font-family: 'Quicksand', sans-serif;
+  transition: all 0.3s ease;
+  border: none;
+  width: 100%;
+  max-width: 240px;
 }
 
-.primary-btn {
-  background: linear-gradient(45deg, #FFB300, #FF8F00); /* Amber to dark amber for better contrast */
-  color: white; /* White text */
-  box-shadow: 0 4px 15px rgba(255, 179, 0, 0.25);
+.action-button.primary {
+  background: var(--yellow-primary);
+  color: var(--text-dark);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
 }
 
-.primary-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(255, 143, 0, 0.3);
+.action-button.primary:hover {
+  background: var(--yellow-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 193, 7, 0.4);
 }
 
-.btn-icon {
-  font-size: clamp(1rem, 3vw, 1.25rem); /* Responsive icon size */
+.action-button.secondary {
+  background: transparent;
+  border: 2px solid var(--yellow-primary);
+  color: var(--yellow-primary);
 }
 
-.secondary-btn {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(255, 152, 0, 0.25);
-  color: #F57F17; /* Deep amber for better readability */
-  box-shadow: 0 4px 15px rgba(255, 152, 0, 0.08);
+.action-button.secondary:hover {
+  background: var(--yellow-light);
+  transform: translateY(-2px);
 }
 
-.secondary-btn:hover {
-  background: rgba(255, 255, 255, 0.95);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(255, 152, 0, 0.15);
-}
-
-/* Stats Section */
-.stats-container {
+/* Right column */
+.right-column {
   display: flex;
-  justify-content: center;
-  gap: clamp(1.5rem, 5vw, 3.5rem); /* Responsive gap */
-  margin-top: 2rem;
-  flex-wrap: wrap; /* Allow stats to wrap on mobile */
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .stat-item {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 1.5rem;
   text-align: center;
-  min-width: 120px; /* Minimum width for stat items */
-  margin-bottom: 1rem; /* Add bottom margin for when they wrap */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 236, 179, 0.5);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(255, 193, 7, 0.1);
 }
 
-.stat-value {
-  font-family: 'Quicksand', sans-serif;
-  font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive font size */
-  font-weight: 700;
+.stat-item:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.15);
+}
+
+.stat-number {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 800;
+  color: var(--yellow-primary);
   margin-bottom: 0.5rem;
-  background: linear-gradient(45deg, #FFC107, #FF9800); 
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 .stat-label {
-  font-size: clamp(0.8rem, 2.5vw, 1rem); /* Responsive font size */
-  color: #546E7A;
+  font-family: 'Roboto', sans-serif;
+  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+  color: var(--text-medium);
   font-weight: 500;
 }
 
-/* Features Section */
-.features-section {
-  width: 100%;
-  padding: 0 0.5rem; /* Add slight padding */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
 }
 
-.features-title {
-  text-align: center;
-  font-family: 'Quicksand', sans-serif;
-  font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive font size */
-  font-weight: 700;
+.info-card {
+  background: rgba(255, 248, 225, 0.3);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 193, 7, 0.15);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.05);
+}
+
+.info-card:hover {
+  background: rgba(255, 248, 225, 0.5);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(255, 193, 7, 0.1);
+}
+
+.card-icon {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.card-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+/* Features section */
+.features-section {
+  padding: 3rem 0;
+}
+
+.section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 800;
   margin-bottom: 3rem;
-  letter-spacing: -0.02em;
-  color: #455A64;
+  text-align: center;
   position: relative;
   display: inline-block;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%; /* Ensure full width for text centering */
-  max-width: 90vw; /* Limit width on larger screens */
+  color: var(--text-dark);
+  letter-spacing: -0.02em;
 }
 
-.features-title::after {
+.section-title::after {
   content: '';
   position: absolute;
-  bottom: -15px;
+  width: 50px;
+  height: 4px;
+  background: var(--yellow-primary);
+  bottom: -10px;
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(50px, 15vw, 80px); /* Responsive width */
-  height: 4px;
-  background: linear-gradient(45deg, #FFC107, #FF9800);
-  border-radius: 4px;
 }
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Smaller minimum width */
-  gap: 1.5rem; /* Reduced gap for mobile */
-  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
-.feature-card {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px);
+.feature {
+  background: var(--card-bg);
   border-radius: 16px;
-  padding: clamp(1.5rem, 5vw, 2.5rem); /* Responsive padding */
+  padding: 2rem;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(255, 193, 7, 0.1);
+  height: 100%;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(255, 152, 0, 0.08); /* Subtle border */
-  height: 100%;
 }
 
-.feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 14px 40px rgba(255, 152, 0, 0.1);
-  border: 1px solid rgba(255, 152, 0, 0.15); /* Slightly darker border on hover */
+.feature:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.15);
 }
 
-.feature-icon-container {
-  width: clamp(50px, 12vw, 70px); /* Responsive size */
-  height: clamp(50px, 12vw, 70px); /* Responsive size */
-  border-radius: 16px; /* Slightly smaller radius for mobile */
+.feature-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.modern-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.25rem; /* Reduced margin for mobile */
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  color: white;
-}
-
-.feature-card:hover .feature-icon-container {
-  transform: scale(1.1) rotate(5deg);
-}
-
-.feature-icon {
-  font-size: clamp(1.3rem, 4vw, 1.75rem); /* Responsive font size */
-}
-
-.feature-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 0.5rem;
 }
 
 .feature-title {
-  font-family: 'Quicksand', sans-serif;
-  margin-bottom: 0.75rem; /* Reduced margin for mobile */
-  font-size: clamp(1.2rem, 3.5vw, 1.5rem); /* Responsive font size */
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: #455A64;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.1rem, 2vw, 1.25rem);
+  font-weight: 700;
+  color: var(--yellow-primary);
 }
 
 .feature-description {
-  font-size: clamp(0.9rem, 3vw, 1.125rem); /* Responsive font size */
-  color: #546E7A;
+  font-family: 'Roboto', sans-serif;
+  color: var(--text-medium);
   line-height: 1.6;
   font-weight: 400;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
   flex: 1;
 }
 
-/* Media Queries - I've adjusted the existing ones and added some new breakpoints */
+/* Animation classes */
+.animate-in {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced Media queries for better responsiveness */
 @media (max-width: 1200px) {
-  .content-container {
+  .main-container {
+    padding-top: 100px;
+  }
+  
+  .hero-section {
     gap: 4rem;
   }
 }
 
-/* Tablet and smaller desktop screens */
 @media (max-width: 1024px) {
-  .hero {
-    padding: 3rem 1rem;
+  .hero-section {
+    grid-template-columns: 1fr;
+    gap: 3rem;
   }
   
-  .content-container {
-    gap: 3.5rem;
+  .right-column {
+    order: 2; /* Put right column AFTER left column */
   }
   
-  .features-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .content-wrapper {
+    padding: 1.5rem;
+  }
+  
+  .main-heading {
+    text-align: center;
+  }
+  
+  .subtitle {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .action-buttons {
+    justify-content: center;
   }
 }
 
-/* Tablet portrait and large mobile */
+/* Mobile view adjustments */
 @media (max-width: 768px) {
-  .hero {
-    padding: 2.5rem 1rem;
+  .main-container {
+    padding-top: 80px;
   }
-
-  .content-container {
-    gap: 3rem;
-  }
-
-  .title {
-    margin-bottom: 1.25rem;
-  }
-
-  .description {
-    margin-bottom: 1.75rem;
-  }
-
-  .cta-group {
-    flex-direction: column;
-    width: 100%;
-    max-width: 280px;
-    margin-left: auto;
-    margin-right: auto;
+  
+  /* Keep the action buttons in one row */
+  .action-buttons {
+    flex-direction: row;
+    justify-content: center;
     gap: 0.75rem;
   }
-
-  .primary-btn, .secondary-btn {
-    width: 100%;
-    justify-content: center;
+  
+  .action-button {
+    flex: 1;
+    max-width: calc(50% - 0.375rem);
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
   }
-
+  
+  /* Stats layout: 2 in first row, 1 in second row */
   .stats-container {
-    flex-direction: column;
-    gap: 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas: 
+      "stat1 stat2"
+      "stat3 stat3";
+    gap: 1rem;
   }
-
-  .stat-item {
-    margin-bottom: 0;
+  
+  .stat-item:nth-child(1) {
+    grid-area: stat1;
   }
-
+  
+  .stat-item:nth-child(2) {
+    grid-area: stat2;
+  }
+  
+  .stat-item:nth-child(3) {
+    grid-area: stat3;
+  }
+  
+  /* Keep info cards 2 per row */
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
   .features-grid {
     grid-template-columns: 1fr;
   }
+  
+  .feature-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .feature-description {
+    text-align: center;
+  }
 }
 
-/* Small mobile devices */
+@media (max-width: 600px) {
+  .content-wrapper {
+    padding: 1rem;
+  }
+  
+  .hero-section {
+    margin-bottom: 4rem;
+  }
+  
+  .section-title::after {
+    width: 40px;
+  }
+  
+  .stat-item, .info-card, .feature {
+    padding: 1.25rem;
+  }
+  
+  .info-card {
+    padding: 1rem;
+  }
+}
+
 @media (max-width: 480px) {
-  .hero {
-    padding: 2rem 0.75rem;
+  .main-container {
+    padding-top: 70px;
   }
-
-  .content-container {
-    gap: 2.5rem;
-    padding: 0 0.5rem;
+  
+  .stat-item {
+    padding: 1rem;
   }
-
-  .hero-content {
-    padding-top: 0.5rem;
+  
+  .stat-number {
+    font-size: 1.6rem;
+    margin-bottom: 0.25rem;
   }
-
-  .badge {
-    padding: 0.5rem 0.875rem;
+  
+  .stat-label {
+    font-size: 0.8rem;
   }
-
-  .feature-card {
+  
+  .info-card {
+    gap: 0.5rem;
+  }
+  
+  .card-icon {
+    font-size: 1.5rem;
+  }
+  
+  .card-title {
+    font-size: 0.9rem;
+  }
+  
+  .feature {
     padding: 1.5rem;
-    border-radius: 20px;
   }
-
-  .feature-icon-container {
-    margin-bottom: 1rem;
-    border-radius: 12px;
+  
+  .section-title {
+    width: 100%;
+    max-width: 90vw;
   }
-
-  .feature-title {
-    margin-bottom: 0.5rem;
+  
+  .modern-icon svg {
+    width: 30px;
+    height: 30px;
   }
 }
 
-/* Very small mobile devices */
-@media (max-width: 360px) {
-  .hero {
-    padding: 1.5rem 0.5rem;
-  }
-  
-  .content-container {
-    gap: 2rem;
-  }
-  
-  .badge-container {
-    margin-bottom: 1rem;
-  }
-  
-  .title {
-    margin-bottom: 1rem;
-  }
-  
-  .description {
-    margin-bottom: 1.5rem;
-  }
-  
-  .cta-group {
-    margin-bottom: 2rem;
-  }
-  
-  .features-title {
-    margin-bottom: 2rem;
+/* Touch device optimizations */
+@media (hover: none) {
+  .feature:hover,
+  .stat-item:hover,
+  .info-card:hover,
+  .action-button:hover {
+    transform: none;
   }
 }
 </style>
