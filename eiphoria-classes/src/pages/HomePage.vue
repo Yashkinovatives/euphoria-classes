@@ -1,20 +1,37 @@
 <template>
   <div class="main-container">
-    <!-- Abstract shapes for background effect -->
-    <div class="shape shape-1"></div>
-    <div class="shape shape-2"></div>
-    <div class="shape shape-3"></div>
-    <div class="shape shape-4"></div>
+    <!-- Background circles with stronger visibility -->
+    <div class="bg-circle" style="position: absolute; width: 500px; height: 500px; border-radius: 50%; background-color: rgba(255, 235, 59, 0.2); top: -100px; right: -100px;"></div>
+    <div class="bg-circle" style="position: absolute; width: 600px; height: 600px; border-radius: 50%; background-color: rgba(255, 235, 59, 0.15); bottom: -150px; right: -150px;"></div>
+    
+    <!-- Background dots -->
+    <div class="background-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
     
     <div class="content-wrapper">
+      <!-- Header section with logo -->
+      <header class="header">
+        <div class="logo">
+          <span class="logo-dot"></span> Euphoria Tutorials
+        </div>
+      </header>
+      
       <!-- Main content pushed down to account for navbar -->
       <div class="hero-section">
         <div class="left-column">
           <h1 class="main-heading">
-            <span class="line">Helping</span>
-            <span class="line">Children</span>
-            <span class="line">Discover Their</span>
-            <span class="line accent">Potential</span>
+            <span class="line">Helping Children</span>
+            <span class="line"><span class="discover-text">Discover</span> Their</span>
+            <span class="line">Potential</span>
           </h1>
           
           <p class="subtitle">
@@ -23,12 +40,13 @@
           </p>
           
           <div class="action-buttons">
-            <button class="action-button primary">Get Started</button>
+            <button class="action-button primary">Parent Login <span class="arrow">→</span></button>
             <button class="action-button secondary">Learn More</button>
           </div>
         </div>
         
         <div class="right-column">
+          <!-- Stats container with yellow border -->
           <div class="stats-container">
             <div class="stat-item" v-for="(stat, index) in stats" :key="index" ref="statItems">
               <div class="stat-number">
@@ -49,6 +67,7 @@
       
       <section class="features-section">
         <h2 class="section-title">Why Parents Choose Us</h2>
+        <div class="underline"></div>
         
         <div class="features-grid">
           <div class="feature" v-for="(feature, index) in features" :key="index">
@@ -89,7 +108,7 @@ const infoCards = [
 
 const features = [
   {
-    modernIcon: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    modernIcon: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffeb3b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                   <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                 </svg>`,
@@ -97,7 +116,7 @@ const features = [
     description: 'Our curriculum balances fun and learning, designed to keep children motivated while building essential skills for their future.',
   },
   {
-    modernIcon: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    modernIcon: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffeb3b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                   <circle cx="8.5" cy="8.5" r="1.5"></circle>
                   <path d="M21 15l-5-5L5 21"></path>
@@ -106,7 +125,7 @@ const features = [
     description: 'Get instant notifications about assignments, grades, and milestones so you\'re always informed about your child\'s progress.',
   },
   {
-    modernIcon: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    modernIcon: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffeb3b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                   <circle cx="9" cy="7" r="4"></circle>
                   <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -116,7 +135,7 @@ const features = [
     description: 'Schedule meetings, exchange messages, and collaborate with teachers to create the best learning environment for your child.',
   },
   {
-    modernIcon: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    modernIcon: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffeb3b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"></path>
                   <circle cx="12" cy="10" r="3"></circle>
                 </svg>`,
@@ -183,19 +202,8 @@ const animateCounters = () => {
 </script>
 
 <style scoped>
-/* Import Google Fonts - Montserrat for headings, Roboto for body text */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap');
-
-:root {
-  --yellow-primary: #FFC107;
-  --yellow-secondary: #FFD54F;
-  --yellow-light: #FFF8E1;
-  --text-dark: #1a1a2e;
-  --text-medium: #3a506b;
-  --card-bg: rgba(255, 255, 255, 0.8);
-  --shape-color-1: rgba(255, 193, 7, 0.1);
-  --shape-color-2: rgba(255, 236, 179, 0.15);
-}
+/* Import Google Fonts - Inter for the whole page for consistency */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 * {
   margin: 0;
@@ -205,74 +213,92 @@ const animateCounters = () => {
 
 .main-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #e9eaf4 0%, #f6f7f9 25%, #eceeeb 50%, #dee0f5 75%, #f1f2f7 100%);
-  color: var(--text-dark);
-  font-family: 'Roboto', sans-serif;
+  background-color: #fafaea;
+  color: #333;
+  font-family: 'Inter', sans-serif;
   position: relative;
   overflow: hidden;
-  /* Added top padding to account for the navbar */
-  padding-top: 130px;
+  padding-top: 100px;
 }
 
-/* Abstract shapes */
-.shape {
+/* Remove the previous circle styles that weren't working */
+
+/* Header styling */
+.header {
+  padding: 20px;
+  text-align: left;
+  margin-bottom: 60px;
+}
+
+.logo {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #333;
+  background-color: #fff;
+  display: inline-block;
+  padding: 8px 15px;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.logo-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #ffeb3b;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+/* Background dots and floating circle */
+.background-dots {
   position: absolute;
-  z-index: 0;
-  filter: blur(70px);
-  opacity: 0.5;
+  top: 280px;
+  left: 50px;
+  width: 200px;
+  height: 100px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
 }
 
-.shape-1 {
-  width: 600px;
-  height: 600px;
-  background: var(--shape-color-1);
-  top: -200px;
-  right: -200px;
-  border-radius: 100%;
+.dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #ffeb3b;
+  border-radius: 50%;
+  opacity: 0.3;
 }
 
-.shape-2 {
-  width: 400px;
-  height: 400px;
-  background: var(--shape-color-2);
-  bottom: 10%;
-  left: -100px;
-  border-radius: 100%;
-}
+/* Grid pattern of dots behind "Discover" */
+.dot:nth-child(1) { top: 0px; left: 0px; }
+.dot:nth-child(2) { top: 0px; left: 25px; }
+.dot:nth-child(3) { top: 0px; left: 50px; }
+.dot:nth-child(4) { top: 25px; left: 0px; }
+.dot:nth-child(5) { top: 25px; left: 25px; }
+.dot:nth-child(6) { top: 25px; left: 50px; }
+.dot:nth-child(7) { top: 50px; left: 0px; }
+.dot:nth-child(8) { top: 50px; left: 25px; }
+.dot:nth-child(9) { top: 50px; left: 50px; }
 
-.shape-3 {
-  width: 300px;
-  height: 300px;
-  background: var(--shape-color-1);
-  top: 40%;
-  left: 10%;
-  border-radius: 100%;
-}
-
-.shape-4 {
-  width: 500px;
-  height: 500px;
-  background: var(--shape-color-2);
-  bottom: -200px;
-  right: 15%;
-  border-radius: 100%;
-}
+/* Removed floating-circle class as we're using ::before and ::after instead */
 
 .content-wrapper {
   position: relative;
   z-index: 1;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 20px;
 }
 
-/* Hero section - adjusted spacing */
+/* Hero section */
 .hero-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 5rem;
-  margin-top: 2rem;
-  margin-bottom: 8rem;
+  gap: 40px;
+  margin-top: 20px;
+  margin-bottom: 60px;
 }
 
 .left-column {
@@ -282,253 +308,236 @@ const animateCounters = () => {
 }
 
 .main-heading {
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-family: 'Inter', sans-serif;
+  font-size: 3em;
   font-weight: 800;
   line-height: 1.1;
-  margin-bottom: 2rem;
-  display: flex;
-  flex-direction: column;
-  color: var(--text-dark);
-  letter-spacing: -0.02em;
+  margin-bottom: 30px;
+  color: #333;
+  position: relative;
+  z-index: 2;
 }
 
 .line {
   display: block;
 }
 
-.accent {
-  color: var(--yellow-primary);
+/* Yellow "Discover" text with underline */
+.discover-text {
+  color: #ffeb3b;
   position: relative;
+  font-weight: 800;
 }
 
-.accent::after {
+.discover-text::after {
   content: '';
   position: absolute;
   width: 100%;
-  height: 1px;
-  background: var(--yellow-secondary);
-  bottom: -10px;
+  height: 3px;
+  background-color: #ffeb3b;
+  bottom: -5px;
   left: 0;
-  z-index: -1;
-  opacity: 0.8;
 }
 
 .subtitle {
-  font-family: 'Roboto', sans-serif;
-  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1em;
   line-height: 1.6;
-  color: var(--text-medium);
-  margin-bottom: 3rem;
-  max-width: 500px;
-  font-weight: 400;
+  color: #666;
+  margin-bottom: 30px;
+  max-width: 90%;
 }
 
 .action-buttons {
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .action-button {
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(0.875rem, 1.5vw, 1rem);
-  font-weight: 600;
-  padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  padding: 15px 30px;
+  font-size: 1em;
   border: none;
-  width: 100%;
-  max-width: 240px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
 }
 
 .action-button.primary {
-  background: var(--yellow-primary);
-  color: var(--text-dark);
-  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+  background-color: #ffeb3b;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  box-shadow: 0 4px 10px rgba(255, 235, 59, 0.3);
 }
 
 .action-button.primary:hover {
-  background: var(--yellow-secondary);
+  background-color: #ffe100;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 193, 7, 0.4);
+  box-shadow: 0 6px 15px rgba(255, 235, 59, 0.4);
 }
 
 .action-button.secondary {
-  background: transparent;
-  border: 2px solid var(--yellow-primary);
-  color: var(--yellow-primary);
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #eee !important;
 }
 
-.action-button.secondary:hover {
-  background: var(--yellow-light);
-  transform: translateY(-2px);
+.arrow {
+  margin-left: 10px;
 }
 
 /* Right column */
 .right-column {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 20px;
 }
 
+/* Stats container with separate boxes */
 .stats-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 
 .stat-item {
-  background: var(--card-bg);
-  border-radius: 16px;
-  padding: 1.5rem;
+  background-color: #fff;
+  padding: 20px 15px;
+  border-radius: 8px;
   text-align: center;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 236, 179, 0.5);
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(255, 193, 7, 0.1);
+  border: 2px solid #ffeb3b;
+  box-shadow: 0 2px 8px rgba(255, 235, 59, 0.15);
 }
 
 .stat-item:hover {
-  background: rgba(255, 255, 255, 0.95);
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.15);
+  box-shadow: 0 4px 12px rgba(255, 235, 59, 0.25);
 }
 
 .stat-number {
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  font-weight: 800;
-  color: var(--yellow-primary);
-  margin-bottom: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 2.5em;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  color: #333; /* Changed to black text */
 }
 
 .stat-label {
-  font-family: 'Roboto', sans-serif;
-  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
-  color: var(--text-medium);
-  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  font-size: 1em;
+  color: #666;
 }
 
 .card-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
+  gap: 15px;
 }
 
 .info-card {
-  background: rgba(255, 248, 225, 0.3);
-  border-radius: 16px;
-  padding: 1.5rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  cursor: pointer;
+  background-color: #fff;
+  border: 2px solid #ffeb3b;
+  padding: 15px;
+  border-radius: 10px;
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 193, 7, 0.15);
-  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.05);
+  box-shadow: 0 4px 10px rgba(255, 235, 59, 0.1);
 }
 
 .info-card:hover {
-  background: rgba(255, 248, 225, 0.5);
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(255, 193, 7, 0.1);
+  box-shadow: 0 8px 20px rgba(255, 235, 59, 0.15);
 }
 
 .card-icon {
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: 1.8em;
+  margin-right: 15px;
 }
 
 .card-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  font-weight: 600;
-  color: var(--text-dark);
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
 }
 
 /* Features section */
 .features-section {
-  padding: 3rem 0;
+  padding: 40px 0;
 }
 
 .section-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-family: 'Inter', sans-serif;
+  font-size: 2.5em;
   font-weight: 800;
-  margin-bottom: 3rem;
+  margin-bottom: 10px;
   text-align: center;
+  color: #333;
   position: relative;
-  display: inline-block;
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--text-dark);
-  letter-spacing: -0.02em;
 }
 
-.section-title::after {
-  content: '';
-  position: absolute;
+.underline {
   width: 50px;
   height: 4px;
-  background: var(--yellow-primary);
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
+  background-color: #ffeb3b;
+  margin: 0 auto 40px auto;
 }
 
 .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  gap: 20px;
 }
 
 .feature {
-  background: var(--card-bg);
-  border-radius: 16px;
-  padding: 2rem;
+  background-color: #fff;
+  border: 2px solid #ffeb3b;
+  border-radius: 10px;
+  padding: 20px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(255, 193, 7, 0.1);
   height: 100%;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 4px 10px rgba(255, 235, 59, 0.1);
 }
 
 .feature:hover {
-  background: rgba(255, 255, 255, 0.95);
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.15);
+  box-shadow: 0 8px 20px rgba(255, 235, 59, 0.15);
 }
 
 .feature-header {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 15px;
+  margin-bottom: 15px;
 }
 
 .modern-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.5rem;
 }
 
 .feature-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(1.1rem, 2vw, 1.25rem);
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2em;
   font-weight: 700;
-  color: var(--yellow-primary);
+  color: #333;
 }
 
 .feature-description {
-  font-family: 'Roboto', sans-serif;
-  color: var(--text-medium);
+  font-family: 'Inter', sans-serif;
+  color: #666;
   line-height: 1.6;
-  font-weight: 400;
-  font-size: clamp(0.9rem, 1.5vw, 1rem);
-  flex: 1;
+  font-size: 1em;
 }
 
 /* Animation classes */
@@ -547,29 +556,17 @@ const animateCounters = () => {
   }
 }
 
-/* Enhanced Media queries for better responsiveness */
+/* Media queries for responsiveness */
 @media (max-width: 1200px) {
   .main-container {
-    padding-top: 100px;
-  }
-  
-  .hero-section {
-    gap: 4rem;
+    padding-top: 120px;
   }
 }
 
 @media (max-width: 1024px) {
   .hero-section {
     grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-  
-  .right-column {
-    order: 2; /* Put right column AFTER left column */
-  }
-  
-  .content-wrapper {
-    padding: 1.5rem;
+    gap: 30px;
   }
   
   .main-heading {
@@ -587,34 +584,66 @@ const animateCounters = () => {
   }
 }
 
-/* Mobile view adjustments */
 @media (max-width: 768px) {
   .main-container {
     padding-top: 80px;
   }
+
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
   
-  /* Keep the action buttons in one row */
-  .action-buttons {
-    flex-direction: row;
-    justify-content: center;
-    gap: 0.75rem;
+  .stat-item:last-child {
+    grid-column: span 2;
   }
   
   .action-button {
-    flex: 1;
-    max-width: calc(50% - 0.375rem);
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
+    padding: 12px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-container {
+    padding-top: 70px;
   }
   
-  /* Stats layout: 2 in first row, 1 in second row */
+  .header {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  .logo {
+    display: inline-block;
+  }
+  
+  .main-heading {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+  
+  .subtitle {
+    font-size: 0.95em;
+    margin-bottom: 25px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .action-button {
+    width: 100%;
+    padding: 12px 20px;
+    margin-bottom: 10px;
+  }
+  
   .stats-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-areas: 
       "stat1 stat2"
       "stat3 stat3";
-    gap: 1rem;
+    gap: 10px;
   }
   
   .stat-item:nth-child(1) {
@@ -629,101 +658,44 @@ const animateCounters = () => {
     grid-area: stat3;
   }
   
-  /* Keep info cards 2 per row */
-  .card-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-  
-  .features-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .feature-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .feature-description {
-    text-align: center;
-  }
-}
-
-@media (max-width: 600px) {
-  .content-wrapper {
-    padding: 1rem;
-  }
-  
-  .hero-section {
-    margin-bottom: 4rem;
-  }
-  
-  .section-title::after {
-    width: 40px;
-  }
-  
-  .stat-item, .info-card, .feature {
-    padding: 1.25rem;
-  }
-  
-  .info-card {
-    padding: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-container {
-    padding-top: 70px;
-  }
-  
   .stat-item {
-    padding: 1rem;
+    padding: 15px;
+    margin-bottom: 10px;
   }
   
-  .stat-number {
-    font-size: 1.6rem;
-    margin-bottom: 0.25rem;
-  }
-  
-  .stat-label {
-    font-size: 0.8rem;
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
   
   .info-card {
-    gap: 0.5rem;
+    padding: 12px;
   }
   
   .card-icon {
-    font-size: 1.5rem;
+    font-size: 1.5em;
+    margin-right: 10px;
   }
   
   .card-title {
-    font-size: 0.9rem;
-  }
-  
-  .feature {
-    padding: 1.5rem;
+    font-size: 1em;
   }
   
   .section-title {
-    width: 100%;
-    max-width: 90vw;
+    font-size: 2em;
   }
   
-  .modern-icon svg {
-    width: 30px;
-    height: 30px;
+  .feature {
+    padding: 15px;
   }
-}
-
-/* Touch device optimizations */
-@media (hover: none) {
-  .feature:hover,
-  .stat-item:hover,
-  .info-card:hover,
-  .action-button:hover {
-    transform: none;
+  
+  .feature-title {
+    font-size: 1.1em;
+  }
+  
+  .feature-description {
+    font-size: 0.9em;
   }
 }
 </style>
