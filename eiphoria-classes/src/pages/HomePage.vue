@@ -1,22 +1,5 @@
 <template>
   <div class="main-container">
-    <!-- Background circles with stronger visibility -->
-    <div class="bg-circle" style="position: absolute; width: 500px; height: 500px; border-radius: 50%; background-color: rgba(255, 235, 59, 0.2); top: -100px; right: -100px;"></div>
-    <div class="bg-circle" style="position: absolute; width: 600px; height: 600px; border-radius: 50%; background-color: rgba(255, 235, 59, 0.15); bottom: -150px; right: -150px;"></div>
-    
-    <!-- Background dots -->
-    <div class="background-dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
-    
     <div class="content-wrapper">
       <!-- Header section with logo -->
       <header class="header">
@@ -80,9 +63,9 @@
         </div>
       </section>
     </div>
+    <AboutUsComponent/>
+    <ScrollingSection/>
   </div>
-  <AboutUsComponent />
-  <ScrollingSection />
 </template>
 
 <script setup>
@@ -90,11 +73,12 @@ import { ref, onMounted } from 'vue';
 import AboutUsComponent from '@/components/HomePageComponents/AboutUsComponent.vue';
 import ScrollingSection from '@/components/HomePageComponents/ScrollingSection.vue';
 
+
 const statItems = ref([]);
 const countElements = ref([]);
 
 const stats = ref([
-  { value: '1500+', currentValue: '0', endValue: 1500, suffix: '+', label: 'Happy Students' },
+  { value: '500+', currentValue: '0', endValue: 500, suffix: '+', label: 'Happy Students' },
   { value: '15+', currentValue: '0', endValue: 15, suffix: '+', label: 'Years of Excellence' },
   { value: '98%', currentValue: '0', endValue: 98, suffix: '%', label: 'Parent Satisfaction' }
 ]);
@@ -221,7 +205,32 @@ const animateCounters = () => {
   padding-top: 100px;
 }
 
-/* Remove the previous circle styles that weren't working */
+/* Background circles with improved styling */
+.main-container::before {
+  content: '';
+  position: absolute;
+  top: -250px;
+  right: -250px;
+  width: 500px;
+  height: 500px;
+  background-color: rgba(255, 235, 59, 0.1);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Bottom right circle with border */
+.main-container::after {
+  content: '';
+  position: absolute;
+  bottom: -300px;
+  right: -300px;
+  width: 600px;
+  height: 600px;
+  border: 2px solid rgba(255, 235, 59, 0.2);
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0.5;
+}
 
 /* Header styling */
 .header {
@@ -250,43 +259,9 @@ const animateCounters = () => {
   margin-right: 8px;
 }
 
-/* Background dots and floating circle */
-.background-dots {
-  position: absolute;
-  top: 280px;
-  left: 50px;
-  width: 200px;
-  height: 100px;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.6;
-}
-
-.dot {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background-color: #ffeb3b;
-  border-radius: 50%;
-  opacity: 0.3;
-}
-
-/* Grid pattern of dots behind "Discover" */
-.dot:nth-child(1) { top: 0px; left: 0px; }
-.dot:nth-child(2) { top: 0px; left: 25px; }
-.dot:nth-child(3) { top: 0px; left: 50px; }
-.dot:nth-child(4) { top: 25px; left: 0px; }
-.dot:nth-child(5) { top: 25px; left: 25px; }
-.dot:nth-child(6) { top: 25px; left: 50px; }
-.dot:nth-child(7) { top: 50px; left: 0px; }
-.dot:nth-child(8) { top: 50px; left: 25px; }
-.dot:nth-child(9) { top: 50px; left: 50px; }
-
-/* Removed floating-circle class as we're using ::before and ::after instead */
-
 .content-wrapper {
   position: relative;
-  z-index: 1;
+  z-index: 10;
   max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
@@ -322,11 +297,27 @@ const animateCounters = () => {
   display: block;
 }
 
-/* Yellow "Discover" text with underline */
+/* Yellow "Discover" text with underline and dot grid */
 .discover-text {
   color: #ffeb3b;
   position: relative;
   font-weight: 800;
+}
+
+.discover-text::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 30px;
+  width: 140px;
+  height: 130px;
+  background-image: 
+    radial-gradient(#ffeb3b 20%, transparent 20%),
+    radial-gradient(#ffeb3b 20%, transparent 20%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  opacity: 0.6;
+  z-index: -1;
 }
 
 .discover-text::after {
@@ -425,7 +416,7 @@ const animateCounters = () => {
   font-weight: bold;
   display: block;
   margin-bottom: 5px;
-  color: #333; /* Changed to black text */
+  color: #333;
 }
 
 .stat-label {
@@ -556,10 +547,24 @@ const animateCounters = () => {
   }
 }
 
-/* Media queries for responsiveness */
+/* Responsive adjustments */
 @media (max-width: 1200px) {
   .main-container {
     padding-top: 120px;
+  }
+
+  .main-container::before {
+    top: -200px;
+    right: -200px;
+    width: 400px;
+    height: 400px;
+  }
+
+  .main-container::after {
+    bottom: -250px;
+    right: -250px;
+    width: 500px;
+    height: 500px;
   }
 }
 
@@ -589,6 +594,11 @@ const animateCounters = () => {
     padding-top: 80px;
   }
 
+  .main-container::before,
+  .main-container::after {
+    display: none;
+  }
+
   .stats-container {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -599,6 +609,12 @@ const animateCounters = () => {
   
   .action-button {
     padding: 12px 24px;
+  }
+
+  .discover-text::before {
+    left: -10px;
+    width: 80px;
+    height: 80px;
   }
 }
 
