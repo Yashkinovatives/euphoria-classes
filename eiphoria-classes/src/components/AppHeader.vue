@@ -459,28 +459,18 @@ export default {
 }
 
 .nav-link:hover {
-  background-color: rgba(0, 150, 136, 0.05);
-  color: var(--teal-medium);
+  background-color: var(--yellow-light);
+  color: var(--text-dark);
 }
 
 .nav-link.active {
-  background: linear-gradient(45deg, var(--teal-medium), var(--teal-dark));
-  color: white;
-  box-shadow: 0 4px 10px rgba(0, 150, 136, 0.2);
-}
-
-.icon-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.icon {
-  transition: all 0.3s ease;
+  background-color: white;
+  color: var(--yellow-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .icon-active {
-  color: white;
+  color: var(--yellow-primary);
 }
 
 .nav-text {

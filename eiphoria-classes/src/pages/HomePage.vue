@@ -78,7 +78,7 @@ const statItems = ref([]);
 const countElements = ref([]);
 
 const stats = ref([
-  { value: '500+', currentValue: '0', endValue: 500, suffix: '+', label: 'Happy Students' },
+  { value: '1500+', currentValue: '0', endValue: 1500, suffix: '+', label: 'Happy Students' },
   { value: '15+', currentValue: '0', endValue: 15, suffix: '+', label: 'Years of Excellence' },
   { value: '98%', currentValue: '0', endValue: 98, suffix: '%', label: 'Parent Satisfaction' }
 ]);
@@ -643,12 +643,27 @@ const animateCounters = () => {
   }
   
   .action-buttons {
-    flex-direction: column;
+    flex-direction: row;
+    gap: 10px;
     width: 100%;
   }
   
   .action-button {
-    width: 100%;
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 0.95em;
+    white-space: nowrap;
+  }
+  
+  .action-button.primary {
+    min-width: 140px;
+  }
+  
+  .action-button.secondary {
+    min-width: 120px;
+  }
+  
+  .action-button {
     padding: 12px 20px;
     margin-bottom: 10px;
   }

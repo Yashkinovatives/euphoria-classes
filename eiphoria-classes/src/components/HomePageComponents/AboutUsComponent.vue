@@ -10,7 +10,7 @@
         <h2 class="section-heading" v-motion 
             :initial="{ opacity: 0, y: 30 }" 
             :enter="{ opacity: 1, y: 0, transition: { duration: 800 } }">
-          About <span class="gradient-text">Our School</span>
+          About <span class="gradient-text">Our Class</span>
         </h2>
         
         <div class="about-grid">
@@ -70,89 +70,127 @@ const features = [
 
 .about-section {
   padding: 5rem 0;
-  background: linear-gradient(135deg, #F0F7FF, #E6F2FF); /* Soft blue background matching homepage */
+  background-color: #fafaea;
   position: relative;
   overflow: hidden;
-  color: #2D3748;
-  font-family: 'Nunito', sans-serif;
+  color: #333;
+  font-family: 'Inter', sans-serif;
 }
 
-/* Animated Background */
-.animated-bg {
+/* Background circles with improved styling */
+.about-section::before {
+  content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: 0;
-}
-
-.floating-element {
-  position: absolute;
-  background: linear-gradient(45deg, rgba(75, 150, 243, 0.1), rgba(49, 120, 230, 0.1)); /* Blue floating elements */
+  top: -250px;
+  right: -250px;
+  width: 500px;
+  height: 500px;
+  background-color: rgba(255, 235, 59, 0.1);
   border-radius: 50%;
-  filter: blur(1px);
-  animation: float 25s infinite ease-in-out alternate;
-}
-
-.floating-element:nth-child(1) { width: 300px; height: 300px; top: 5%; left: 10%; animation-delay: 0s; }
-.floating-element:nth-child(2) { width: 200px; height: 200px; top: 65%; left: 85%; animation-delay: -4s; }
-.floating-element:nth-child(3) { width: 350px; height: 350px; top: 35%; left: 55%; animation-delay: -8s; }
-.floating-element:nth-child(4) { width: 150px; height: 150px; top: 75%; left: 15%; animation-delay: -12s; }
-.floating-element:nth-child(5) { width: 250px; height: 250px; top: 20%; left: 75%; animation-delay: -16s; }
-.floating-element:nth-child(6) { width: 180px; height: 180px; top: 80%; left: 45%; animation-delay: -5s; }
-.floating-element:nth-child(7) { width: 220px; height: 220px; top: 15%; left: 35%; animation-delay: -9s; }
-.floating-element:nth-child(8) { width: 270px; height: 270px; top: 60%; left: 70%; animation-delay: -13s; }
-
-@keyframes float {
-  0% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(3deg); }
-  100% { transform: translateY(-40px) rotate(-3deg); }
-}
-
-.container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  position: relative;
   z-index: 1;
 }
 
-.about-content {
-  width: 100%;
+/* Bottom right circle with border */
+.about-section::after {
+  content: '';
+  position: absolute;
+  bottom: -300px;
+  right: -300px;
+  width: 600px;
+  height: 600px;
+  border: 2px solid rgba(255, 235, 59, 0.2);
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0.5;
 }
 
 .section-heading {
-  font-family: 'Quicksand', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 800;
   text-align: center;
   margin-bottom: 3rem;
-  letter-spacing: -0.02em;
-  color: #2D3748;
+  color: #333;
   position: relative;
-  display: block;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.section-heading::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 4px;
-  background: linear-gradient(45deg, #4B96F3, #3178E6); /* Blue gradient underline */
-  border-radius: 4px;
-  margin: 0 auto;
 }
 
 .gradient-text {
-  background: linear-gradient(45deg, #4B96F3, #3178E6); /* Blue gradient text */
+  color: #ffeb3b;
+  position: relative;
+  font-weight: 800;
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
+}
+
+.gradient-text::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  background-color: #ffeb3b;
+  bottom: -5px;
+  left: 0;
+}
+
+.about-image {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 15px 30px rgba(255, 235, 59, 0.15);
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.image-accent {
+  position: absolute;
+  bottom: -15px;
+  right: -15px;
+  width: 100px;
+  height: 100px;
+  background: #ffeb3b;
+  border-radius: 16px;
+  z-index: -1;
+  opacity: 0.8;
+}
+
+.feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #ffeb3b;
+  border-radius: 50%;
+  color: #333;
+  font-size: 0.875rem;
+  box-shadow: 0 4px 8px rgba(255, 235, 59, 0.2);
+  transition: all 0.3s ease;
+}
+
+.learn-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: #ffeb3b;
+  color: #333;
+  border-radius: 100px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 235, 59, 0.2);
+  margin-top: 0.5rem;
+  align-self: flex-start;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, #000000, #050a11); /* Blue gradient text */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 800;
@@ -194,7 +232,7 @@ const features = [
   right: -15px;
   width: 100px;
   height: 100px;
-  background: linear-gradient(45deg, #4B96F3, #3178E6); /* Blue gradient accent */
+  background: linear-gradient(45deg, #d3f303, #d4ff00); /* Blue gradient accent */
   border-radius: 16px;
   z-index: -1;
   opacity: 0.8;

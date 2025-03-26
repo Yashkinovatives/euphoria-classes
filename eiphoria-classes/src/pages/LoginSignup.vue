@@ -4,11 +4,11 @@
       <!-- Left Panel -->
       <div class="image-panel">
         <div class="logo">
-          <img :src="CLogo" alt="Logo" />
+          <span class="logo-dot"></span> Euphoria Tutorials
         </div>
 
         <div class="image-content">
-          <h2 class="image-title">Capturing Moments,<br />Creating Memories</h2>
+          <h2 class="image-title">Connecting <br />Parents and Learning</h2>
 
           <div class="slide-indicators">
             <span></span>
@@ -110,7 +110,7 @@
 import { ref, reactive } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
-import CLogo from "@/assets/images/CLogo.jpg";
+// import CLogo from "@/assets/images/CLogo.jpg";
 
 const router = useRouter();
 const loading = ref(false);
@@ -143,7 +143,6 @@ const togglePasswordVisibility = () => {
 };
 
 const goBack = () => {
-  // Navigate back to the website
   router.push('/');
 };
 
@@ -153,18 +152,15 @@ const handleSubmit = async () => {
     let endpoint;
     let payload = { ...form };
 
-    // Convert email to lowercase for consistency
     payload.email = payload.email.toLowerCase(); 
 
     if (isLogin.value) {
       endpoint = "http://127.0.0.1:8000/api/login/";
     } else {
       if (awaitingApproval.value) {
-        // Teacher Verification
         endpoint = "http://127.0.0.1:8000/api/verify-teacher/";
         payload = { email: payload.email, approval_code: approvalCode.value };
       } else {
-        // Initial Signup
         endpoint = "http://127.0.0.1:8000/api/signup/";
       }
     }
@@ -192,12 +188,12 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   font-family: 'Inter', sans-serif;
 }
 
@@ -206,38 +202,81 @@ const handleSubmit = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
-  background-color: rgba(67, 56, 83, 0.1);
+  padding: 10rem 1.5rem;
+  background-color: #fafaea;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background circles */
+.auth-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -250px;
+  right: -250px;
+  width: 500px;
+  height: 500px;
+  background-color: rgba(255, 235, 59, 0.1);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.auth-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: -300px;
+  left: -300px;
+  width: 600px;
+  height: 600px;
+  border: 2px solid rgba(255, 235, 59, 0.2);
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0.5;
 }
 
 .auth-container {
   display: flex;
   width: 100%;
   max-width: 1000px;
-  background-color: #1a1625;
+  background-color: #fff;
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 10;
+  border: 2px solid #ffeb3b;
 }
 
 /* Left Panel - Image Section */
 .image-panel {
   flex: 5;
-  background: linear-gradient(to bottom, #5e38a8, #7048bc);
+  background: linear-gradient(to bottom, rgba(255, 235, 59, 0.2), rgba(255, 235, 59, 0.1));
   display: flex;
   flex-direction: column;
   padding: 2rem;
   position: relative;
   overflow: hidden;
-  color: white;
+  color: #333;
 }
 
 .logo {
   margin-bottom: 3rem;
+  font-size: 1.1em;
+  font-weight: 600;
+  display: inline-block;
+  background-color: #fff;
+  padding: 8px 15px;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.logo img {
-  height: 32px;
+.logo-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #ffeb3b;
+  border-radius: 50%;
+  margin-right: 8px;
 }
 
 .image-content {
@@ -249,9 +288,10 @@ const handleSubmit = async () => {
 
 .image-title {
   font-size: 1.8rem;
-  font-weight: 600;
+  font-weight: 800;
   line-height: 1.3;
   margin-bottom: 2rem;
+  color: #333;
 }
 
 .slide-indicators {
@@ -262,21 +302,21 @@ const handleSubmit = async () => {
 .slide-indicators span {
   width: 2rem;
   height: 4px;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(51, 51, 51, 0.3);
   border-radius: 2px;
 }
 
 .slide-indicators span.active {
-  background-color: white;
+  background-color: #ffeb3b;
 }
 
 /* Right Panel - Form Section */
 .form-panel {
   flex: 6;
-  background-color: #1a1625;
+  background-color: #fff;
   padding: 2.5rem;
   position: relative;
-  color: white;
+  color: #333;
 }
 
 .back-link {
@@ -289,14 +329,14 @@ const handleSubmit = async () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(51, 51, 51, 0.7);
   text-decoration: none;
   font-size: 0.875rem;
   transition: color 0.2s;
 }
 
 .back-link a:hover {
-  color: white;
+  color: #333;
 }
 
 .back-link i {
@@ -310,20 +350,21 @@ const handleSubmit = async () => {
 
 .form-title {
   font-size: 1.8rem;
-  font-weight: 600;
+  font-weight: 800;
   margin-bottom: 0.5rem;
+  color: #333;
 }
 
 .account-switch {
   font-size: 0.875rem;
   margin-bottom: 2rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(51, 51, 51, 0.7);
 }
 
 .account-switch a {
-  color: #7048bc;
+  color: #050505;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .account-switch a:hover {
@@ -343,7 +384,7 @@ const handleSubmit = async () => {
 .form-group label {
   font-size: 0.9rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(51, 51, 51, 0.7);
   margin-bottom: 0.5rem;
   display: block;
 }
@@ -351,22 +392,22 @@ const handleSubmit = async () => {
 .form-group input {
   width: 100%;
   padding: 0.875rem 1rem;
-  background-color: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: rgba(255, 235, 59, 0.05);
+  border: 1px solid rgba(255, 235, 59, 0.3);
   border-radius: 8px;
-  color: white;
+  color: #333;
   font-size: 0.9rem;
   transition: all 0.2s;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #7048bc;
-  background-color: rgba(255, 255, 255, 0.12);
+  border-color: #ffeb3b;
+  background-color: rgba(255, 235, 59, 0.1);
 }
 
 .form-group input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(51, 51, 51, 0.5);
 }
 
 .password-input {
@@ -380,7 +421,7 @@ const handleSubmit = async () => {
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(51, 51, 51, 0.5);
   cursor: pointer;
   font-size: 0.9rem;
 }
@@ -393,10 +434,10 @@ const handleSubmit = async () => {
 .role-btn {
   flex: 1;
   padding: 0.75rem;
-  background-color: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: rgba(255, 235, 59, 0.05);
+  border: 1px solid rgba(255, 235, 59, 0.3);
   border-radius: 8px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(51, 51, 51, 0.7);
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s;
@@ -411,27 +452,30 @@ const handleSubmit = async () => {
 }
 
 .role-btn.selected {
-  background-color: rgba(112, 72, 188, 0.2);
-  border-color: #7048bc;
-  color: white;
+  background-color: rgba(255, 235, 59, 0.2);
+  border-color: #ffeb3b;
+  color: #333;
 }
 
 .submit-btn {
   width: 100%;
   padding: 0.875rem;
   margin-top: 0.5rem;
-  background-color: #7048bc;
-  color: white;
+  background-color: #ffeb3b;
+  color: #333;
   border: none;
   border-radius: 8px;
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(255, 235, 59, 0.3);
 }
 
 .submit-btn:hover {
-  background-color: #5e38a8;
+  background-color: #ffe100;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 235, 59, 0.4);
 }
 
 .submit-btn:disabled {
@@ -443,9 +487,9 @@ const handleSubmit = async () => {
   display: inline-block;
   width: 1.25rem;
   height: 1.25rem;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(51, 51, 51, 0.3);
   border-radius: 50%;
-  border-top-color: white;
+  border-top-color: #333;
   animation: spin 0.7s linear infinite;
 }
 
@@ -474,21 +518,11 @@ const handleSubmit = async () => {
 
 @media (max-width: 500px) {
   .auth-wrapper {
-    padding: 1rem;
+    padding: 4rem 1rem;
   }
   
   .auth-container {
     border-radius: 16px;
-  }
-  
-  .image-panel {
-    padding: 1.5rem;
-    max-height: 200px;
-  }
-  
-  .image-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
   }
   
   .form-panel {
