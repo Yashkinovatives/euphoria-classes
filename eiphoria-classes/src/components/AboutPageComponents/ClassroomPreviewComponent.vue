@@ -1,5 +1,10 @@
 <template>
     <section class="classroom-preview">
+      <!-- Add background patterns -->
+      <div class="background-patterns">
+        <div class="circle-pattern"></div>
+        <div class="grid-pattern"></div>
+      </div>
       <div class="section-container">
         <div class="section-header">
           <h2 class="section-title">Our <span class="gradient-text">Classroom</span> Experience</h2>
@@ -51,22 +56,6 @@
         </div>
       </div>
   
-      <!-- Testimonial -->
-      <div class="classroom-testimonial">
-        <div class="testimonial-content">
-          <div class="quote-mark">"</div>
-          <p class="testimonial-text">
-            The learning environment here is exceptional. My children are excited to go to school every day, and I've seen tremendous growth in their confidence and academic abilities. The classrooms are modern, comfortable, and clearly designed with students' needs in mind.
-          </p>
-          <div class="testimonial-author">
-            <img :src="'/api/placeholder/50/50'" alt="Parent" class="author-image" />
-            <div class="author-info">
-              <h4 class="author-name">Sarah Johnson</h4>
-              <p class="author-title">Parent of two students</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
   </template>
   
@@ -100,10 +89,44 @@
   </script>
   
   <style scoped>
+  /* Add new background pattern styles */
+  .background-patterns {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  
+  .circle-pattern {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, rgba(255, 193, 7, 0.05), rgba(255, 213, 79, 0.05));
+    top: -100px;
+    right: -100px;
+  }
+  
+  .grid-pattern {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(rgba(255, 193, 7, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 193, 7, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.5;
+  }
+  
   .classroom-preview {
+    position: relative;  /* Add this */
     padding: 5rem 2rem;
-    background-color: #FAFCFF;
-    font-family: 'Nunito', sans-serif;
+    background-color: white;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;  /* Add this */
   }
   
   .section-container {
@@ -125,9 +148,11 @@
   }
   
   .gradient-text {
-    background: linear-gradient(45deg, #4B96F3, #3178E6);
+    background: linear-gradient(45deg, #FFC107, #FFD54F);
     -webkit-background-clip: text;
+    background-clip: text;  /* Added for better browser support */
     -webkit-text-fill-color: transparent;
+    color: #FFC107;  /* Fallback */
   }
   
   .section-subtitle {
@@ -178,15 +203,15 @@
   }
   
   .feature-icon {
-    color: #3178E6;
+    color: #FFC107;
     font-weight: bold;
     margin-right: 0.75rem;
   }
   
   .explore-button {
     padding: 0.875rem 1.75rem;
-    background: linear-gradient(45deg, #4B96F3, #3178E6);
-    color: white;
+    background: linear-gradient(45deg, #FFC107, #FFD54F);
+    color: #333;  /* Changed to dark text for better contrast */
     border: none;
     border-radius: 0.5rem;
     font-weight: 600;
@@ -197,7 +222,8 @@
   
   .explore-button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(75, 150, 243, 0.3);
+    box-shadow: 0 6px 15px rgba(255, 193, 7, 0.3);
+    background: linear-gradient(45deg, #FFD54F, #FFC107);  /* Reverse gradient on hover */
   }
   
   .classroom-gallery {
@@ -208,7 +234,7 @@
     position: relative;
     border-radius: 1rem;
     overflow: hidden;
-    box-shadow: 0 10px 25px rgba(75, 150, 243, 0.15);
+    box-shadow: 0 10px 25px rgba(255, 193, 7, 0.15);
   }
   
   .main-image {
@@ -241,12 +267,13 @@
     align-items: center;
     cursor: pointer;
     font-size: 1.2rem;
-    color: #3178E6;
+    color: #FFC107;
     transition: all 0.3s ease;
   }
   
   .nav-button:hover {
     background: white;
+    color: #FFD54F;  /* Added hover color */
     transform: scale(1.1);
   }
   
@@ -275,7 +302,7 @@
     padding: 2.5rem;
     background: white;
     border-radius: 1rem;
-    box-shadow: 0 10px 25px rgba(75, 150, 243, 0.1);
+    box-shadow: 0 10px 25px rgba(255, 193, 7, 0.1);
     position: relative;
   }
   
@@ -289,7 +316,7 @@
     top: -2rem;
     left: 2rem;
     font-size: 8rem;
-    color: rgba(75, 150, 243, 0.1);
+    color: rgba(255, 193, 7, 0.1);
     font-family: Georgia, serif;
     line-height: 1;
   }
@@ -338,6 +365,7 @@
     }
   }
   
+  /* Update responsive styles */
   @media (max-width: 768px) {
     .classroom-content {
       grid-template-columns: 1fr;
@@ -352,6 +380,17 @@
     .classroom-gallery {
       order: 1;
     }
+  
+    .circle-pattern {
+      width: 300px;
+      height: 300px;
+      top: -50px;
+      right: -50px;
+    }
+  
+    .grid-pattern {
+      background-size: 15px 15px;
+    }
   }
   
   @media (max-width: 480px) {
@@ -362,19 +401,44 @@
     .classroom-title {
       font-size: 1.75rem;
     }
-    
-    .classroom-testimonial {
-      padding: 1.5rem;
+  
+    .circle-pattern {
+      width: 200px;
+      height: 200px;
+      top: -30px;
+      right: -30px;
+    }
+  
+    .grid-pattern {
+      background-size: 10px 10px;
+      opacity: 0.3;
     }
     
-    .testimonial-text {
-      font-size: 1rem;
+    .classroom-preview {
+      padding: 3rem 1rem;
     }
-    
-    .nav-button {
-      width: 30px;
-      height: 30px;
-      font-size: 1rem;
+  
+    .classroom-features li {
+      font-size: 0.95rem;
     }
+  
+    .explore-button {
+      width: 100%;
+      padding: 1rem;
+    }
+  }
+  
+  .classroom-testimonial {
+    padding: 1.5rem;
+  }
+  
+  .testimonial-text {
+    font-size: 1rem;
+  }
+  
+  .nav-button {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
   }
   </style>

@@ -10,13 +10,9 @@
         <h2 class="section-title">Our <span class="gradient-text">Values</span></h2>
         <p class="section-subtitle">The principles that guide our teaching approach</p>
       </div>
-      
+
       <div class="values-grid">
-        <div 
-          v-for="value in values" 
-          :key="value.id"
-          class="value-card"
-        >
+        <div v-for="value in values" :key="value.id" class="value-card">
           <div class="value-icon">
             <div class="icon-wrapper" v-html="value.icon"></div>
           </div>
@@ -77,44 +73,158 @@ const values = ref([
 
 .values-section {
   position: relative;
-  background: linear-gradient(135deg, #F0F7FF, #E6F2FF);
+  background: white;
   padding: 5rem 2rem;
   font-family: 'Nunito', sans-serif;
   color: #2D3748;
   overflow: hidden;
 }
 
-/* Animated Background */
-.animated-bg {
+/* Add grid pattern */
+.values-section::before {
+  content: '';
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  top: 0;
+  left: 0;
+  background-image:
+    linear-gradient(rgba(255, 193, 7, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 193, 7, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
+/* Update floating elements */
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(75, 150, 243, 0.1), rgba(49, 120, 230, 0.1));
+  background: linear-gradient(45deg, rgba(255, 193, 7, 0.1), rgba(255, 213, 79, 0.1));
   border-radius: 50%;
   filter: blur(1px);
   animation: float 25s infinite ease-in-out alternate;
 }
 
-.floating-element:nth-child(1) { width: 300px; height: 300px; top: 5%; left: 10%; animation-delay: 0s; }
-.floating-element:nth-child(2) { width: 200px; height: 200px; top: 65%; left: 85%; animation-delay: -4s; }
-.floating-element:nth-child(3) { width: 350px; height: 350px; top: 35%; left: 55%; animation-delay: -8s; }
-.floating-element:nth-child(4) { width: 150px; height: 150px; top: 75%; left: 15%; animation-delay: -12s; }
-.floating-element:nth-child(5) { width: 250px; height: 250px; top: 20%; left: 75%; animation-delay: -16s; }
-.floating-element:nth-child(6) { width: 180px; height: 180px; top: 80%; left: 45%; animation-delay: -5s; }
-.floating-element:nth-child(7) { width: 220px; height: 220px; top: 15%; left: 35%; animation-delay: -9s; }
-.floating-element:nth-child(8) { width: 270px; height: 270px; top: 60%; left: 70%; animation-delay: -13s; }
+/* Update gradient text */
+.gradient-text {
+  background: linear-gradient(45deg, #FFC107, #FFD54F);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Update card styles */
+.value-card {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 2.5rem;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(255, 193, 7, 0.08);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.value-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(255, 193, 7, 0.15);
+}
+
+/* Update icon styles */
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  background: rgba(255, 193, 7, 0.1);
+  border-radius: 50%;
+  color: #FFC107;
+  transition: all 0.3s ease;
+}
+
+.value-card:hover .icon-wrapper {
+  background: linear-gradient(135deg, #FFC107, #FFD54F);
+  color: white;
+  transform: scale(1.1);
+}
+
+.floating-element:nth-child(1) {
+  width: 300px;
+  height: 300px;
+  top: 5%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.floating-element:nth-child(2) {
+  width: 200px;
+  height: 200px;
+  top: 65%;
+  left: 85%;
+  animation-delay: -4s;
+}
+
+.floating-element:nth-child(3) {
+  width: 350px;
+  height: 350px;
+  top: 35%;
+  left: 55%;
+  animation-delay: -8s;
+}
+
+.floating-element:nth-child(4) {
+  width: 150px;
+  height: 150px;
+  top: 75%;
+  left: 15%;
+  animation-delay: -12s;
+}
+
+.floating-element:nth-child(5) {
+  width: 250px;
+  height: 250px;
+  top: 20%;
+  left: 75%;
+  animation-delay: -16s;
+}
+
+.floating-element:nth-child(6) {
+  width: 180px;
+  height: 180px;
+  top: 80%;
+  left: 45%;
+  animation-delay: -5s;
+}
+
+.floating-element:nth-child(7) {
+  width: 220px;
+  height: 220px;
+  top: 15%;
+  left: 35%;
+  animation-delay: -9s;
+}
+
+.floating-element:nth-child(8) {
+  width: 270px;
+  height: 270px;
+  top: 60%;
+  left: 70%;
+  animation-delay: -13s;
+}
 
 @keyframes float {
-  0% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(3deg); }
-  100% { transform: translateY(-40px) rotate(-3deg); }
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-20px) rotate(3deg);
+  }
+
+  100% {
+    transform: translateY(-40px) rotate(-3deg);
+  }
 }
 
 .container {
@@ -152,10 +262,65 @@ const values = ref([
   line-height: 1.6;
 }
 
+/* Remove duplicate styles and update the grid */
 .values-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2.5rem;
+}
+
+@media (max-width: 1200px) {
+  .values-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .values-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+    gap: 1.5rem;
+  }
+
+  .value-card {
+    padding: 1.25rem;
+  }
+
+  .value-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .value-description {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .icon-wrapper {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .values-grid {
+    grid-template-columns: repeat(2, 1fr);
+    /* Keep 2 columns even on smallest screens */
+    gap: 1rem;
+  }
+
+  .value-card {
+    padding: 1rem;
+  }
+
+  .value-title {
+    font-size: 1rem;
+  }
+
+  .icon-wrapper {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 }
 
 .value-card {
@@ -211,27 +376,20 @@ const values = ref([
   line-height: 1.6;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-  .values-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 768px) {
   .values-section {
     padding: 4rem 1.5rem;
   }
-  
+
   .values-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  
+
   .section-title {
     font-size: 2rem;
   }
-  
+
   .section-subtitle {
     font-size: 1.125rem;
   }
@@ -241,22 +399,22 @@ const values = ref([
   .values-section {
     padding: 3rem 1rem;
   }
-  
+
   .section-title {
     font-size: 1.75rem;
   }
-  
+
   .value-card {
     padding: 2rem;
   }
-  
+
   .value-title {
     font-size: 1.25rem;
   }
-  
+
   .values-grid {
     grid-template-columns: 1fr;
     max-width: 100%;
   }
 }
-</style>  
+</style>

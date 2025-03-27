@@ -54,7 +54,7 @@ const stats = ref([
   },
   {
     id: 2,
-    value: "500+",
+    value: "1500+",
     label: "Happy Students",
     featured: false,
   },
@@ -80,31 +80,106 @@ const stats = ref([
 .about-hero {
   position: relative;
   min-height: 100vh;
-  background: linear-gradient(135deg, #F0F7FF, #E6F2FF);
-  padding: 0.5rem 2rem 3rem;
+  background: white;
+  padding: 2rem  1rem; /* Increased top padding from 0.5rem to 8rem */
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* Animated Background */
-.animated-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
+@media (max-width: 768px) {
+  .about-hero {
+    padding: 6rem 1.5rem 2rem; /* Adjusted for mobile */
+  }
+  
+  .hero-title {
+    font-size: 3rem;
+    flex-wrap: wrap;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 3rem;
+  }
 }
 
+@media (max-width: 480px) {
+  .about-hero {
+    padding: 5rem 1rem 2rem; /* Further adjusted for smaller screens */
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .stat-card {
+    padding: 2rem 1rem;
+  }
+  
+  .stat-value {
+    font-size: 2.5rem;
+  }
+}
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(75, 150, 243, 0.1), rgba(49, 120, 230, 0.1));
+  background: linear-gradient(45deg, rgba(255, 193, 7, 0.1), rgba(255, 213, 79, 0.1));
   border-radius: 50%;
   filter: blur(1px);
   animation: float 25s infinite ease-in-out alternate;
+}
+
+.hero-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 4rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, #fff700, #fff700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.arrow-icon {
+  color: #ffbf00;
+}
+
+.hero-subtitle {
+  color: #666;
+}
+
+.stat-card {
+  background-color: white;
+  box-shadow: 0 10px 25px rgba(255, 193, 7, 0.1);
+}
+
+.hover-bg {
+  background: linear-gradient(135deg, #FFC107, #FFD54F);
+}
+
+.stat-card.featured {
+  background: linear-gradient(135deg, #FFC107, #FFD54F);
+}
+
+.stat-card:hover {
+  box-shadow: 0 15px 35px rgba(255, 193, 7, 0.2);
+}
+
+.stat-value {
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+.stat-label {
+  color: #666;
 }
 
 .floating-element:nth-child(1) { width: 300px; height: 300px; top: 5%; left: 10%; animation-delay: 0s; }
@@ -142,7 +217,7 @@ const stats = ref([
 }
 
 .gradient-text {
-  background: linear-gradient(45deg, #4B96F3, #3178E6);
+  background: linear-gradient(45deg, #dad725, #3e3c15);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -194,7 +269,7 @@ const stats = ref([
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #4B96F3, #3178E6);
+  background: linear-gradient(135deg, #cf2d0d, #3178E6);
   opacity: 0;
   transition: opacity 0.4s ease;
   z-index: 0;
@@ -205,7 +280,7 @@ const stats = ref([
 }
 
 .stat-card.featured {
-  background: linear-gradient(135deg, #4B96F3, #3178E6);
+  background: linear-gradient(135deg, #d3431b, #3178E6);
 }
 
 .stat-card:hover {
@@ -265,6 +340,7 @@ const stats = ref([
 @media (max-width: 768px) {
   .about-hero {
     padding: 4rem 1.5rem 2rem;
+    min-height: 85vh;
   }
   
   .hero-title {
@@ -284,16 +360,21 @@ const stats = ref([
   }
   
   .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr); /* Changed from 1fr to repeat(2, 1fr) */
+    gap: 1rem; /* Reduced gap for better fit */
   }
   
   .stat-card {
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem;
+    min-width: auto; /* Remove min-width constraint */
   }
   
   .stat-value {
-    font-size: 2.5rem;
+    font-size: 2rem; /* Slightly reduced font size */
+  }
+  
+  .stat-label {
+    font-size: 0.9rem; /* Adjusted label size */
   }
 }
 </style>

@@ -70,13 +70,74 @@ const teacher = ref({
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
+/* Update background and gradients */
 .teacher-section {
   position: relative;
-  background: linear-gradient(135deg, #F0F7FF, #E6F2FF);
+  background: white;  /* Changed from blue gradient to white */
   padding: 5rem 2rem;
   font-family: 'Nunito', sans-serif;
   color: #2D3748;
   overflow: hidden;
+}
+
+.floating-element {
+  position: absolute;
+  background: linear-gradient(45deg, rgba(255, 193, 7, 0.1), rgba(255, 213, 79, 0.1));
+  border-radius: 50%;
+  filter: blur(1px);
+  animation: float 25s infinite ease-in-out alternate;
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, #FFC107, #FFD54F);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Add grid pattern */
+.teacher-section::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-image: 
+    linear-gradient(rgba(255, 193, 7, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 193, 7, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Update accent colors */
+.image-accent {
+  background: linear-gradient(135deg, #FFC107, #FFD54F);
+}
+
+.teacher-credentials {
+  color: #FFC107;
+}
+
+.achievement-icon {
+  background: rgba(255, 193, 7, 0.1);
+  color: #FFC107;
+}
+
+.teacher-profile {
+  box-shadow: 0 10px 30px rgba(255, 193, 7, 0.1);
+}
+
+/* Update responsive styles */
+@media (max-width: 480px) {
+  .teacher-section::before {
+    background-size: 15px 15px;
+    opacity: 0.3;
+  }
+  
+  .floating-element {
+    opacity: 0.5;
+  }
 }
 
 /* Animated Background */
@@ -91,10 +152,29 @@ const teacher = ref({
 
 .floating-element {
   position: absolute;
-  background: linear-gradient(45deg, rgba(75, 150, 243, 0.1), rgba(49, 120, 230, 0.1));
+  background: linear-gradient(45deg, rgba(255, 193, 7, 0.1), rgba(255, 213, 79, 0.1));
   border-radius: 50%;
   filter: blur(1px);
   animation: float 25s infinite ease-in-out alternate;
+}
+
+/* Update the border color for profile elements */
+.profile-header {
+  border-bottom: 1px solid rgba(255, 193, 7, 0.1);
+  padding-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.image-accent {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #FFC107, #FFD54F);
+  border-radius: 1rem;
+  z-index: -1;
+  opacity: 0.7;
 }
 
 .floating-element:nth-child(1) { width: 300px; height: 300px; top: 5%; left: 10%; animation-delay: 0s; }
@@ -136,7 +216,7 @@ const teacher = ref({
 }
 
 .gradient-text {
-  background: linear-gradient(45deg, #4B96F3, #3178E6);
+  background: linear-gradient(45deg, #f37b4b, #5c3617);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -211,7 +291,7 @@ const teacher = ref({
 
 .teacher-credentials {
   font-size: 1.1rem;
-  color: #4B96F3;
+  color: #eb4520;
   font-weight: 600;
 }
 
@@ -244,7 +324,7 @@ const teacher = ref({
   min-width: 1.75rem;
   background: rgba(75, 150, 243, 0.1);
   border-radius: 50%;
-  color: #4B96F3;
+  color: #f38e4b;
 }
 
 .achievement-icon svg {
@@ -269,7 +349,7 @@ const teacher = ref({
 
 @media (max-width: 768px) {
   .teacher-section {
-    padding: 4rem 1.5rem;
+    padding: 3rem 1rem;
   }
   
   .section-title {
@@ -278,48 +358,68 @@ const teacher = ref({
   
   .section-subtitle {
     font-size: 1.125rem;
+    margin-bottom: 2rem;
   }
   
   .teacher-profile {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
   
   .profile-image-container {
-    max-height: 400px;
+    max-height: 300px;  /* Reduced from 400px */
   }
   
-  .profile-image {
-    object-position: top center;
+  .profile-content {
+    padding: 1.5rem;
+    gap: 1rem;  /* Reduced from 1.5rem */
   }
   
   .teacher-achievements {
     grid-template-columns: 1fr;
+    gap: 1rem;  /* Reduced from 1.25rem */
+  }
+
+  .profile-bio {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
   }
 }
 
 @media (max-width: 480px) {
   .teacher-section {
-    padding: 3rem 1rem;
+    padding: 2rem 1rem;
   }
   
   .section-title {
     font-size: 1.75rem;
   }
   
-  .profile-content {
-    padding: 1.5rem;
+  .profile-image-container {
+    max-height: 250px;  /* Further reduced */
   }
   
   .teacher-name {
     font-size: 1.5rem;
   }
   
-  .profile-bio {
+  .teacher-credentials {
     font-size: 1rem;
   }
   
-  .profile-image-container {
-    max-height: 350px;
+  .profile-header {
+    padding-bottom: 1rem;
+  }
+  
+  .achievement {
+    font-size: 0.9rem;
+  }
+  
+  .achievement-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    min-width: 1.5rem;
   }
 }
 </style>
